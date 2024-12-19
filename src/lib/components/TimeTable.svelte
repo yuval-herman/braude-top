@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Item } from '../types';
 
-	const { items }: { items: Item[] } = $props();
+	const { items = [] }: { items?: Item[] } = $props();
 
 	const itemsByDay = $derived(
 		[...Array(7)].map((_, day) => items.filter((item) => item.day === day))
