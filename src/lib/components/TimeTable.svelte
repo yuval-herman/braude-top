@@ -4,7 +4,7 @@
 	const { items = [] }: { items?: Item[] } = $props();
 
 	const itemsByDay = $derived(
-		[...Array(7)].map((_, day) => items.filter((item) => item.day === day))
+		[...Array(6)].map((_, day) => items.filter((item) => item.day === day))
 	);
 
 	const hoursList = [
@@ -65,7 +65,7 @@
 		{#each hoursList as hour}
 			<tr>
 				<th>{getHour(hour.hour, hour.min)}</th>
-				{#each { length: 7 } as _}
+				{#each { length: itemsByDay.length } as _}
 					<td></td>
 				{/each}
 			</tr>
