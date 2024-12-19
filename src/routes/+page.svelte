@@ -1,2 +1,5 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+	import TimeTable from '$lib/components/TimeTable.svelte';
+</script>
+
+<TimeTable items={[{ value: 'test', day: 3, end: 6, start: 2 }]} />
