@@ -1,5 +1,7 @@
 :root {
     direction: rtl;
+    --top-bg: #ccc;
+    --bg: #aaa
 }
 
 body {

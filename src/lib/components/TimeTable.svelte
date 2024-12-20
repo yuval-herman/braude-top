@@ -77,6 +77,7 @@
 	table {
 		border-collapse: collapse;
 		height: 100%;
+		background-color: var(--bg);
 	}
 
 	th,
@@ -97,7 +98,7 @@
 		place-items: center;
 		left: 0;
 		border: 1px solid black;
-		background-color: #ccc;
+		background-color: var(--top-bg);
 		cursor: pointer;
 	}
 </style>
