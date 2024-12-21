@@ -7,7 +7,7 @@
 	let itemHeight = $state<number>();
 	const itemGap = 12;
 	const itemPerPage = $derived(
-		listHeight && itemHeight ? listHeight / (itemHeight + itemGap + 1) : 10
+		listHeight && itemHeight ? listHeight / (itemHeight + itemGap + 2) : 10
 	);
 
 	const lastPage = $derived(Math.floor(items.length / itemPerPage));
@@ -24,10 +24,10 @@
 <div class="container">
 	<header>
 		<nav>
-			<button onclick={() => (currentPage = (currentPage + 1) % (lastPage + 1))}>הבא</button>
 			<button onclick={() => (currentPage--, currentPage < 0 && (currentPage = lastPage))}
 				>הקודם</button
 			>
+			<button onclick={() => (currentPage = (currentPage + 1) % (lastPage + 1))}>הבא</button>
 		</nav>
 		<span id="page-counter">{currentPage}</span>
 	</header>
@@ -41,6 +41,8 @@
 <style>
 	.container {
 		height: 100%;
+		max-width: 100%;
+		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 		padding: 16px;
@@ -71,6 +73,9 @@
 		padding: 8px;
 		padding-right: 16px;
 		border-radius: 12px;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 	button {
 		padding: 4px 8px;
