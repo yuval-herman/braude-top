@@ -1,4 +1,5 @@
 import '../src/lib/global.css';
+import './storybook.css';
 
 /** @type { import('@storybook/svelte').Preview } */
 const preview = {
