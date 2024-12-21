@@ -13,7 +13,7 @@
 	const items = ['מתמטיקה', 'פיזיקה', 'כימיה', 'ספרות', 'היסטוריה', 'אנגלית'];
 </script>
 
-<Story name="Empty" />
+<Story name="Empty" args={{ items: [] }} />
 <Story name="One page" args={{ items }} />
 <Story name="Three pages" args={{ items: Array(6).fill(items).flat() }} />
 <Story name="Many pages" args={{ items: Array(100).fill(items).flat() }} />
