@@ -4,7 +4,11 @@
 
 	const { Story } = defineMeta({
 		title: 'PaginatedList',
-		component: PaginatedList
+		component: PaginatedList,
+
+		parameters: {
+			layout: 'fullscreen'
+		}
 	});
 	const items = ['מתמטיקה', 'פיזיקה', 'כימיה', 'ספרות', 'היסטוריה', 'אנגלית'];
 </script>
