@@ -77,6 +77,7 @@
 	table {
 		border-collapse: collapse;
 		height: 100%;
+		width: 100%;
 		background-color: var(--bg);
 	}
 
