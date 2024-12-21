@@ -1,10 +1,13 @@
 :root {
-    direction: rtl;
-    --top-bg: #ccc;
-    --bg: #aaa
+	--top-bg: #ccc;
+	--bg: #aaa;
 }
 
 body {
-    margin: 0;
-    height: 100vh;
+	direction: rtl;
+	margin: 0;
+	height: 100vh;
+}
+* {
+	box-sizing: border-box;
 }
