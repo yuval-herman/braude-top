@@ -22,13 +22,15 @@
 </script>
 
 <div class="container">
-	<nav>
-		<button onclick={() => (currentPage = (currentPage + 1) % (lastPage + 1))}>הבא</button>
-		<button onclick={() => (currentPage--, currentPage < 0 && (currentPage = lastPage))}
-			>הקודם</button
-		>
-	</nav>
-	<span>{currentPage}</span>
+	<header>
+		<nav>
+			<button onclick={() => (currentPage = (currentPage + 1) % (lastPage + 1))}>הבא</button>
+			<button onclick={() => (currentPage--, currentPage < 0 && (currentPage = lastPage))}
+				>הקודם</button
+			>
+		</nav>
+		<span id="page-counter">{currentPage}</span>
+	</header>
 	<ul bind:clientHeight={listHeight}>
 		{#each pageItems as item}
 			<li bind:clientHeight={itemHeight}>{item}</li>
@@ -42,6 +44,16 @@
 		display: flex;
 		flex-direction: column;
 		padding: 16px;
+	}
+	header {
+		display: flex;
+		justify-content: space-between;
+	}
+	#page-counter {
+		background-color: var(--top-bg);
+		border-radius: 4px;
+		padding: 4px;
+		margin: 4px;
 	}
 	ul {
 		flex-grow: 1;
@@ -59,5 +71,10 @@
 		padding: 8px;
 		padding-right: 16px;
 		border-radius: 12px;
+	}
+	button {
+		padding: 4px 8px;
+		border-radius: 4px;
+		background-color: var(--top-bg);
 	}
 </style>
