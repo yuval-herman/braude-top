@@ -10,7 +10,10 @@
 			layout: 'fullscreen'
 		}
 	});
-	const items = ['מתמטיקה', 'פיזיקה', 'כימיה', 'ספרות', 'היסטוריה', 'אנגלית'];
+	const items = ['מתמטיקה', 'פיזיקה', 'כימיה', 'ספרות', 'היסטוריה', 'אנגלית'].map((item) => ({
+		display: item,
+		onclick: () => {}
+	}));
 </script>
 
 <Story name="Empty" args={{ items: [] }} />
