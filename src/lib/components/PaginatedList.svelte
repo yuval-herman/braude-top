@@ -1,24 +1,12 @@
 <script lang="ts">
 	type ListItem = { display: string; onclick: () => void };
-	const { items }: { items: ListItem[] } = $props();
+	const { items, itemPerPage = 10 }: { items: ListItem[]; itemPerPage?: number } = $props();
 	let currentPage = $state(0);
-
-	let listHeight = $state<number>();
-	let itemHeight = $state<number>();
-	const itemGap = 12;
-	const itemPerPage = $derived(
-		listHeight && itemHeight ? listHeight / (itemHeight + itemGap + 2) : 10
-	);
 
 	const lastPage = $derived(Math.floor(items.length / itemPerPage));
 	const pageItems = $derived(
 		items.slice(itemPerPage * currentPage, itemPerPage * (currentPage + 1))
 	);
-
-	// Handle changes when resizing the window
-	$effect(() => {
-		if (currentPage > lastPage) currentPage = lastPage;
-	});
 </script>
 
 <div class="container">
@@ -31,11 +19,11 @@
 		</nav>
 		<span id="page-counter">{currentPage}</span>
 	</header>
-	<ul bind:clientHeight={listHeight}>
+	<ul>
 		{#each pageItems as item}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-			<li bind:clientHeight={itemHeight} onclick={item.onclick}>{item.display}</li>
+			<li onclick={item.onclick}>{item.display}</li>
 		{/each}
 	</ul>
 </div>
@@ -67,7 +55,7 @@
 		background-color: var(--bg);
 		padding: 8px;
 		border-radius: 12px;
-		overflow: hidden;
+		overflow: scroll;
 	}
 	li {
 		background-color: var(--top-bg);
