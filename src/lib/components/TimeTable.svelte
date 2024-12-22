@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { hoursList } from '$lib/utils';
 	import type { Item } from '../types';
 
 	const { items = [] }: { items?: Item[] } = $props();
@@ -6,25 +7,6 @@
 	const itemsByDay = $derived(
 		[...Array(6)].map((_, day) => items.filter((item) => item.day === day))
 	);
-
-	const hoursList = [
-		{ hour: 8, min: 30 },
-		{ hour: 9, min: 30 },
-		{ hour: 10, min: 30 },
-		{ hour: 11, min: 30 },
-		{ hour: 12, min: 20 },
-		{ hour: 12, min: 50 },
-		{ hour: 13, min: 50 },
-		{ hour: 14, min: 50 },
-		{ hour: 15, min: 50 },
-		{ hour: 16, min: 50 },
-		{ hour: 17, min: 50 },
-		{ hour: 18, min: 50 },
-		{ hour: 19, min: 50 },
-		{ hour: 20, min: 50 },
-		{ hour: 21, min: 50 },
-		{ hour: 22, min: 50 }
-	];
 
 	const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
 	const hourFormatter = new Intl.DateTimeFormat('he-IL', {

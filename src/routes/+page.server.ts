@@ -1,6 +1,6 @@
-import { getCourseNames } from '$lib/server/db';
+import { getCourseInstances, getCoursesMinimal } from '$lib/server/db';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
-	return { courseNames: getCourseNames() };
+	return { courses: getCoursesMinimal() };
 };
