@@ -14,6 +14,7 @@ export interface CourseInstance {
 	is_full: number;
 	language: string;
 	extra_notes?: string;
+	instructor: string;
 }
 
 export interface Session {
@@ -22,6 +23,5 @@ export interface Session {
 	week_day: string;
 	start_time: string;
 	end_time: string;
-	instructor: string;
 	room: string;
 }
