@@ -1,6 +1,12 @@
 <script lang="ts">
-	type ListItem = { display: string; onclick: () => void };
-	const { items, itemPerPage = 10 }: { items: ListItem[]; itemPerPage?: number } = $props();
+	import type { Session, CourseInstance, Course } from '$lib/types';
+	import CourseInstanceC from './CourseInstance.svelte';
+
+	interface Props {
+		itemPerPage?: number;
+		items: (Course & { instances: (CourseInstance & { sessions: Session[] })[] })[];
+	}
+	const { itemPerPage = 10, items }: Props = $props();
 	let currentPage = $state(0);
 
 	const lastPage = $derived(Math.floor(items.length / itemPerPage));
@@ -20,10 +26,15 @@
 		<span id="page-counter">{currentPage}</span>
 	</header>
 	<ul>
-		{#each pageItems as item}
-			<!-- svelte-ignore a11y_click_events_have_key_events -->
-			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-			<li onclick={item.onclick}>{item.display}</li>
+		{#each pageItems as course}
+			<li>
+				<h3>{course.name}</h3>
+				<div class="instances">
+					{#each course.instances as instance}
+						<CourseInstanceC {instance} sessions={instance.sessions} />
+					{/each}
+				</div>
+			</li>
 		{/each}
 	</ul>
 </div>
@@ -48,6 +59,8 @@
 		margin: 4px;
 	}
 	ul {
+		margin: 0;
+		padding: 0;
 		flex-grow: 1;
 		list-style-type: none;
 		margin: 0;
@@ -58,7 +71,7 @@
 		overflow: scroll;
 	}
 	li {
-		background-color: var(--top-bg);
+		border: var(--top-bg) solid;
 		margin: 12px;
 		padding: 8px;
 		padding-right: 16px;
@@ -72,5 +85,10 @@
 		padding: 4px 8px;
 		border-radius: 4px;
 		background-color: var(--top-bg);
+	}
+	.instances {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 	}
 </style>

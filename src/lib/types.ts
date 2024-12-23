@@ -25,3 +25,12 @@ export interface Session {
 	end_time: string;
 	room: string;
 }
+
+export interface Course {
+	course_id: number;
+	name: string;
+	year: string;
+	credit: number;
+	description: string;
+	syllabus_link: string;
+}

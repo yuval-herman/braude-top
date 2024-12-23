@@ -1,13 +1,11 @@
-import type { CourseInstance, Session } from '$lib/types';
+import type { Course, CourseInstance, Session } from '$lib/types';
 import Database from 'better-sqlite3';
 
 const db = new Database('src/lib/courses.db');
 
 /** Retrieves all the courses names and ids */
-export const getCoursesMinimal = (() => {
-	const stmt = db.prepare<[], { course_id: number; name: string }>(
-		'SELECT course_id, name FROM courses ORDER by name'
-	);
+export const getCourses = (() => {
+	const stmt = db.prepare<[], Course>('SELECT * FROM courses ORDER by name');
 	return () => stmt.all();
 })();
 
