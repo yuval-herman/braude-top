@@ -30,7 +30,7 @@ export const getCourseInstances = (() => {
 /** Retrieves all the course instances for a given course id that have sessions*/
 export const getNonEmptyCourseInstances = (() => {
 	const stmt = db.prepare<number, CourseInstance>(
-		'SELECT course_id, course_instance_id, instructor, type, hours, group_name, is_full, language, extra_notes from course_instances \
+		'SELECT distinct course_id, course_instance_id, instructor, type, hours, group_name, is_full, language, extra_notes from course_instances \
 		JOIN sessions USING (course_instance_id) \
 		WHERE course_id = ?'
 	);
