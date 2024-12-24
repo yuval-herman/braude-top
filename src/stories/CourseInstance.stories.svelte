@@ -43,4 +43,5 @@
 </script>
 
 <Story name="Course" args={{ instance, sessions }} />
+<Story name="Lots of sessions" args={{ instance, sessions: Array(4).fill(sessions).flat() }} />
 <Story name="Full Course" args={{ instance: { ...instance, is_full: 1 }, sessions }} />
