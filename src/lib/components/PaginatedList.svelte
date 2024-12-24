@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { hoveredInstance } from '$lib/state.svelte';
 	import type { Session, CourseInstance, Course } from '$lib/types';
+	import { itemizeSession } from '$lib/utils';
 	import CourseInstanceC from './CourseInstance.svelte';
 
 	interface Props<OnclickParam = unknown> {
@@ -34,11 +36,20 @@
 				<h3>{course.name}</h3>
 				<div class="instances">
 					{#each course.instances as instance}
-						<CourseInstanceC
-							{instance}
-							onclick={() => course.onclick(instance.sessions)}
-							sessions={instance.sessions}
-						/>
+						<div
+							onpointerover={() =>
+								(hoveredInstance.items = instance.sessions.map((s) => ({
+									...itemizeSession(s),
+									value: course.name
+								})))}
+							onpointerleave={() => (hoveredInstance.items = [])}
+						>
+							<CourseInstanceC
+								{instance}
+								onclick={() => course.onclick(instance.sessions)}
+								sessions={instance.sessions}
+							/>
+						</div>
 					{/each}
 				</div>
 			</li>
