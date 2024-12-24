@@ -23,8 +23,13 @@
 		<PaginatedList
 			items={filteredCourses.map((c) => ({
 				...c,
-				onclick(sessions) {
-					sessions.forEach((s) => selectedItems.push({ ...itemizeSession(s), value: c.name }));
+				onclick(instance, sessions) {
+					sessions.forEach((s) =>
+						selectedItems.push({
+							...itemizeSession(s),
+							value: { name: c.name, room: s.room, instructor: instance.instructor }
+						})
+					);
 				}
 			}))}
 		/>

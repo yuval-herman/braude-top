@@ -7,7 +7,7 @@
 	interface Props<OnclickParam = unknown> {
 		itemPerPage?: number;
 		items: (Course & {
-			onclick: (sessions: Session[]) => void;
+			onclick: (instance: CourseInstance, sessions: Session[]) => void;
 			instances: (CourseInstance & { sessions: Session[] })[];
 		})[];
 	}
@@ -40,13 +40,13 @@
 							onpointerover={() =>
 								(hoveredInstance.items = instance.sessions.map((s) => ({
 									...itemizeSession(s),
-									value: course.name
+									value: { name: course.name, instructor: instance.instructor, room: s.room }
 								})))}
 							onpointerleave={() => (hoveredInstance.items = [])}
 						>
 							<CourseInstanceC
 								{instance}
-								onclick={() => course.onclick(instance.sessions)}
+								onclick={() => course.onclick(instance, instance.sessions)}
 								sessions={instance.sessions}
 							/>
 						</div>

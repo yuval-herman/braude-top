@@ -36,7 +36,9 @@
 							style:height="calc({item.end - item.start} * (100% + 1px) - 1px)"
 							onclick={() => items.splice(items.indexOf(item), 1)}
 						>
-							{item.value}
+							{item.value.name}
+							{item.value.instructor}
+							{item.value.room}
 						</a>
 					{/each}
 				</th>
