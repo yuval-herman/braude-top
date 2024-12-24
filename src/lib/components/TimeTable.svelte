@@ -33,7 +33,7 @@
 						<a
 							class="item"
 							style:top="calc({item.start} * (100% + 1px) - 1px)"
-							style:height="calc({item.end} * (100% + 1px) - 1px)"
+							style:height="calc({item.end - item.start} * (100% + 1px) - 1px)"
 							onclick={() => items.splice(items.indexOf(item), 1)}
 						>
 							{item.value}
@@ -83,5 +83,8 @@
 		border: 1px solid black;
 		background-color: var(--top-bg);
 		cursor: pointer;
+		overflow: hidden;
+		white-space: wrap;
+		word-break: break-all;
 	}
 </style>
