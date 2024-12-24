@@ -1,3 +1,5 @@
+import type { Session } from './types';
+
 export const hoursList = [
 	{ hour: 8, min: 30 },
 	{ hour: 9, min: 30 },
@@ -16,3 +18,24 @@ export const hoursList = [
 	{ hour: 21, min: 50 },
 	{ hour: 22, min: 50 }
 ];
+
+function time2Index(timestring: string) {
+	const [chour, cmin] = timestring.split(':').map(Number);
+	const index = hoursList.findIndex(({ hour, min }) => hour === chour && min === cmin);
+	return index === -1 ? undefined : index + 1;
+}
+
+export function itemizeSession({ week_day, start_time, end_time }: Session) {
+	const first_day = 1488;
+	const day = week_day.charCodeAt(0) - first_day;
+	const start = time2Index(start_time);
+	const end = time2Index(end_time);
+	if (!start || !end) {
+		throw new Error('start or end time were not found in hourList');
+	}
+	return {
+		day,
+		start,
+		end
+	};
+}
