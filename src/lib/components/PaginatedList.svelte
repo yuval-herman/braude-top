@@ -28,7 +28,7 @@
 			>
 			<button onclick={() => (currentPage = (currentPage + 1) % (lastPage + 1))}>הבא</button>
 		</nav>
-		<span id="page-counter">{currentPage}</span>
+		<span id="page-counter">עמ' {currentPage + 1}</span>
 	</header>
 	<ul>
 		{#each pageItems as course}
