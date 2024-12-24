@@ -2,9 +2,12 @@
 	import type { Session, CourseInstance, Course } from '$lib/types';
 	import CourseInstanceC from './CourseInstance.svelte';
 
-	interface Props {
+	interface Props<OnclickParam = unknown> {
 		itemPerPage?: number;
-		items: (Course & { instances: (CourseInstance & { sessions: Session[] })[] })[];
+		items: (Course & {
+			onclick: (sessions: Session[]) => void;
+			instances: (CourseInstance & { sessions: Session[] })[];
+		})[];
 	}
 	const { itemPerPage = 10, items }: Props = $props();
 	let currentPage = $state(0);
@@ -31,7 +34,11 @@
 				<h3>{course.name}</h3>
 				<div class="instances">
 					{#each course.instances as instance}
-						<CourseInstanceC {instance} sessions={instance.sessions} />
+						<CourseInstanceC
+							{instance}
+							onclick={() => course.onclick(instance.sessions)}
+							sessions={instance.sessions}
+						/>
 					{/each}
 				</div>
 			</li>
@@ -51,6 +58,9 @@
 	header {
 		display: flex;
 		justify-content: space-between;
+	}
+	h3 {
+		white-space: wrap;
 	}
 	#page-counter {
 		background-color: var(--top-bg);
@@ -79,7 +89,6 @@
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		cursor: pointer;
 	}
 	button {
 		padding: 4px 8px;
