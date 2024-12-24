@@ -61,6 +61,7 @@
 		height: 100%;
 		width: 100%;
 		background-color: var(--bg);
+		border-radius: 12px;
 	}
 
 	th,
@@ -68,6 +69,20 @@
 		width: calc(100% / 8);
 		height: calc(100% * (1 / 16 - 1));
 		border: 1px solid #ccc;
+	}
+
+	thead th {
+		border-top: none;
+	}
+	th:last-child,
+	td:last-child {
+		border-left: none;
+	}
+	th:first-child {
+		border-right: none;
+	}
+	tbody tr:last-child :is(td, th) {
+		border-bottom: none;
 	}
 
 	th {
