@@ -59,12 +59,12 @@
 
 <style>
 	.container {
-		height: 100%;
+		max-height: 100%;
 		max-width: 100%;
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
-		padding: 16px;
+		flex-grow: 1;
 	}
 	header {
 		display: flex;
