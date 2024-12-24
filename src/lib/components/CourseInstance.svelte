@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Course, CourseInstance, Session } from '$lib/types';
+	import type { CourseInstance, Session } from '$lib/types';
 	interface Props {
 		instance: CourseInstance;
 		sessions: Session[];
