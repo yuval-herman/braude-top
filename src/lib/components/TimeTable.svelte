@@ -2,16 +2,25 @@
 	import { hoursList } from '$lib/utils';
 	import type { Item } from '../types';
 
-	const { items = [] }: { items?: Item[] } = $props();
+	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
 
 	const itemsByDay = $derived(
-		[...Array(6)].map((_, day) => items.filter((item) => item.day === day))
+		[...Array(6)].map((_, day) =>
+			items
+				.filter((item) => item.day === day)
+				.map((i) => ({ ...i, is_preview: false }))
+				.concat(
+					previewItems.filter((item) => item.day === day).map((i) => ({ ...i, is_preview: true }))
+				)
+		)
 	);
+	$inspect(itemsByDay);
 
 	const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
 	const hourFormatter = new Intl.DateTimeFormat('he-IL', {
 		timeStyle: 'short'
 	});
+
 	const date = new Date(0);
 	const getDay = (day: number) => (date.setDate(4 + day), dayFormatter.format(date));
 	const getHour = (hour: number, min: number) => (
@@ -32,6 +41,7 @@
 						<!-- svelte-ignore a11y_no_static_element_interactions -->
 						<a
 							class="item"
+							class:preview={item.is_preview}
 							style:top="calc({item.start} * (100% + 1px) - 1px)"
 							style:height="calc({item.end - item.start} * (100% + 1px) - 1px)"
 							onclick={() => items.splice(items.indexOf(item), 1)}
@@ -103,5 +113,8 @@
 		overflow: hidden;
 		white-space: wrap;
 		word-break: break-all;
+		&.preview {
+			opacity: 50%;
+		}
 	}
 </style>

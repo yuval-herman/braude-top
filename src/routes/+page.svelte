@@ -14,7 +14,6 @@
 		data.full_courses.filter((c) => c.name.toLowerCase().includes(searchQuery))
 	);
 	const selectedItems = $state<Item[]>([]);
-	const shownItems = $derived(selectedItems.concat(hoveredInstance.items));
 </script>
 
 <main>
@@ -34,7 +33,7 @@
 			}))}
 		/>
 	</div>
-	<TimeTable items={shownItems} />
+	<TimeTable items={selectedItems} preview={hoveredInstance.items} />
 </main>
 
 <style>
