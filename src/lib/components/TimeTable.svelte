@@ -14,7 +14,6 @@
 				)
 		)
 	);
-	$inspect(itemsByDay);
 
 	const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
 	const hourFormatter = new Intl.DateTimeFormat('he-IL', {
