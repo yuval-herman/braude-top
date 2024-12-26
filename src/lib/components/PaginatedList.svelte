@@ -89,7 +89,8 @@
 		background-color: var(--bg);
 		padding: 8px;
 		border-radius: 12px;
-		overflow: scroll;
+		overflow: auto;
+		scrollbar-width: none; /* TODO: make a manual scrollbar, chrome's scrollbar looks awful and safari does not support styling... */
 	}
 	li {
 		border: var(--top-bg) solid;
