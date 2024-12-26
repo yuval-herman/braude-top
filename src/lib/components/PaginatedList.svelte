@@ -1,15 +1,16 @@
 <script lang="ts">
-	import { hoveredInstance } from '$lib/state.svelte';
-	import type { Session, CourseInstance, Course } from '$lib/types';
+	import { hoveredInstance, selectedCourses } from '$lib/state.svelte';
+	import type { Session, CourseInstance, Course, FullCourse } from '$lib/types';
 	import { itemizeSession } from '$lib/utils';
 	import CourseInstanceC from './CourseInstance.svelte';
 
-	interface Props<OnclickParam = unknown> {
+	type SingleInstanceCourse = Course & CourseInstance & { sessions: Session[] };
+	type FullCourseWOnclick = FullCourse & {
+		onclick?: (course: FullCourse['instances'][number]) => void;
+	};
+	interface Props {
 		itemPerPage?: number;
-		items: (Course & {
-			onclick: (instance: CourseInstance, sessions: Session[]) => void;
-			instances: (CourseInstance & { sessions: Session[] })[];
-		})[];
+		items: SingleInstanceCourse[] | FullCourseWOnclick[];
 	}
 	const { itemPerPage = 10, items }: Props = $props();
 	let currentPage = $state(0);
@@ -35,22 +36,32 @@
 			<li>
 				<h3>{course.name}</h3>
 				<div class="instances">
-					{#each course.instances as instance}
-						<div
-							onpointerover={() =>
-								(hoveredInstance.items = instance.sessions.map((s) => ({
-									...itemizeSession(s),
-									value: { name: course.name, instructor: instance.instructor, room: s.room }
-								})))}
-							onpointerleave={() => (hoveredInstance.items = [])}
-						>
-							<CourseInstanceC
-								{instance}
-								onclick={() => course.onclick(instance, instance.sessions)}
-								sessions={instance.sessions}
-							/>
-						</div>
-					{/each}
+					{#if 'instances' in course}
+						{#each course.instances as instance}
+							<div
+								onpointerover={() =>
+									(hoveredInstance.items = instance.sessions.map((s) => ({
+										...itemizeSession(s),
+										value: { name: course.name, instructor: instance.instructor, room: s.room }
+									})))}
+								onpointerleave={() => (hoveredInstance.items = [])}
+							>
+								<CourseInstanceC
+									{instance}
+									onclick={course.onclick
+										? () => {
+												course.onclick!(instance);
+												const { instances, onclick, ...cleanCourse } = course;
+												selectedCourses.push({ ...cleanCourse, ...instance });
+											}
+										: undefined}
+									sessions={instance.sessions}
+								/>
+							</div>
+						{/each}
+					{:else}
+						<CourseInstanceC instance={course} sessions={course.sessions} />
+					{/if}
 				</div>
 			</li>
 		{/each}

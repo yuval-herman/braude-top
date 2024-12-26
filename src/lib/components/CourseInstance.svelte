@@ -3,7 +3,7 @@
 	interface Props {
 		instance: CourseInstance;
 		sessions: Session[];
-		onclick: () => void;
+		onclick?: () => void;
 	}
 	const { instance, sessions, onclick }: Props = $props();
 </script>

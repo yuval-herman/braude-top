@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
-	import { hoveredInstance } from '$lib/state.svelte.js';
+	import { hoveredInstance, selectedCourses } from '$lib/state.svelte.js';
 	import type { Item } from '$lib/types.js';
 	import { itemizeSession } from '$lib/utils.js';
 
@@ -14,25 +14,36 @@
 		data.full_courses.filter((c) => c.name.toLowerCase().includes(searchQuery))
 	);
 	const selectedItems = $state<Item[]>([]);
+
+	let tab = $state<'all' | 'my'>('all');
 </script>
 
 <main>
-	<div class="course-selection">
-		<input type="text" bind:value={searchQuery} />
-		<PaginatedList
-			items={filteredCourses.map((c) => ({
-				...c,
-				onclick(instance, sessions) {
-					sessions.forEach((s) =>
-						selectedItems.push({
-							...itemizeSession(s),
-							value: { name: c.name, room: s.room, instructor: instance.instructor }
-						})
-					);
-				}
-			}))}
-		/>
-	</div>
+	<aside>
+		<nav>
+			<button onclick={() => (tab = 'all')}>כל הקורסים</button>
+			<button onclick={() => (tab = 'my')}>הקורסים שלי</button>
+		</nav>
+		<div style:display={tab === 'all' ? 'contents' : 'none'}>
+			<input type="text" bind:value={searchQuery} />
+			<PaginatedList
+				items={filteredCourses.map((c) => ({
+					...c,
+					onclick(instance) {
+						instance.sessions.forEach((s) =>
+							selectedItems.push({
+								...itemizeSession(s),
+								value: { name: c.name, room: s.room, instructor: instance.instructor }
+							})
+						);
+					}
+				}))}
+			/>
+		</div>
+		<div style:display={tab === 'my' ? 'contents' : 'none'}>
+			<PaginatedList items={selectedCourses} />
+		</div>
+	</aside>
 	<TimeTable items={selectedItems} preview={hoveredInstance.items} />
 </main>
 
@@ -44,16 +55,26 @@
 		gap: 12px;
 		grid-template-columns: 1fr 2fr;
 	}
-	.course-selection {
+	aside {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
 		height: 100%;
 		overflow: hidden;
-	}
-	input {
+		background: var(--bg);
 		padding: 8px;
 		border-radius: 8px;
-		border: 1px solid #ccc;
+		& input {
+			padding: 8px;
+			border-radius: 8px;
+			border: 1px solid #ccc;
+		}
+		& nav {
+			display: flex;
+			gap: 4px;
+			& > * {
+				flex-grow: 1;
+			}
+		}
 	}
 </style>

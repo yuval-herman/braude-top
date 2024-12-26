@@ -38,3 +38,5 @@ export interface Course {
 	description: string;
 	syllabus_link: string;
 }
+
+export type FullCourse = Course & { instances: (CourseInstance & { sessions: Session[] })[] };
