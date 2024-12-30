@@ -44,15 +44,18 @@
 		margin: 0;
 		margin-bottom: 12px;
 	}
+	.container {
+		container-type: inline-size;
+	}
 	.instances {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		grid-auto-rows: 1fr;
 		gap: 8px;
-		@media (max-width: 500px) {
+		@container (max-width: 450px) {
 			grid-template-columns: repeat(2, 1fr);
 		}
-		@media (max-width: 350px) {
+		@container (max-width: 350px) {
 			grid-template-columns: 1fr;
 		}
 		* {
