@@ -1,4 +1,4 @@
-import type { Session } from './types';
+import type { CourseSession } from './types';
 
 export const hoursList = [
 	{ hour: 8, min: 30 },
@@ -25,7 +25,7 @@ function time2Index(timestring: string) {
 	return index === -1 ? undefined : index + 1;
 }
 
-export function itemizeSession({ week_day, start_time, end_time }: Session) {
+export function itemizeSession({ week_day, start_time, end_time }: CourseSession) {
 	const first_day = 1488;
 	const day = week_day.charCodeAt(0) - first_day;
 	const start = time2Index(start_time);

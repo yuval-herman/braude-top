@@ -2,7 +2,7 @@
 	import { hoveredInstance, selectedCourses } from '$lib/state.svelte';
 	import type { Session, CourseInstance, Course, FullCourse } from '$lib/types';
 	import { itemizeSession } from '$lib/utils';
-	import CourseInstanceC from './CourseInstance.svelte';
+	import CourseInstanceC from './CourseCard.svelte';
 
 	type SingleInstanceCourse = Course & CourseInstance & { sessions: Session[] };
 	type FullCourseWOnclick = FullCourse & {

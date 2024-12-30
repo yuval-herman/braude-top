@@ -9,6 +9,15 @@ export interface Item {
 	}; // Value to show in cell
 }
 
+export interface CourseSession {
+	course_instance_id: number;
+	semester: string;
+	week_day: string;
+	start_time: string;
+	end_time: string;
+	room: string;
+}
+
 export interface CourseInstance {
 	course_id: number;
 	course_instance_id: number;
@@ -21,14 +30,7 @@ export interface CourseInstance {
 	instructor: string;
 }
 
-export interface Session {
-	course_instance_id: number;
-	semester: string;
-	week_day: string;
-	start_time: string;
-	end_time: string;
-	room: string;
-}
+export type FullCourseInstance = CourseInstance & { sessions: CourseSession[] };
 
 export interface Course {
 	course_id: number;
@@ -39,4 +41,4 @@ export interface Course {
 	syllabus_link: string;
 }
 
-export type FullCourse = Course & { instances: (CourseInstance & { sessions: Session[] })[] };
+export type FullCourse = Course & { instances: FullCourseInstance[] };

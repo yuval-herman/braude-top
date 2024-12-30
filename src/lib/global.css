@@ -1,12 +1,51 @@
 :root {
-	--top-bg: #ccc;
-	--bg: #aaa;
+	/* Background colors */
+	--bg: #f8fafc; /* Main background, used for most of the page */
+	--bg-secondary: #d9eafd; /* Secondary background, for contrasting sections or cards */
+
+	/* Text colors */
+	--text: #0d1b2a; /* Primary text color, for the main content */
+	--text-secondary: #9aa6b2; /* Secondary text color, for less prominent text like subtitles or descriptions */
+
+	/* Primary action colors */
+	--primary: #bcccdc; /* Primary action/button color */
+	--primary-hover: #9aa6b2; /* Hover state for primary buttons */
+
+	/* Accent colors */
+	--accent: #3ddc97; /* Accent color for highlights or decorative elements */
+
+	/* Feedback colors */
+	--warn: #ff6b6b; /* Color for warning states */
+	--success: #4caf50; /* Color for success messages or indicators */
+	--info: #00bcd4; /* Color for informational messages or indicators */
+
+	/* Borders and shadows */
+	--border: #bcccdc; /* Border color for elements like cards or buttons */
+	--shadow: rgba(0, 0, 0, 0.1); /* Shadow color for elevated elements */
+
+	/* Dark theme adjustments */
+	&[data-theme='dark'] {
+		--bg: #0d1b2a;
+		--bg-secondary: #1b263b;
+		--text: #f8fafc;
+		--text-secondary: #bcccdc;
+		--primary: #d9eafd;
+		--primary-hover: #bcccdc;
+		--accent: #3ddc97;
+		--warn: #ff6b6b;
+		--success: #4caf50;
+		--info: #29bcd4;
+		--border: #9aa6b2;
+		--shadow: rgba(0, 0, 0, 0.5);
+	}
 }
 
 body {
 	direction: rtl;
 	margin: 0;
 	height: 100vh;
+	color: var(--text);
+	font-family: sans-serif;
 }
 * {
 	box-sizing: border-box;
