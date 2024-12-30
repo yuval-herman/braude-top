@@ -1,29 +1,19 @@
 <script lang="ts">
-	import { hoursList } from '$lib/utils';
+	import { getDay, getHour, hoursList } from '$lib/utils';
 	import type { Item } from '../types';
 
 	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
+	function splitToDays(items: Item[]) {
+		const daysArr = Array(6);
+		for (let i = 0; i < items.length; i++) {
+			if (!daysArr[items[i].day]) daysArr[items[i].day] = [];
+			daysArr[items[i].day].push(items[i]);
+		}
+		return daysArr;
+	}
 
 	const itemsByDay = $derived(
-		[...Array(6)].map((_, day) =>
-			items
-				.filter((item) => item.day === day)
-				.map((i) => ({ ...i, is_preview: false }))
-				.concat(
-					previewItems.filter((item) => item.day === day).map((i) => ({ ...i, is_preview: true }))
-				)
-		)
-	);
-
-	const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
-	const hourFormatter = new Intl.DateTimeFormat('he-IL', {
-		timeStyle: 'short'
-	});
-
-	const date = new Date(0);
-	const getDay = (day: number) => (date.setDate(4 + day), dayFormatter.format(date));
-	const getHour = (hour: number, min: number) => (
-		date.setHours(hour, min), hourFormatter.format(date)
+		splitToDays(items.concat(previewItems.map((p) => ({ ...p, is_preview: true }))))
 	);
 </script>
 
@@ -35,20 +25,16 @@
 				<th
 					>{getDay(day)}
 					{#each dayItems as item}
-						<!-- svelte-ignore a11y_missing_attribute -->
-						<!-- svelte-ignore a11y_click_events_have_key_events -->
-						<!-- svelte-ignore a11y_no_static_element_interactions -->
-						<a
+						<div
 							class="item"
 							class:preview={item.is_preview}
 							style:top="calc({item.start} * (100% + 1px) - 1px)"
 							style:height="calc({item.end - item.start} * (100% + 1px) - 1px)"
-							onclick={() => items.splice(items.indexOf(item), 1)}
 						>
 							{item.value.name}
 							{item.value.instructor}
 							{item.value.room}
-						</a>
+						</div>
 					{/each}
 				</th>
 			{/each}
@@ -108,7 +94,6 @@
 		left: 0;
 		border: 1px solid black;
 		background-color: var(--top-bg);
-		cursor: pointer;
 		overflow: hidden;
 		white-space: wrap;
 		word-break: break-all;
