@@ -26,19 +26,7 @@
 		</nav>
 		<div style:display={tab === 'all' ? 'contents' : 'none'}>
 			<input type="text" bind:value={searchQuery} />
-			<PaginatedList
-				items={filteredCourses.map((c) => ({
-					...c,
-					onclick(instance) {
-						instance.sessions.forEach((s) =>
-							selectedItems.push({
-								...itemizeSession(s),
-								value: { name: c.name, room: s.room, instructor: instance.instructor }
-							})
-						);
-					}
-				}))}
-			/>
+			<PaginatedList items={filteredCourses} />
 		</div>
 		<div style:display={tab === 'my' ? 'contents' : 'none'}>
 			<PaginatedList items={selectedCourses} />
