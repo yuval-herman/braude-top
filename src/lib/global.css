@@ -1,30 +1,28 @@
 :root {
-	/* Background colors */
-	--bg: #f8fafc; /* Main background, used for most of the page */
-	--bg-secondary: #d9eafd; /* Secondary background, for contrasting sections or cards */
+	--bg: #fff;
+	--bg-secondary: #111f45;
 
-	/* Text colors */
-	--text: #0d1b2a; /* Primary text color, for the main content */
-	--text-secondary: #9aa6b2; /* Secondary text color, for less prominent text like subtitles or descriptions */
+	--text: #000;
+	--text-secondary: #555;
 
-	/* Primary action colors */
-	--primary: #bcccdc; /* Primary action/button color */
-	--primary-hover: #9aa6b2; /* Hover state for primary buttons */
+	--primary: #7194f4;
+	--primary-hover: #a5bbf8;
 
-	/* Accent colors */
-	--accent: #3ddc97; /* Accent color for highlights or decorative elements */
+	--secondary: #8ba0da;
+	--secondary-hover: #b5c3e8;
 
-	/* Feedback colors */
-	--warn: #ff6b6b; /* Color for warning states */
-	--success: #4caf50; /* Color for success messages or indicators */
-	--info: #00bcd4; /* Color for informational messages or indicators */
+	--accent: #124ced;
 
-	/* Borders and shadows */
-	--border: #bcccdc; /* Border color for elements like cards or buttons */
-	--shadow: rgba(0, 0, 0, 0.1); /* Shadow color for elevated elements */
+	--warn: #ff6b6b;
+	--success: #4caf50;
+	--info: #d0dbfb;
 
-	/* Dark theme adjustments */
-	&[data-theme='dark'] {
+	--border: #bcccdc;
+	--shadow: rgba(0, 0, 0, 0.1);
+
+	/* TODO */
+	/* color-scheme: light dark; */
+	/* @media (prefers-color-scheme: dark) {
 		--bg: #0d1b2a;
 		--bg-secondary: #1b263b;
 		--text: #f8fafc;
@@ -37,7 +35,7 @@
 		--info: #29bcd4;
 		--border: #9aa6b2;
 		--shadow: rgba(0, 0, 0, 0.5);
-	}
+	} */
 }
 
 body {

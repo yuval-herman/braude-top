@@ -116,7 +116,7 @@
 			min-width: 0px;
 		}
 		.instance {
-			background: var(--primary);
+			background: var(--info);
 			border-radius: 8px;
 			padding: 8px;
 			border: var(--border) 1px solid;
@@ -130,11 +130,12 @@
 			}
 			.sessions {
 				border-radius: 8px;
-				background: var(--bg-secondary);
+				border: dashed var(--border) 4px;
 				overflow: hidden;
 				.session {
+					background: var(--secondary);
 					&:nth-child(odd) {
-						background: color-mix(in srgb, var(--bg-secondary), black 5%);
+						background: var(--secondary-hover);
 					}
 					&:not(:last-child) {
 						border-bottom: var(--border) 2px solid;

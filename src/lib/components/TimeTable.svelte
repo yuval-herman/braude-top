@@ -97,6 +97,7 @@
 	}
 
 	.item {
+		border-radius: 16px;
 		text-align: center;
 		font-size: small;
 		z-index: 1;
@@ -105,8 +106,8 @@
 		display: grid;
 		place-items: center;
 		left: 0;
-		border: var(--border-width) solid black;
-		background-color: var(--bg-secondary);
+		border: var(--border-width) solid var(--bg-secondary);
+		background-color: var(--secondary);
 		overflow: hidden;
 		white-space: wrap;
 		word-break: break-all;

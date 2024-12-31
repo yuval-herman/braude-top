@@ -35,6 +35,7 @@
 
 <style>
 	main {
+		background: var(--bg);
 		padding: 12px;
 		height: 100%;
 		display: grid;

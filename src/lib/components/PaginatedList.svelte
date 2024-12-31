@@ -64,7 +64,7 @@
 			display: flex;
 			gap: calc(var(--gap) / 2);
 			flex-direction: column;
-			background-color: var(--bg);
+			background-color: var(--primary);
 			list-style-type: none;
 			margin: 0;
 			flex-grow: 1;
@@ -75,7 +75,6 @@
 			padding-right: 12px;
 			li {
 				flex-shrink: 0;
-				border: var(--top-bg) solid;
 				&:not(:last-child) {
 					padding-bottom: calc(var(--gap) / 2);
 					border-bottom: solid var(--border) 1px;
