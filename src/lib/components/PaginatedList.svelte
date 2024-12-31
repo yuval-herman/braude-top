@@ -4,9 +4,10 @@
 
 	interface Props {
 		itemPerPage?: number;
+		mode?: 'all' | 'my';
 		items: FullCourse[];
 	}
-	const { itemPerPage = 10, items }: Props = $props();
+	const { itemPerPage = 10, items, mode = 'all' }: Props = $props();
 	let currentPage = $state(0);
 
 	const lastPage = $derived(Math.floor(items.length / itemPerPage));
@@ -28,7 +29,7 @@
 	<ul>
 		{#each pageItems as course}
 			<li>
-				<CourseCard {course} />
+				<CourseCard {course} {mode} />
 			</li>
 		{/each}
 	</ul>

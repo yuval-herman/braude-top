@@ -27,7 +27,7 @@
 			<PaginatedList items={filteredCourses} />
 		</div>
 		<div style:display={tab === 'my' ? 'contents' : 'none'}>
-			<PaginatedList items={selectedCourses} />
+			<PaginatedList items={selectedCourses} mode="my" />
 		</div>
 	</aside>
 	<TimeTable items={selectedCourses.flatMap(itemizeCourse)} preview={hoveredInstance.items} />

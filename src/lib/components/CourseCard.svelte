@@ -7,18 +7,33 @@
 	} from '$lib/state.svelte';
 	import type { CourseInstance, FullCourse } from '$lib/types';
 	import { itemizeCourse } from '$lib/utils';
+
 	interface Props {
 		course: FullCourse;
+		mode?: 'all' | 'my';
 	}
-	const { course }: Props = $props();
+	const { course, mode = 'all' }: Props = $props();
 	function instanceInSelected(instance: CourseInstance) {
 		return selectedCourses.some((c) =>
 			c.instances.some((i) => i.course_instance_id === instance.course_instance_id)
 		);
 	}
+
+	// warn when the course registration is incomplete
+	const warn = $derived.by(
+		() =>
+			mode === 'my' &&
+			!course.instances.every(
+				(i) =>
+					!i.co_requirements ||
+					(JSON.parse(i.co_requirements) as number[]).some((req) =>
+						selectedCourses.find((c) => c.instances.find((i) => i.course_instance_id === req))
+					)
+			)
+	);
 </script>
 
-<div class="container">
+<div class="container" class:warn>
 	<h3>{course.name}</h3>
 	<div class="instances">
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
@@ -56,18 +71,35 @@
 			</div>
 		{/each}
 	</div>
+	{#if warn}
+		<div class="info">
+			<h4 class="warn">הרישום לקורס אינו שלם!</h4>
+			<span>כדי להשלים את הרישום לקורס עליך להירשם גם לאחד מקורסי התרגול</span>
+		</div>
+	{/if}
 </div>
 
 <style>
-	.warn {
+	.warn:is(span, h4) {
 		color: var(--warn);
 	}
-	h3 {
+	.info {
+		color: var(--text-secondary);
+		font-style: italic;
+		margin: 4px;
+	}
+	div.warn {
+		border: double 6px var(--warn);
+	}
+	h3,
+	h4 {
 		margin: 0;
 		margin-bottom: 12px;
 	}
 	.container {
 		container-type: inline-size;
+		border-radius: 8px;
+		padding: 4px;
 	}
 	.instances {
 		display: grid;
