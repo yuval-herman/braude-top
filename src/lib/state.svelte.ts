@@ -3,8 +3,6 @@ import type { FullCourse, Item } from './types';
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
 export const selectedCourses = $state<FullCourse[]>([]);
 export function addSelectedCourse(course: FullCourse) {
-	console.log('add');
-
 	const exitingCourse = selectedCourses.find((c) => c.course_id === course.course_id);
 
 	if (exitingCourse) {
@@ -19,8 +17,6 @@ export function addSelectedCourse(course: FullCourse) {
 	}
 }
 export function removeSelectedCourse(course: FullCourse) {
-	console.log('remove');
-
 	const i = selectedCourses.findIndex((c) => c.course_id === course.course_id);
 	if (i === -1) throw new Error('Tried to remove non exiting course');
 	const exitingCourse = selectedCourses[i];
