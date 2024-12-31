@@ -1,6 +1,7 @@
 # WIP
 
 - timetable item design
+- different colors for different types of instances
 
 # Planned
 
