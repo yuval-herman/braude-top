@@ -1,7 +1,7 @@
-# Today
+# WIP
 
-- ability to select courses to a list and show it separately to plan instances
 - show when course registration in incomplete (need to scrape)
+- better styling all around (need to think of better ux/ui)
 
 # Planned
 
@@ -11,7 +11,6 @@
 - course searching filters
 - export timetable
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
-- better styling all around (need to think of better ux/ui)
 
 # Considering
 
