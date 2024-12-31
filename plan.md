@@ -1,7 +1,6 @@
 # WIP
 
-- show when course registration in incomplete (need to scrape)
-- better styling all around (need to think of better ux/ui)
+- timetable item design
 
 # Planned
 
