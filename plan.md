@@ -2,7 +2,6 @@
 
 - ability to select courses to a list and show it separately to plan instances
 - show when course registration in incomplete (need to scrape)
-- items should not be removed through clicking in the timetable itself
 
 # Planned
 
