@@ -12,7 +12,7 @@ export const getCourses = (() => {
 /** Retrieves all the courses that have sessions*/
 export const getNonEmptyCourses = (() => {
 	const stmt = db.prepare<[], Course>(
-		'SELECT distinct course_id, name, year, credit, description, syllabus_link from courses \
+		'SELECT distinct c.* from courses c \
 		join course_instances using (course_id) \
 		join sessions USING (course_instance_id)'
 	);
@@ -30,7 +30,7 @@ export const getCourseInstances = (() => {
 /** Retrieves all the course instances for a given course id that have sessions*/
 export const getNonEmptyCourseInstances = (() => {
 	const stmt = db.prepare<number, CourseInstance>(
-		'SELECT distinct course_id, course_instance_id, instructor, type, hours, group_name, is_full, language, extra_notes from course_instances \
+		'SELECT distinct c.* from course_instances c \
 		JOIN sessions USING (course_instance_id) \
 		WHERE course_id = ?'
 	);

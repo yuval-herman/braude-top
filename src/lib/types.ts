@@ -24,13 +24,12 @@ export interface CourseInstance {
 	type: string;
 	hours: number;
 	group_name: string;
-	is_full: number;
+	is_full: 0 | 1;
 	language: string;
 	extra_notes?: string;
 	instructor: string;
+	co_requirements?: string;
 }
-
-export type FullCourseInstance = CourseInstance & { sessions: CourseSession[] };
 
 export interface Course {
 	course_id: number;
@@ -41,4 +40,5 @@ export interface Course {
 	syllabus_link: string;
 }
 
+export type FullCourseInstance = CourseInstance & { sessions: CourseSession[] };
 export type FullCourse = Course & { instances: FullCourseInstance[] };
