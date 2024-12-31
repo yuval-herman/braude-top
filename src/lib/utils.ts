@@ -32,6 +32,7 @@ export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 			const day = week_day.charCodeAt(0) - first_day;
 			const start = time2Index(start_time);
 			const end = time2Index(end_time);
+
 			if (!start || !end) {
 				throw new Error('start or end time were not found in hourList');
 			}
