@@ -1,6 +1,12 @@
 <script lang="ts">
-	import { addSelectedCourse, removeSelectedCourse, selectedCourses } from '$lib/state.svelte';
+	import {
+		addSelectedCourse,
+		removeSelectedCourse,
+		selectedCourses,
+		hoveredInstance
+	} from '$lib/state.svelte';
 	import type { CourseInstance, FullCourse } from '$lib/types';
+	import { itemizeCourse } from '$lib/utils';
 	interface Props {
 		course: FullCourse;
 	}
@@ -25,6 +31,9 @@
 					instanceInSelected(instance)
 						? removeSelectedCourse({ ...course, instances: [instance] })
 						: addSelectedCourse({ ...course, instances: [instance] })}
+				onmouseenter={() =>
+					(hoveredInstance.items = itemizeCourse({ ...course, instances: [instance] }))}
+				onmouseleave={() => (hoveredInstance.items.length = 0)}
 			>
 				<div class="instance-details">
 					<span>{instance.type}</span>
