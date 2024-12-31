@@ -2,8 +2,7 @@
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { hoveredInstance, selectedCourses } from '$lib/state.svelte.js';
-	import type { Item } from '$lib/types.js';
-	import { itemizeSession } from '$lib/utils.js';
+	import { itemizeCourse } from '$lib/utils.js';
 
 	const { data } = $props();
 	let searchQuery = $state('');
@@ -13,7 +12,6 @@
 	const filteredCourses = $derived(
 		data.full_courses.filter((c) => c.name.toLowerCase().includes(searchQuery))
 	);
-	const selectedItems = $state<Item[]>([]);
 
 	let tab = $state<'all' | 'my'>('all');
 </script>
@@ -32,7 +30,7 @@
 			<PaginatedList items={selectedCourses} />
 		</div>
 	</aside>
-	<TimeTable items={selectedItems} preview={hoveredInstance.items} />
+	<TimeTable items={selectedCourses.flatMap(itemizeCourse)} preview={hoveredInstance.items} />
 </main>
 
 <style>

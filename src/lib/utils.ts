@@ -1,4 +1,4 @@
-import type { CourseSession } from './types';
+import type { CourseSession, FullCourse, Item } from './types';
 
 export const hoursList = [
 	{ hour: 8, min: 30 },
@@ -25,19 +25,19 @@ function time2Index(timestring: string) {
 	return index === -1 ? undefined : index + 1;
 }
 
-export function itemizeSession({ week_day, start_time, end_time }: CourseSession) {
+export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 	const first_day = 1488;
-	const day = week_day.charCodeAt(0) - first_day;
-	const start = time2Index(start_time);
-	const end = time2Index(end_time);
-	if (!start || !end) {
-		throw new Error('start or end time were not found in hourList');
-	}
-	return {
-		day,
-		start,
-		end
-	};
+	return instances.flatMap(({ sessions, instructor }) =>
+		sessions.map(({ week_day, start_time, end_time, room }): Item => {
+			const day = week_day.charCodeAt(0) - first_day;
+			const start = time2Index(start_time);
+			const end = time2Index(end_time);
+			if (!start || !end) {
+				throw new Error('start or end time were not found in hourList');
+			}
+			return { day, end, start, value: { name, room, instructor } };
+		})
+	);
 }
 
 const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });

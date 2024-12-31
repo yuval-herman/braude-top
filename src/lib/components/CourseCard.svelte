@@ -1,18 +1,23 @@
 <script lang="ts">
+	import { selectedCourses } from '$lib/state.svelte';
 	import type { FullCourse } from '$lib/types';
 	interface Props {
 		course: FullCourse;
-		// onclick?: () => void;
 	}
 	const { course }: Props = $props();
-	$inspect(course);
 </script>
 
 <div class="container">
 	<h3>{course.name}</h3>
 	<div class="instances">
+		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		{#each course.instances as instance, i}
-			<div class="instance" style="z-index: {course.instances.length - i};">
+			<!-- svelte-ignore a11y_click_events_have_key_events -->
+			<div
+				class="instance"
+				style="z-index: {course.instances.length - i};"
+				onclick={() => selectedCourses.push({ ...course, instances: [instance] })}
+			>
 				<div class="instance-details">
 					<span>{instance.type}</span>
 					<span>של</span>
