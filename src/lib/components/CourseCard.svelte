@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { selectedCourses } from '$lib/state.svelte';
+	import { addSelectedCourse } from '$lib/state.svelte';
 	import type { FullCourse } from '$lib/types';
 	interface Props {
 		course: FullCourse;
@@ -16,7 +16,7 @@
 			<div
 				class="instance"
 				style="z-index: {course.instances.length - i};"
-				onclick={() => selectedCourses.push({ ...course, instances: [instance] })}
+				onclick={() => addSelectedCourse({ ...course, instances: [instance] })}
 			>
 				<div class="instance-details">
 					<span>{instance.type}</span>
