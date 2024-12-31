@@ -1,10 +1,15 @@
 <script lang="ts">
-	import { addSelectedCourse } from '$lib/state.svelte';
-	import type { FullCourse } from '$lib/types';
+	import { addSelectedCourse, removeSelectedCourse, selectedCourses } from '$lib/state.svelte';
+	import type { CourseInstance, FullCourse } from '$lib/types';
 	interface Props {
 		course: FullCourse;
 	}
 	const { course }: Props = $props();
+	function instanceInSelected(instance: CourseInstance) {
+		return selectedCourses.some((c) =>
+			c.instances.some((i) => i.course_instance_id === instance.course_instance_id)
+		);
+	}
 </script>
 
 <div class="container">
@@ -16,7 +21,10 @@
 			<div
 				class="instance"
 				style="z-index: {course.instances.length - i};"
-				onclick={() => addSelectedCourse({ ...course, instances: [instance] })}
+				onclick={() =>
+					instanceInSelected(instance)
+						? removeSelectedCourse({ ...course, instances: [instance] })
+						: addSelectedCourse({ ...course, instances: [instance] })}
 			>
 				<div class="instance-details">
 					<span>{instance.type}</span>
