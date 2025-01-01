@@ -1,4 +1,4 @@
-import type { Course, CourseInstance, CourseSession } from '$lib/types';
+import type { Course, CourseExam, CourseInstance, CourseSession } from '$lib/types';
 import Database from 'better-sqlite3';
 
 const db = new Database('src/lib/courses.db');
@@ -42,5 +42,11 @@ export const getInstancesSession = (() => {
 	const stmt = db.prepare<number, CourseSession>(
 		'SELECT * from sessions where course_instance_id = ?'
 	);
+	return (id: number | string) => stmt.all(id as number);
+})();
+
+/** Retrieves all the exams for a given course instance id */
+export const getInstancesExams = (() => {
+	const stmt = db.prepare<number, CourseExam>('SELECT * from exams WHERE course_instance_id = ?');
 	return (id: number | string) => stmt.all(id as number);
 })();

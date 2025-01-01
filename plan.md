@@ -1,6 +1,7 @@
 # WIP
 
 - show exams
+- improve loading times
 
 # Planned
 
@@ -10,8 +11,12 @@
 - course searching filters
 - export timetable
 
+- animations
 - dark color scheme
 - handle multiple sessions in the same time slot (timetable)
+- update favicon
+
+- testing!!!
 
 # Considering
 

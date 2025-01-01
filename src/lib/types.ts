@@ -19,6 +19,14 @@ export interface CourseSession {
 	room: string;
 }
 
+export interface CourseExam {
+	course_instance_id: number;
+	exam_round: number;
+	course_type: string;
+	date: string;
+	exam_type: string;
+}
+
 export interface CourseInstance {
 	course_id: number;
 	course_instance_id: number;
