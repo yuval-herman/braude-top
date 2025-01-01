@@ -53,9 +53,10 @@
 					instanceInSelected(instance)
 						? removeSelectedCourse({ ...course, instances: [instance] })
 						: addSelectedCourse({ ...course, instances: [instance] })}
-				onmouseenter={() =>
-					(hoveredInstance.items = itemizeCourse({ ...course, instances: [instance] }))}
-				onmouseleave={() => (hoveredInstance.items.length = 0)}
+				onmouseenter={mode === 'all'
+					? () => (hoveredInstance.items = itemizeCourse({ ...course, instances: [instance] }))
+					: undefined}
+				onmouseleave={mode === 'all' ? () => (hoveredInstance.items.length = 0) : undefined}
 			>
 				{#if mode === 'my'}
 					<Indicator color={css.colors.str2color(course.name)} />

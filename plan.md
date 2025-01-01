@@ -1,7 +1,5 @@
 # WIP
 
-- fixe bug where preview item remains when deleted
-
 # Planned
 
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
