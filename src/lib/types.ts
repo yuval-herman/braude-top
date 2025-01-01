@@ -8,6 +8,7 @@ export interface Item {
 		instructor: string;
 		name: string;
 	}; // Value to show in cell
+	is_preview?: boolean;
 }
 
 export interface CourseSession {

@@ -4,7 +4,7 @@
 
 	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
 	function splitToDays(items: Item[]) {
-		const daysArr = Array(6);
+		const daysArr: Item[][] = Array(6);
 		for (let i = 0; i < items.length; i++) {
 			if (!daysArr[items[i].day]) daysArr[items[i].day] = [];
 			daysArr[items[i].day].push(items[i]);
@@ -17,7 +17,7 @@
 	);
 </script>
 
-{#snippet Item(item: Item & { is_preview: boolean }, index: number)}
+{#snippet Item(item: Item, index: number)}
 	<div
 		class="item"
 		class:preview={item.is_preview}
@@ -49,7 +49,7 @@
 					{#each itemsByDay as dayItems, i}
 						<td>
 							{#each dayItems as item}
-								{@render Item(item, 6 - i)}
+								{@render Item(item, 10 * (6 - i) + item.start)}
 							{/each}
 						</td>
 					{/each}
