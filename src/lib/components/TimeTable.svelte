@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getDay, getHour, hoursList, instanceColors } from '$lib/utils';
 	import type { Item } from '../types';
+	import Indicator from './Indicator.svelte';
 
 	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
 	function splitToDays(items: Item[]) {
@@ -26,6 +27,7 @@
 		style:z-index={index}
 		style:background={instanceColors.get(item.type)}
 	>
+		<Indicator color={item.colorIndicator} />
 		{item.value.name}
 		{item.value.instructor}
 		{item.value.room}

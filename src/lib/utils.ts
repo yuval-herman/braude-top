@@ -36,7 +36,14 @@ export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 			if (!start || !end) {
 				throw new Error('start or end time were not found in hourList');
 			}
-			return { day, end, start, type, value: { name, room, instructor } };
+			return {
+				day,
+				end,
+				start,
+				type,
+				value: { name, room, instructor },
+				colorIndicator: colors.str2color(name)
+			};
 		})
 	);
 }
@@ -50,16 +57,52 @@ const date = new Date(0);
 export function getDay(day: number) {
 	return date.setDate(4 + day), dayFormatter.format(date);
 }
+
 export function getHour(hour: number, min: number) {
 	return date.setHours(hour, min), hourFormatter.format(date);
 }
 
+export function randomNumber(min: number, max: number) {
+	return Math.random() * (max - min) + min;
+}
+
+type Range = { from: number; to: number };
 const colors = {
 	colorMix(a: string, b: string, percent: number = 50) {
 		return `color-mix(in srgb, ${a}, ${b} ${percent}%)`;
 	},
 	lighten(color: string, percent: number = 15) {
 		return colors.colorMix(color, 'white', percent);
+	},
+	randomColor(
+		hueMax: Range = { from: 0, to: 360 },
+		satMax: Range = { from: 0, to: 100 },
+		lightMax: Range = { from: 0, to: 100 }
+	) {
+		const hue = randomNumber(hueMax.from, hueMax.to);
+		const sat = randomNumber(satMax.from, satMax.to);
+		const light = randomNumber(lightMax.from, lightMax.to);
+		return `hsl(${hue}, ${sat}%, ${light}%)`;
+	},
+	str2color(str: string) {
+		let hash = 0;
+		str.split('').forEach((char) => {
+			hash = char.charCodeAt(0) + ((hash << 5) - hash);
+		});
+		let color = '#';
+		for (let i = 0; i < 3; i++) {
+			const value = (hash >> (i * 8)) & 0xff;
+			color += value.toString(16).padStart(2, '0');
+		}
+		return color;
+	},
+	num2color(num: number) {
+		let hex = num.toString(16);
+		if (hex.length !== 6) {
+			const shift = 6 - hex.length;
+			hex = (num * 10 ** shift).toString(16);
+		}
+		return '#' + hex;
 	}
 };
 

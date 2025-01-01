@@ -1,7 +1,6 @@
 # WIP
 
-- add small indicator for which course an item in the timetable belongs
-- add keys to each blocks
+- fixe bug where preview item remains when deleted
 
 # Planned
 

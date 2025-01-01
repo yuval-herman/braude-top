@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Indicator from './Indicator.svelte';
+
 	import {
 		addSelectedCourse,
 		hoveredInstance,
@@ -55,6 +57,9 @@
 					(hoveredInstance.items = itemizeCourse({ ...course, instances: [instance] }))}
 				onmouseleave={() => (hoveredInstance.items.length = 0)}
 			>
+				{#if mode === 'my'}
+					<Indicator color={css.colors.str2color(course.name)} />
+				{/if}
 				<div class="instance-details">
 					<span>{instance.type}</span>
 					<span>של</span>
@@ -151,6 +156,7 @@
 			}
 		}
 		.instance {
+			position: relative;
 			--instance-background: var(--primary);
 			--instance-background-hover: color-mix(in srgb, var(--primary), white 15%);
 			background: var(--instance-background);

@@ -9,6 +9,7 @@ export interface Item {
 		name: string;
 	}; // Value to show in cell
 	is_preview?: boolean;
+	colorIndicator: string;
 }
 
 export interface CourseSession {
