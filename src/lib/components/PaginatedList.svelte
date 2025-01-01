@@ -17,15 +17,17 @@
 </script>
 
 <div class="container">
-	<header>
-		<nav>
-			<button onclick={() => (currentPage--, currentPage < 0 && (currentPage = lastPage))}
-				>הקודם</button
-			>
-			<button onclick={() => (currentPage = (currentPage + 1) % (lastPage + 1))}>הבא</button>
-		</nav>
-		<span id="page-counter">עמ' {currentPage + 1}</span>
-	</header>
+	{#if lastPage != 0}
+		<header>
+			<nav>
+				<button onclick={() => (currentPage--, currentPage < 0 && (currentPage = lastPage))}
+					>הקודם</button
+				>
+				<button onclick={() => (currentPage = (currentPage + 1) % (lastPage + 1))}>הבא</button>
+			</nav>
+			<span id="page-counter">עמ' {currentPage + 1}</span>
+		</header>
+	{/if}
 	<ul>
 		{#each pageItems as course}
 			<li>
