@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getDay, getHour, hoursList } from '$lib/utils';
+	import { getDay, getHour, hoursList, instanceColors } from '$lib/utils';
 	import type { Item } from '../types';
 
 	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
@@ -24,6 +24,7 @@
 		style:top="calc({item.start - 1} * (100% + 1px))"
 		style:height="calc({item.end - item.start} * (100% + 1px))"
 		style:z-index={index}
+		style:background={instanceColors.get(item.type)}
 	>
 		{item.value.name}
 		{item.value.instructor}

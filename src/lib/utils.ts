@@ -1,4 +1,4 @@
-import type { CourseSession, FullCourse, Item } from './types';
+import type { FullCourse, Item } from './types';
 
 export const hoursList = [
 	{ hour: 8, min: 30 },
@@ -27,7 +27,7 @@ function time2Index(timestring: string) {
 
 export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 	const first_day = 1488;
-	return instances.flatMap(({ sessions, instructor }) =>
+	return instances.flatMap(({ sessions, instructor, type }) =>
 		sessions.map(({ week_day, start_time, end_time, room }): Item => {
 			const day = week_day.charCodeAt(0) - first_day;
 			const start = time2Index(start_time);
@@ -36,7 +36,7 @@ export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 			if (!start || !end) {
 				throw new Error('start or end time were not found in hourList');
 			}
-			return { day, end, start, value: { name, room, instructor } };
+			return { day, end, start, type, value: { name, room, instructor } };
 		})
 	);
 }
@@ -53,3 +53,21 @@ export function getDay(day: number) {
 export function getHour(hour: number, min: number) {
 	return date.setHours(hour, min), hourFormatter.format(date);
 }
+
+const colors = {
+	colorMix(a: string, b: string, percent: number = 50) {
+		return `color-mix(in srgb, ${a}, ${b} ${percent}%)`;
+	},
+	lighten(color: string, percent: number = 15) {
+		return colors.colorMix(color, 'white', percent);
+	}
+};
+
+export const css = { colors } as const;
+export const instanceColors = new Map(
+	Object.entries({
+		הרצאה: colors.lighten('var(--primary)'),
+		תרגיל: colors.colorMix('var(--primary)', 'PaleGreen', 50),
+		מעבדה: colors.colorMix('var(--primary)', 'Aquamarine', 50)
+	})
+);

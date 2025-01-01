@@ -1,12 +1,12 @@
 <script lang="ts">
 	import {
 		addSelectedCourse,
+		hoveredInstance,
 		removeSelectedCourse,
-		selectedCourses,
-		hoveredInstance
+		selectedCourses
 	} from '$lib/state.svelte';
 	import type { CourseInstance, FullCourse } from '$lib/types';
-	import { itemizeCourse } from '$lib/utils';
+	import { instanceColors, itemizeCourse } from '$lib/utils';
 
 	interface Props {
 		course: FullCourse;
@@ -42,6 +42,7 @@
 			<div
 				class="instance"
 				style="z-index: {course.instances.length - i};"
+				style:background={instanceColors.get(instance.type)}
 				onclick={() =>
 					instanceInSelected(instance)
 						? removeSelectedCourse({ ...course, instances: [instance] })
@@ -82,6 +83,7 @@
 <style>
 	.warn:is(span, h4) {
 		color: var(--warn);
+		font-weight: bolder;
 	}
 	.info {
 		color: var(--text-secondary);
@@ -117,7 +119,7 @@
 			min-width: 0px;
 		}
 		.instance {
-background: var(--primary);
+			background: var(--primary);
 			border-radius: 8px;
 			padding: 8px;
 			border: var(--border) 1px solid;
@@ -126,11 +128,10 @@ background: var(--primary);
 			&:hover {
 			}
 			.instance-details {
-text-shadow: 2px 2px 1px var(--shadow);
 				margin-bottom: 8px;
 			}
 			.sessions {
-color: black;
+				color: black;
 				border-radius: 8px;
 				border: dashed var(--border) 4px;
 				overflow: hidden;

@@ -1,10 +1,8 @@
 # WIP
 
-- new color scheme
-- different colors for different types of instances
-
 # Planned
 
+- dark color scheme
 - get more info on course מחלקה (need to scrape)
 - show exams
 - another panel for extra info about a course
