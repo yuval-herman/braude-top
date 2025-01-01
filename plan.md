@@ -1,7 +1,6 @@
 # WIP
 
 - show exams
-- improve loading times
 
 # Planned
 
