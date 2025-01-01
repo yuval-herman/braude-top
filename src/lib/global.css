@@ -1,17 +1,15 @@
 :root {
-	--bg: #fff;
-	--bg-secondary: #111f45;
+	--bg: #e0e6eb;
+
+	--contrast: #f1e3dd;
 
 	--text: #000;
-	--text-secondary: #555;
+	--text-secondary: #444;
 
-	--primary: #7194f4;
-	--primary-hover: #a5bbf8;
+	--primary: #8d9db6;
+	/* --primary-hover: #a5bbf8; */
 
-	--secondary: #8ba0da;
-	--secondary-hover: #b5c3e8;
-
-	--accent: #124ced;
+	--accent: #667292;
 
 	--warn: #ff6b6b;
 	--success: #4caf50;

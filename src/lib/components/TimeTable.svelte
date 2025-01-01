@@ -64,6 +64,7 @@
 
 <style>
 	table {
+		background: var(--bg);
 		box-shadow: 5px 5px 5px 5px var(--shadow);
 		border-collapse: collapse;
 		table-layout: fixed;
@@ -98,21 +99,23 @@
 	}
 
 	.item {
-		background: #fff;
-		box-shadow: 5px 5px 5px var(--shadow);
-		border-radius: 16px;
-		text-align: center;
-		font-size: small;
-		z-index: 1;
-		position: absolute;
-		width: 100%;
 		display: grid;
 		place-items: center;
+
+		position: absolute;
+		width: 100%;
 		left: 0;
-		border: var(--border-width) solid var(--bg-secondary);
+		padding: 6px;
+
+		text-align: center;
+		font-size: small;
 		overflow: hidden;
 		white-space: wrap;
 		word-break: break-all;
+
+		background: var(--primary);
+		border-radius: 16px;
+		box-shadow: 5px 5px 5px var(--shadow);
 		&.preview {
 			opacity: 50%;
 		}

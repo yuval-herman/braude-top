@@ -72,12 +72,8 @@
 			padding-right: 12px;
 			li {
 				flex-shrink: 0;
-				box-shadow: 5px 5px 5px 5px var(--shadow);
+				box-shadow: 5px 5px 5px var(--shadow);
 				border-radius: 8px;
-				&:not(:last-child) {
-					padding-bottom: calc(var(--gap) / 2);
-					border-bottom: solid var(--border) 1px;
-				}
 			}
 		}
 	}

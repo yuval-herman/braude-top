@@ -99,7 +99,8 @@
 	.container {
 		container-type: inline-size;
 		border-radius: 8px;
-		padding: 4px;
+		padding: 12px;
+		background: var(--bg);
 	}
 	.instances {
 		display: grid;
@@ -116,6 +117,7 @@
 			min-width: 0px;
 		}
 		.instance {
+background: var(--primary);
 			border-radius: 8px;
 			padding: 8px;
 			border: var(--border) 1px solid;
@@ -124,15 +126,16 @@
 			&:hover {
 			}
 			.instance-details {
+text-shadow: 2px 2px 1px var(--shadow);
 				margin-bottom: 8px;
 			}
 			.sessions {
+color: black;
 				border-radius: 8px;
 				border: dashed var(--border) 4px;
 				overflow: hidden;
 				.session {
-					&:nth-child(odd) {
-					}
+					background: var(--contrast);
 					&:not(:last-child) {
 						border-bottom: var(--border) 2px solid;
 					}

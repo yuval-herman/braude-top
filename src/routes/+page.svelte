@@ -39,7 +39,7 @@
 		height: 100%;
 		display: grid;
 		gap: 12px;
-		grid-template-columns: 1fr 2fr;
+		grid-template-columns: 1fr 3fr;
 	}
 	aside {
 		display: flex;
