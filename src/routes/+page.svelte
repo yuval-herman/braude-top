@@ -35,7 +35,6 @@
 
 <style>
 	main {
-		background: var(--bg);
 		padding: 12px;
 		height: 100%;
 		display: grid;
@@ -48,7 +47,6 @@
 		gap: 8px;
 		height: 100%;
 		overflow: hidden;
-		background: var(--bg);
 		padding: 8px;
 		border-radius: 8px;
 		& input {

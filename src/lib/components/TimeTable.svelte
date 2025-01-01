@@ -17,12 +17,13 @@
 	);
 </script>
 
-{#snippet Item(item: Item & { is_preview: boolean })}
+{#snippet Item(item: Item & { is_preview: boolean }, index: number)}
 	<div
 		class="item"
 		class:preview={item.is_preview}
 		style:top="calc({item.start - 1} * (100% + 1px))"
 		style:height="calc({item.end - item.start} * (100% + 1px))"
+		style:z-index={index}
 	>
 		{item.value.name}
 		{item.value.instructor}
@@ -44,10 +45,10 @@
 			<tr>
 				<th>{getHour(hour.hour, hour.min)}</th>
 				{#if row === 0}
-					{#each itemsByDay as dayItems}
+					{#each itemsByDay as dayItems, i}
 						<td>
 							{#each dayItems as item}
-								{@render Item(item)}
+								{@render Item(item, 6 - i)}
 							{/each}
 						</td>
 					{/each}
@@ -63,11 +64,11 @@
 
 <style>
 	table {
+		box-shadow: 5px 5px 5px 5px var(--shadow);
 		border-collapse: collapse;
 		table-layout: fixed;
 		height: 100%;
 		width: 100%;
-		background-color: var(--bg);
 		border-radius: 12px;
 		--border-width: 1px;
 	}
@@ -97,6 +98,8 @@
 	}
 
 	.item {
+		background: #fff;
+		box-shadow: 5px 5px 5px var(--shadow);
 		border-radius: 16px;
 		text-align: center;
 		font-size: small;
@@ -107,7 +110,6 @@
 		place-items: center;
 		left: 0;
 		border: var(--border-width) solid var(--bg-secondary);
-		background-color: var(--secondary);
 		overflow: hidden;
 		white-space: wrap;
 		word-break: break-all;

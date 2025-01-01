@@ -50,11 +50,9 @@
 			button {
 				padding: 4px 8px;
 				border-radius: 4px;
-				background-color: var(--top-bg);
 			}
 		}
 		#page-counter {
-			background-color: var(--top-bg);
 			border-radius: 4px;
 			padding: 4px;
 			margin: 4px;
@@ -64,7 +62,6 @@
 			display: flex;
 			gap: calc(var(--gap) / 2);
 			flex-direction: column;
-			background-color: var(--primary);
 			list-style-type: none;
 			margin: 0;
 			flex-grow: 1;
@@ -75,6 +72,8 @@
 			padding-right: 12px;
 			li {
 				flex-shrink: 0;
+				box-shadow: 5px 5px 5px 5px var(--shadow);
+				border-radius: 8px;
 				&:not(:last-child) {
 					padding-bottom: calc(var(--gap) / 2);
 					border-bottom: solid var(--border) 1px;
