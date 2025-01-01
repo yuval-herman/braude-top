@@ -1,6 +1,7 @@
 # WIP
 
-- show exams
+- add small indicator for which course an item in the timetable belongs
+- add keys to each blocks
 
 # Planned
 

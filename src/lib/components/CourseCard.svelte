@@ -71,6 +71,19 @@
 				</div>
 			</div>
 		{/each}
+		{#if mode === 'my' && course.instances.some((i) => i.exams.length > 0)}
+			<div class="exams">
+				{#each course.instances as { exams }}
+					{#each exams as exam}
+						<p>
+							<span>{exam.exam_type},</span>
+							<span>מועד {exam.exam_round},</span>
+							<span>ב-{exam.date}</span>
+						</p>
+					{/each}
+				{/each}
+			</div>
+		{/if}
 	</div>
 	{#if warn}
 		<div class="info">
@@ -107,7 +120,6 @@
 	.instances {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		grid-auto-rows: 1fr;
 		gap: 8px;
 		@container (max-width: 450px) {
 			grid-template-columns: repeat(2, 1fr);
@@ -118,12 +130,25 @@
 		* {
 			min-width: 0px;
 		}
-		.instance {
-			background: var(--primary);
+		.exams {
+			background: var(--info);
+		}
+		.instance,
+		.exams {
 			border-radius: 8px;
 			padding: 8px;
-			border: var(--border) 1px solid;
 			box-shadow: 5px 5px 5px var(--shadow);
+			p {
+				margin: 4px;
+				&:not(:last-child) {
+					padding-bottom: 4px;
+					border-bottom: var(--border) 2px solid;
+				}
+			}
+		}
+		.instance {
+			background: var(--primary);
+			border: var(--border) 1px solid;
 			cursor: pointer;
 			&:hover {
 			}
