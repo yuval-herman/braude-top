@@ -1,11 +1,18 @@
 import type { FullCourse, Item } from './types';
+import { browser } from '$app/environment';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
-export const selectedCourses = $state<FullCourse[]>([]);
+const storageKeys = { selectedCourses: 'selected' };
+export const selectedCourses = $state<FullCourse[]>(
+	(() => {
+		if (!browser) return [];
+		const cache = localStorage.getItem(storageKeys.selectedCourses);
+		return cache ? JSON.parse(cache) : [];
+	})()
+);
 
 export function addSelectedCourse(course: FullCourse) {
 	const exitingCourse = selectedCourses.find((c) => c.course_id === course.course_id);
-
 	if (exitingCourse) {
 		const exitingInstancesIds = exitingCourse.instances.map((i) => i.course_instance_id);
 		exitingCourse.instances.push(
@@ -16,6 +23,7 @@ export function addSelectedCourse(course: FullCourse) {
 	} else {
 		selectedCourses.push(course);
 	}
+	browser && localStorage.setItem(storageKeys.selectedCourses, JSON.stringify(selectedCourses));
 }
 export function removeSelectedCourse(course: FullCourse) {
 	const i = selectedCourses.findIndex((c) => c.course_id === course.course_id);
@@ -31,4 +39,5 @@ export function removeSelectedCourse(course: FullCourse) {
 	} else {
 		exitingCourse.instances = instances;
 	}
+	browser && localStorage.setItem(storageKeys.selectedCourses, JSON.stringify(selectedCourses));
 }

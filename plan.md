@@ -1,7 +1,5 @@
 # WIP
 
-- save selectedItems in storage
-
 # Planned
 
 - mobile layout
