@@ -6,7 +6,7 @@
 		selectedCourses
 	} from '$lib/state.svelte';
 	import type { CourseInstance, FullCourse } from '$lib/types';
-	import { instanceColors, itemizeCourse } from '$lib/utils';
+	import { css, instanceColors, itemizeCourse } from '$lib/utils';
 
 	interface Props {
 		course: FullCourse;
@@ -42,7 +42,11 @@
 			<div
 				class="instance"
 				style="z-index: {course.instances.length - i};"
-				style:background={instanceColors.get(instance.type)}
+				style:--instance-background={instanceColors.get(instance.type)}
+				style:--instance-background-hover={(() => {
+					const color = instanceColors.get(instance.type);
+					return color && css.colors.lighten(color);
+				})()}
 				onclick={() =>
 					instanceInSelected(instance)
 						? removeSelectedCourse({ ...course, instances: [instance] })
@@ -147,10 +151,13 @@
 			}
 		}
 		.instance {
-			background: var(--primary);
+			--instance-background: var(--primary);
+			--instance-background-hover: color-mix(in srgb, var(--primary), white 15%);
+			background: var(--instance-background);
 			border: var(--border) 1px solid;
 			cursor: pointer;
 			&:hover {
+				background: var(--instance-background-hover);
 			}
 			.instance-details {
 				margin-bottom: 8px;
