@@ -1,7 +1,5 @@
 # WIP
 
-- grey out selected sessions from PaginatedList in 'all' mode
-
 # Planned
 
 - testing!!!

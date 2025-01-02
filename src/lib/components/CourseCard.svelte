@@ -33,6 +33,18 @@
 					)
 			)
 	);
+	function getColor(instance: CourseInstance, hover = false) {
+		let color = instanceColors.get(instance.type) ?? (instanceColors.get('default') as string);
+		if (
+			mode === 'all' &&
+			selectedCourses.find((c) =>
+				c.instances.find((i) => i.course_instance_id === instance.course_instance_id)
+			)
+		) {
+			color = css.colors.saturate(color, -25);
+		}
+		return hover ? css.colors.lighten(color) : color;
+	}
 </script>
 
 <div class="container" class:warn>
@@ -44,11 +56,8 @@
 			<div
 				class="instance"
 				style="z-index: {course.instances.length - i};"
-				style:--instance-background={instanceColors.get(instance.type)}
-				style:--instance-background-hover={(() => {
-					const color = instanceColors.get(instance.type);
-					return color && css.colors.lighten(color);
-				})()}
+				style:--instance-background={getColor(instance)}
+				style:--instance-background-hover={getColor(instance, true)}
 				onclick={() =>
 					instanceInSelected(instance)
 						? removeSelectedCourse({ ...course, instances: [instance] })
@@ -159,8 +168,6 @@
 		}
 		.instance {
 			position: relative;
-			--instance-background: var(--primary);
-			--instance-background-hover: color-mix(in srgb, var(--primary), white 15%);
 			background: var(--instance-background);
 			border: var(--border) 1px solid;
 			cursor: pointer;

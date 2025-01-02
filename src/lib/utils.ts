@@ -71,8 +71,11 @@ const colors = {
 	colorMix(a: string, b: string, percent: number = 50) {
 		return `color-mix(in srgb, ${a}, ${b} ${percent}%)`;
 	},
-	lighten(color: string, percent: number = 15) {
-		return colors.colorMix(color, 'white', percent);
+	lighten(color: string, percent: number = 10) {
+		return `hsl(from ${color} h s calc(l + ${percent}))`;
+	},
+	saturate(color: string, percent: number = 10) {
+		return `hsl(from ${color} h calc(s + ${percent}) l)`;
 	},
 	randomColor(
 		hueMax: Range = { from: 0, to: 360 },
@@ -111,6 +114,7 @@ export const instanceColors = new Map(
 	Object.entries({
 		הרצאה: colors.lighten('var(--primary)'),
 		תרגיל: colors.colorMix('var(--primary)', 'PaleGreen', 50),
-		מעבדה: colors.colorMix('var(--primary)', 'Aquamarine', 50)
+		מעבדה: colors.colorMix('var(--primary)', 'Aquamarine', 50),
+		default: 'var(--primary)'
 	})
 );
