@@ -62,9 +62,6 @@
 			.hidden {
 				display: none;
 			}
-			nav {
-				height: 10rem;
-			}
 		}
 	}
 	.selector {
@@ -81,6 +78,7 @@
 			border: 1px solid #ccc;
 		}
 		& nav {
+			min-height: 2rem;
 			display: flex;
 			gap: 6px;
 			& > * {
