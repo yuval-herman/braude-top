@@ -1,9 +1,11 @@
 # WIP
 
-- testing!!!
+- make deployment script
+- grey out selected sessions from PaginatedList in 'all' mode
 
 # Planned
 
+- testing!!!
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
 - another panel for extra info about a course
 
