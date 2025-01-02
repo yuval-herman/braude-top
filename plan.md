@@ -1,5 +1,7 @@
 # WIP
 
+- testing!!!
+
 # Planned
 
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
@@ -11,8 +13,6 @@
 - animations
 - handle multiple sessions in the same time slot (timetable)
 - update favicon
-
-- testing!!!
 
 # Considering
 
