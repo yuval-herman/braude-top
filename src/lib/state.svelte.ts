@@ -41,3 +41,5 @@ export function removeSelectedCourse(course: FullCourse) {
 	}
 	browser && localStorage.setItem(storageKeys.selectedCourses, JSON.stringify(selectedCourses));
 }
+
+export const sidebar = $state({ isOpen: false });

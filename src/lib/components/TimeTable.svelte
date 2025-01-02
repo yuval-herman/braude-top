@@ -1,4 +1,7 @@
 <script lang="ts">
+	import MenuButton from './MenuButton.svelte';
+
+	import { sidebar } from '$lib/state.svelte';
 	import { getDay, getHour, hoursList, instanceColors } from '$lib/utils';
 	import type { Item } from '../types';
 	import Indicator from './Indicator.svelte';
@@ -37,7 +40,7 @@
 <table>
 	<thead>
 		<tr>
-			<th></th>
+			<th><MenuButton /></th>
 			{#each { length: 6 } as _, day}
 				<th>{getDay(day)} </th>
 			{/each}
@@ -46,7 +49,7 @@
 	<tbody>
 		{#each hoursList as hour, row}
 			<tr>
-				<th>{getHour(hour.hour, hour.min)}</th>
+				<th class="hour">{getHour(hour.hour, hour.min)}</th>
 				{#if row === 0}
 					{#each itemsByDay as dayItems, i}
 						<td>
@@ -97,6 +100,7 @@
 		border-bottom: none;
 	}
 
+	th,
 	td {
 		position: relative;
 	}
@@ -121,6 +125,15 @@
 		box-shadow: 5px 5px 5px var(--shadow);
 		&.preview {
 			opacity: 50%;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.hour {
+			font-size: small;
+		}
+		.item {
+			font-size: x-small;
 		}
 	}
 </style>

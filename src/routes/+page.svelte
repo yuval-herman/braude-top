@@ -1,7 +1,8 @@
 <script lang="ts">
+	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
-	import { hoveredInstance, selectedCourses } from '$lib/state.svelte.js';
+	import { hoveredInstance, selectedCourses, sidebar } from '$lib/state.svelte.js';
 	import { itemizeCourse } from '$lib/utils.js';
 
 	const { data } = $props();
@@ -14,11 +15,15 @@
 	);
 
 	let tab = $state<'all' | 'my'>('all');
+	$inspect(sidebar.isOpen);
 </script>
 
 <main>
-	<aside>
+	<div class="selector" class:hidden={!sidebar.isOpen}>
 		<nav>
+			<div class="menu-button">
+				<MenuButton />
+			</div>
 			<button onclick={() => (tab = 'all')}>כל הקורסים</button>
 			<button onclick={() => (tab = 'my')}>הקורסים שלי</button>
 		</nav>
@@ -29,19 +34,41 @@
 		<div style:display={tab === 'my' ? 'contents' : 'none'}>
 			<PaginatedList items={selectedCourses} mode="my" />
 		</div>
-	</aside>
-	<TimeTable items={selectedCourses.flatMap(itemizeCourse)} preview={hoveredInstance.items} />
+	</div>
+	<div class="table-container" class:hidden={sidebar.isOpen}>
+		<TimeTable items={selectedCourses.flatMap(itemizeCourse)} preview={hoveredInstance.items} />
+	</div>
 </main>
 
 <style>
+	.menu-button {
+		display: none;
+		position: relative;
+	}
 	main {
 		padding: 12px;
 		height: 100%;
 		display: grid;
 		gap: 12px;
 		grid-template-columns: 1fr 3fr;
+		.table-container {
+			display: contents;
+		}
+		@media (max-width: 770px) {
+			display: block;
+			font-size: medium;
+			.menu-button {
+				display: block;
+			}
+			.hidden {
+				display: none;
+			}
+			nav {
+				height: 10rem;
+			}
+		}
 	}
-	aside {
+	.selector {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
@@ -56,7 +83,7 @@
 		}
 		& nav {
 			display: flex;
-			gap: 4px;
+			gap: 6px;
 			& > * {
 				flex-grow: 1;
 			}
