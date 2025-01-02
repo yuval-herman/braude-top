@@ -35,11 +35,11 @@ export interface CourseInstance {
 	type: string;
 	hours: number;
 	group_name: string;
-	is_full: 0 | 1;
-	language: string;
-	extra_notes?: string;
+	is_full: number;
+	language: string | null;
+	extra_notes: string | null;
 	instructor: string;
-	co_requirements?: string;
+	co_requirements: string | null;
 }
 
 export interface Course {
@@ -48,7 +48,7 @@ export interface Course {
 	year: string;
 	credit: number;
 	description: string;
-	syllabus_link: string;
+	syllabus_link: string | null;
 }
 
 export type FullCourseInstance = CourseInstance & {

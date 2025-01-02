@@ -85,6 +85,7 @@
 			<div class="exams">
 				{#each course.instances as { exams }}
 					{#each exams as exam}
+						{@debug exam}
 						<p>
 							<span>{exam.exam_type},</span>
 							<span>מועד {exam.exam_round},</span>

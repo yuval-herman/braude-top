@@ -15,7 +15,6 @@
 	);
 
 	let tab = $state<'all' | 'my'>('all');
-	$inspect(sidebar.isOpen);
 </script>
 
 <main>
