@@ -1,6 +1,5 @@
 # WIP
 
-- make deployment script
 - grey out selected sessions from PaginatedList in 'all' mode
 
 # Planned
