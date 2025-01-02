@@ -17,5 +17,3 @@ export const load: PageServerLoad = async () => {
 	}));
 	return { full_courses };
 };
-
-export const prerender = true;
