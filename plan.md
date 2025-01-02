@@ -11,7 +11,6 @@
 
 - animations
 - handle multiple sessions in the same time slot (timetable)
-- update favicon
 
 # Considering
 
