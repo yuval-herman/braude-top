@@ -1,7 +1,7 @@
 import type { Course, CourseExam, CourseInstance, CourseSession } from '$lib/types';
 import Database from 'better-sqlite3';
 
-const db = new Database('src/lib/courses.db');
+const db = new Database('data/courses.db');
 
 /** Retrieves all the courses */
 export const getCourses = (() => {
