@@ -14,6 +14,9 @@
 	const pageItems = $derived(
 		items.slice(itemPerPage * currentPage, itemPerPage * (currentPage + 1))
 	);
+	$effect(() => {
+		if (pageItems.length === 0) currentPage = 0;
+	});
 </script>
 
 <div class="container">
