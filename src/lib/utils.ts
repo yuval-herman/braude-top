@@ -48,6 +48,24 @@ export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 	);
 }
 
+export function itemizeCourseList(courses: FullCourse[]): Item[] {
+	const items = courses.flatMap(itemizeCourse);
+	for (let i = 0; i < items.length; i++) {
+		const { start: istart, end: iend, day: iday } = items[i];
+		for (let j = i + 1; j < items.length; j++) {
+			const { start: jstart, end: jend, day: jday } = items[j];
+			if (
+				((istart <= jstart && jstart < iend) || (istart < jend && jstart < istart)) &&
+				iday === jday
+			) {
+				items[i].is_overlapping = true;
+				items[j].is_overlapping = true;
+			}
+		}
+	}
+	return items;
+}
+
 const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
 const hourFormatter = new Intl.DateTimeFormat('he-IL', {
 	timeStyle: 'short'

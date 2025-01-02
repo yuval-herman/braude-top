@@ -1,10 +1,8 @@
 <script lang="ts">
-	import MenuButton from './MenuButton.svelte';
-
-	import { sidebar } from '$lib/state.svelte';
 	import { getDay, getHour, hoursList, instanceColors } from '$lib/utils';
 	import type { Item } from '../types';
 	import Indicator from './Indicator.svelte';
+	import MenuButton from './MenuButton.svelte';
 
 	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
 	function splitToDays(items: Item[]) {
@@ -19,6 +17,7 @@
 	const itemsByDay = $derived(
 		splitToDays(items.concat(previewItems.map((p) => ({ ...p, is_preview: true }))))
 	);
+	// $inspect(items);
 </script>
 
 {#snippet Item(item: Item, index: number)}
@@ -28,7 +27,7 @@
 		style:top="calc({item.start - 1} * (100% + 1px))"
 		style:height="calc({item.end - item.start} * (100% + 1px))"
 		style:z-index={index}
-		style:background={instanceColors.get(item.type)}
+		style:background={item.is_overlapping ? 'red' : instanceColors.get(item.type)}
 	>
 		<Indicator color={item.colorIndicator} />
 		{item.value.name}

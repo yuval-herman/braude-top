@@ -8,8 +8,9 @@ export interface Item {
 		instructor: string;
 		name: string;
 	}; // Value to show in cell
-	is_preview?: boolean;
 	colorIndicator: string;
+	is_preview?: boolean;
+	is_overlapping?: boolean;
 }
 
 export interface CourseSession {

@@ -3,7 +3,7 @@
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { hoveredInstance, selectedCourses, sidebar } from '$lib/state.svelte.js';
-	import { itemizeCourse } from '$lib/utils.js';
+	import { itemizeCourseList } from '$lib/utils.js';
 
 	const { data } = $props();
 	let searchQuery = $state('');
@@ -35,7 +35,7 @@
 		</div>
 	</div>
 	<div class="table-container" class:hidden={sidebar.isOpen}>
-		<TimeTable items={selectedCourses.flatMap(itemizeCourse)} preview={hoveredInstance.items} />
+		<TimeTable items={itemizeCourseList(selectedCourses)} preview={hoveredInstance.items} />
 	</div>
 </main>
 
