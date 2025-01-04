@@ -14,7 +14,7 @@
 		data.full_courses.filter((c) => c.name.toLowerCase().includes(searchQuery))
 	);
 
-	let tab = $state<'all' | 'my'>('my');
+	let tab = $state<'all' | 'my'>('all');
 </script>
 
 <main>
