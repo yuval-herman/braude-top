@@ -14,7 +14,7 @@
 		data.full_courses.filter((c) => c.name.toLowerCase().includes(searchQuery))
 	);
 
-	let tab = $state<'all' | 'my'>('all');
+	let tab = $state<'all' | 'my'>('my');
 </script>
 
 <main>
@@ -31,6 +31,9 @@
 			<PaginatedList items={filteredCourses} />
 		</div>
 		<div style:display={tab === 'my' ? 'contents' : 'none'}>
+			{#if selectedCourses.length === 0}
+				<p class="warn">כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b></p>
+			{/if}
 			<PaginatedList items={selectedCourses} mode="my" />
 		</div>
 	</div>
@@ -40,10 +43,12 @@
 </main>
 
 <style>
-	.menu-button {
-		display: none;
-		position: relative;
+	.warn {
+		color: var(--warn);
+		text-align: center;
+		margin: 1.5rem;
 	}
+
 	main {
 		padding: 12px;
 		height: 100%;
@@ -85,5 +90,9 @@
 				flex-grow: 1;
 			}
 		}
+	}
+	.menu-button {
+		display: none;
+		position: relative;
 	}
 </style>

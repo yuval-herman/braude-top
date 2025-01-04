@@ -1,6 +1,6 @@
 # WIP
 
-- add message when moving to 'my' tab without selecting any courses
+- add `version` field to local storage, handle older versions
 
 # Planned
 
