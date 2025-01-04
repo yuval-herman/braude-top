@@ -7,7 +7,6 @@
 		removeSelectedCourse,
 		selectedCourses
 	} from '$lib/state.svelte';
-	import type { CourseInstance, FullCourse } from '$lib/types';
 	import { css, instanceColors, itemizeCourse } from '$lib/utils';
 
 	interface Props {

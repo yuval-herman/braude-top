@@ -1,4 +1,3 @@
-import type { FullCourse, Item } from './types';
 import { browser } from '$app/environment';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });

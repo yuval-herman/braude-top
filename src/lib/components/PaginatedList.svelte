@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { FullCourse } from '$lib/types';
 	import CourseCard from './CourseCard.svelte';
 
 	interface Props {

@@ -1,5 +1,3 @@
-import type { FullCourse, Item } from './types';
-
 export const hoursList = [
 	{ hour: 8, min: 30 },
 	{ hour: 9, min: 30 },

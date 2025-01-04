@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { getDay, getHour, hoursList, instanceColors } from '$lib/utils';
-	import type { Item } from '../types';
 	import Indicator from './Indicator.svelte';
 	import MenuButton from './MenuButton.svelte';
 

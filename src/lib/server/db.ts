@@ -1,4 +1,3 @@
-import type { Course, CourseExam, CourseInstance, CourseSession } from '$lib/types';
 import Database from 'better-sqlite3';
 
 const db = new Database('data/courses.db');

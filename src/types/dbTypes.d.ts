@@ -1,4 +1,4 @@
-export interface Item {
+interface Item {
 	day: number; // Day of the week 1-6
 	start: number; // Start hour as an integer (1=8:30, 2=9:30, etc...)
 	end: number; // End hour as an integer
@@ -13,7 +13,7 @@ export interface Item {
 	is_overlapping?: boolean;
 }
 
-export interface CourseSession {
+interface CourseSession {
 	course_instance_id: number;
 	semester: string;
 	week_day: string;
@@ -22,7 +22,7 @@ export interface CourseSession {
 	room: string;
 }
 
-export interface CourseExam {
+interface CourseExam {
 	course_instance_id: number;
 	exam_round: number;
 	course_type: string;
@@ -30,7 +30,7 @@ export interface CourseExam {
 	exam_type: string;
 }
 
-export interface CourseInstance {
+interface CourseInstance {
 	course_id: number;
 	course_instance_id: number;
 	type: string;
@@ -43,7 +43,7 @@ export interface CourseInstance {
 	co_requirements: string | null;
 }
 
-export interface Course {
+interface Course {
 	course_id: number;
 	name: string;
 	year: string;
@@ -52,8 +52,8 @@ export interface Course {
 	syllabus_link: string | null;
 }
 
-export type FullCourseInstance = CourseInstance & {
+type FullCourseInstance = CourseInstance & {
 	sessions: CourseSession[];
 	exams: CourseExam[];
 };
-export type FullCourse = Course & { instances: FullCourseInstance[] };
+type FullCourse = Course & { instances: FullCourseInstance[] };
