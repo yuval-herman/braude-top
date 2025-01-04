@@ -1,8 +1,11 @@
 # WIP
 
+- add message when moving to 'my' tab without selecting any courses
+
 # Planned
 
 - testing!!!
+
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
 - another panel for extra info about a course
 
@@ -10,7 +13,6 @@
 - export timetable
 
 - animations
-- handle multiple sessions in the same time slot (timetable)
 
 # Considering
 
