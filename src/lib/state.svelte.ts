@@ -1,12 +1,22 @@
-import { browser } from '$app/environment';
+import { browser, version } from '$app/environment';
+import { TypedLocalStorage } from './storage';
+
+if (browser) {
+	const localVersion = TypedLocalStorage.getItem('version');
+	if (localVersion && localVersion < version && TypedLocalStorage.hasKey('selected')) {
+		alert('האתר עודכן ולכן המערכת השמורה נמחקה');
+		TypedLocalStorage.removeItem('selected');
+	}
+	TypedLocalStorage.setItem('version', version);
+}
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
-const storageKeys = { selectedCourses: 'selected' };
+
 export const selectedCourses = $state<FullCourse[]>(
 	(() => {
 		if (!browser) return [];
-		const cache = localStorage.getItem(storageKeys.selectedCourses);
-		return cache ? JSON.parse(cache) : [];
+		const cache = TypedLocalStorage.getItem('selected');
+		return cache || [];
 	})()
 );
 
@@ -22,7 +32,7 @@ export function addSelectedCourse(course: FullCourse) {
 	} else {
 		selectedCourses.push(course);
 	}
-	browser && localStorage.setItem(storageKeys.selectedCourses, JSON.stringify(selectedCourses));
+	browser && TypedLocalStorage.setItem('selected', selectedCourses);
 }
 export function removeSelectedCourse(course: FullCourse) {
 	const i = selectedCourses.findIndex((c) => c.course_id === course.course_id);
@@ -38,7 +48,7 @@ export function removeSelectedCourse(course: FullCourse) {
 	} else {
 		exitingCourse.instances = instances;
 	}
-	browser && localStorage.setItem(storageKeys.selectedCourses, JSON.stringify(selectedCourses));
+	browser && TypedLocalStorage.setItem('selected', selectedCourses);
 }
 
 export const sidebar = $state({ isOpen: false });

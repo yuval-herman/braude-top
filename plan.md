@@ -1,7 +1,5 @@
 # WIP
 
-- add `version` field to local storage, handle older versions
-
 # Planned
 
 - testing!!!
