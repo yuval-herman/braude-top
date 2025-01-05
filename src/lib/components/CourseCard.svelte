@@ -8,6 +8,7 @@
 		selectedCourses
 	} from '$lib/state.svelte';
 	import { css, instanceColors, itemizeCourse } from '$lib/utils';
+	import { fade, slide } from 'svelte/transition';
 
 	interface Props {
 		course: FullCourse;
@@ -50,7 +51,7 @@
 	<h3>{course.name}</h3>
 	<div class="instances">
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		{#each course.instances as instance, i}
+		{#each course.instances as instance, i (instance.course_instance_id)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class="instance"
@@ -65,6 +66,7 @@
 					? () => (hoveredInstance.items = itemizeCourse({ ...course, instances: [instance] }))
 					: undefined}
 				onmouseleave={mode === 'all' ? () => (hoveredInstance.items.length = 0) : undefined}
+				transition:slide
 			>
 				{#if mode === 'my'}
 					<Indicator color={css.colors.str2color(course.name)} />
@@ -91,9 +93,9 @@
 		{/each}
 		{#if mode === 'my' && course.instances.some((i) => i.exams.length > 0)}
 			<div class="exams">
-				{#each course.instances as { exams }}
-					{#each exams as exam}
-						<p>
+				{#each course.instances as { exams, course_instance_id } (course_instance_id)}
+					{#each exams as exam (exam.date)}
+						<p transition:slide|global>
 							<span>{exam.exam_type},</span>
 							<span>מועד {exam.exam_round},</span>
 							<span>ב-{exam.date}</span>
@@ -104,7 +106,7 @@
 		{/if}
 	</div>
 	{#if warn}
-		<div class="info">
+		<div class="info" transition:fade>
 			<h4 class="warn">הרישום לקורס אינו שלם!</h4>
 			<span>כדי להשלים את הרישום לקורס עליך להירשם גם לאחד מקורסי התרגול</span>
 		</div>
@@ -130,6 +132,7 @@
 		margin-bottom: 12px;
 	}
 	.container {
+		transition: border 250ms;
 		container-type: inline-size;
 		border-radius: 8px;
 		padding: 12px;
@@ -138,7 +141,6 @@
 	.instances {
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
-		gap: 8px;
 		@container (max-width: 450px) {
 			grid-template-columns: repeat(2, 1fr);
 		}
@@ -153,6 +155,7 @@
 		}
 		.instance,
 		.exams {
+			margin: 4px;
 			border-radius: 8px;
 			padding: 8px;
 			box-shadow: 5px 5px 5px var(--shadow);
@@ -169,6 +172,7 @@
 			background: var(--instance-background);
 			border: var(--border) 1px solid;
 			cursor: pointer;
+			transition: all 0.25s;
 			&:hover {
 				background: var(--instance-background-hover);
 			}
