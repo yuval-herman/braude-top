@@ -1,6 +1,9 @@
 import { browser, version } from '$app/environment';
 import { TypedLocalStorage } from './storage';
 
+export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
+export const sidebar = $state({ isOpen: false });
+
 if (browser) {
 	const localVersion = TypedLocalStorage.getItem('version');
 	if (localVersion && localVersion < version && TypedLocalStorage.hasKey('selected')) {
@@ -9,8 +12,6 @@ if (browser) {
 	}
 	TypedLocalStorage.setItem('version', version);
 }
-
-export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
 
 export const selectedCourses = $state<FullCourse[]>(
 	(() => {
@@ -30,7 +31,7 @@ export function addSelectedCourse(course: FullCourse) {
 			)
 		);
 	} else {
-		selectedCourses.push(course);
+		selectedCourses.push(structuredClone(course));
 	}
 	browser && TypedLocalStorage.setItem('selected', selectedCourses);
 }
@@ -50,5 +51,3 @@ export function removeSelectedCourse(course: FullCourse) {
 	}
 	browser && TypedLocalStorage.setItem('selected', selectedCourses);
 }
-
-export const sidebar = $state({ isOpen: false });
