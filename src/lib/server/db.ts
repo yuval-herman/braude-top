@@ -8,6 +8,23 @@ export const getCourses = (() => {
 	return () => stmt.all();
 })();
 
+/** Retrieves full course by id */
+export const getFullCourse = (() => {
+	const courseStmt = db.prepare<number, Course>('SELECT * from courses WHERE course_id = ?');
+	return (id: number | string): FullCourse | undefined => {
+		const course = courseStmt.get(id as number);
+		if (course === undefined) return;
+
+		const instances: FullCourseInstance[] = getCourseInstances(id as number).map((instance) => {
+			const sessions = getInstancesSession(instance.course_instance_id);
+			const exams = getInstancesExams(instance.course_instance_id);
+			return { ...instance, sessions, exams };
+		});
+
+		return { ...course, instances };
+	};
+})();
+
 /** Retrieves all the courses that have sessions*/
 export const getNonEmptyCourses = (() => {
 	const stmt = db.prepare<[], Course>(
