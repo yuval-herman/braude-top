@@ -4,6 +4,7 @@
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { hoveredInstance, selectedCourses, sidebar } from '$lib/state.svelte.js';
 	import { itemizeCourseList } from '$lib/utils.js';
+	import { fade, slide } from 'svelte/transition';
 
 	const { data } = $props();
 	let searchQuery = $state('');
@@ -32,7 +33,9 @@
 		</div>
 		<div style:display={tab === 'my' ? 'contents' : 'none'}>
 			{#if selectedCourses.length === 0}
-				<p class="warn">כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b></p>
+				<p class="warn" transition:slide>
+					כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b>
+				</p>
 			{/if}
 			<PaginatedList items={selectedCourses} mode="my" />
 		</div>

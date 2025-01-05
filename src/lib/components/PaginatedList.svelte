@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fade, slide } from 'svelte/transition';
 	import CourseCard from './CourseCard.svelte';
 
 	interface Props {
@@ -31,8 +32,8 @@
 		</header>
 	{/if}
 	<ul>
-		{#each pageItems as course}
-			<li>
+		{#each pageItems as course (course.course_id)}
+			<li transition:slide>
 				<CourseCard {course} {mode} />
 			</li>
 		{/each}
@@ -62,20 +63,16 @@
 			margin: 4px;
 		}
 		ul {
-			--gap: 64px;
-			display: flex;
-			gap: calc(var(--gap) / 2);
-			flex-direction: column;
+			flex-grow: 1;
 			list-style-type: none;
 			margin: 0;
-			flex-grow: 1;
 			border-radius: 12px;
 			overflow-y: scroll;
 			scrollbar-width: none; /* TODO: make a manual scrollbar, chrome's scrollbar looks awful and safari does not support styling... */
 			padding: 8px;
 			padding-right: 12px;
 			li {
-				flex-shrink: 0;
+				margin-bottom: calc(32px);
 				box-shadow: 5px 5px 5px var(--shadow);
 				border-radius: 8px;
 			}
