@@ -2,9 +2,10 @@
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
-	import { hoveredInstance, selectedCourses, sidebar } from '$lib/state.svelte.js';
+	import { hoveredInstance, selectedCourses, sidebar, undoStack } from '$lib/state.svelte.js';
 	import { itemizeCourseList } from '$lib/utils.js';
-	import { fade, slide } from 'svelte/transition';
+	import type { KeyboardEventHandler } from 'svelte/elements';
+	import { slide } from 'svelte/transition';
 
 	const { data } = $props();
 	let searchQuery = $state('');
@@ -16,8 +17,25 @@
 	);
 
 	let tab = $state<'all' | 'my'>('all');
+
+	const onkeydown: KeyboardEventHandler<Window> = (e) => {
+		if (e.metaKey || e.ctrlKey) {
+			if (e.code === 'KeyZ') {
+				if (e.shiftKey) {
+					// redoStack.pop()?.();
+					// TODO
+				} else {
+					undoStack.pop()?.();
+				}
+			} else if (e.code === 'KeyY') {
+				// redoStack.pop()?.();
+				// TODO
+			}
+		}
+	};
 </script>
 
+<svelte:window {onkeydown} />
 <main>
 	<div class="selector" class:hidden={!sidebar.isOpen}>
 		<nav>

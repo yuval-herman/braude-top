@@ -3,6 +3,10 @@ import { TypedLocalStorage } from './storage';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
 export const sidebar = $state({ isOpen: false });
+type stackFunction = () => void;
+
+export const undoStack: stackFunction[] = [];
+// export const redoStack: stackFunction[] = [];
 
 if (browser) {
 	const localVersion = TypedLocalStorage.getItem('version');
@@ -21,7 +25,7 @@ export const selectedCourses = $state<FullCourse[]>(
 	})()
 );
 
-export function addSelectedCourse(course: FullCourse) {
+export function addSelectedCourse(course: FullCourse, saveUndo = true) {
 	const exitingCourse = selectedCourses.find((c) => c.course_id === course.course_id);
 	if (exitingCourse) {
 		const exitingInstancesIds = exitingCourse.instances.map((i) => i.course_instance_id);
@@ -34,8 +38,9 @@ export function addSelectedCourse(course: FullCourse) {
 		selectedCourses.push(structuredClone(course));
 	}
 	browser && TypedLocalStorage.setItem('selected', selectedCourses);
+	saveUndo && undoStack.push(() => removeSelectedCourse(course, false));
 }
-export function removeSelectedCourse(course: FullCourse) {
+export function removeSelectedCourse(course: FullCourse, saveUndo = true) {
 	const i = selectedCourses.findIndex((c) => c.course_id === course.course_id);
 	if (i === -1) throw new Error('Tried to remove non exiting course');
 	const exitingCourse = selectedCourses[i];
@@ -50,4 +55,5 @@ export function removeSelectedCourse(course: FullCourse) {
 		exitingCourse.instances = instances;
 	}
 	browser && TypedLocalStorage.setItem('selected', selectedCourses);
+	saveUndo && undoStack.push(() => addSelectedCourse(course, false));
 }
