@@ -94,6 +94,7 @@
 	main {
 		padding: 12px;
 		height: 100%;
+		overflow: hidden;
 		display: grid;
 		gap: 12px;
 		grid-template-columns: 1fr 3fr;
@@ -115,13 +116,15 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-		height: 100%;
+		max-height: 100%;
 		overflow: hidden;
+
 		padding: 8px;
 		border-radius: 8px;
 		.list-container {
 			display: grid;
 			gap: 12px;
+			max-height: 100%;
 		}
 		& input {
 			padding: 8px;
