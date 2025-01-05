@@ -7,6 +7,7 @@
 - work by year and semester
 - replace logic for user downloading the entire db
 
+- add error pages
 - e2e testing
 - add ctrl-y to redo
 
