@@ -49,7 +49,22 @@
 </script>
 
 <div class="container" class:warn>
-	<h3>{course.name}</h3>
+	<header>
+		<h3>{course.name}</h3>
+		<a aria-label="מידע נוסף" href="course/{course.course_id}">
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				width="24"
+				height="24"
+				viewBox="0 0 32 32"
+				fill="currentColor"
+				><path
+					d="m17.962 24.725 1.806.096v2.531h-7.534v-2.406l1.045-.094c.568-.063.916-.254.916-1.014v-8.801c0-.699-.188-.92-.791-.92l-1.106-.062v-2.626h5.666zM15.747 4.648c1.394 0 2.405 1.047 2.405 2.374 0 1.331-1.014 2.313-2.438 2.313-1.454 0-2.404-.982-2.404-2.313 0-1.327.95-2.374 2.437-2.374M16 32C7.178 32 0 24.822 0 16S7.178 0 16 0c8.82 0 16 7.178 16 16s-7.18 16-16 16m0-29C8.832 3 3 8.832 3 16s5.832 13 13 13 13-5.832 13-13S23.168 3 16 3"
+				/></svg
+			></a
+		>
+	</header>
+
 	<div class="instances">
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		{#each course.instances as instance, i (instance.course_instance_id)}
@@ -128,7 +143,7 @@
 	div.warn {
 		border: double 6px var(--warn);
 	}
-	h3,
+
 	h4 {
 		margin: 0;
 		margin-bottom: 12px;
@@ -139,6 +154,19 @@
 		border-radius: 8px;
 		padding: 12px;
 		background: var(--bg);
+	}
+	header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 12px;
+		h3 {
+			margin: 0;
+		}
+		a {
+			outline: none;
+			color: var(--text-secondary);
+		}
 	}
 	.instances {
 		display: grid;
