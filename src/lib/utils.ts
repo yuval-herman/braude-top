@@ -15,9 +15,9 @@ export const hoursList = [
 	{ hour: 20, min: 50 },
 	{ hour: 21, min: 50 },
 	{ hour: 22, min: 50 }
-];
+] as const;
 
-function time2Index(timestring: string) {
+export function time2Index(timestring: string): number | undefined {
 	const [chour, cmin] = timestring.split(':').map(Number);
 	const index = hoursList.findIndex(({ hour, min }) => hour === chour && min === cmin);
 	return index === -1 ? undefined : index + 1;
@@ -28,6 +28,10 @@ export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 	return instances.flatMap(({ sessions, instructor, type }) =>
 		sessions.map(({ week_day, start_time, end_time, room }): Item => {
 			const day = week_day.charCodeAt(0) - first_day;
+			if (day < 0 || day > 5) {
+				throw new Error('day is not recognized');
+			}
+
 			const start = time2Index(start_time);
 			const end = time2Index(end_time);
 
