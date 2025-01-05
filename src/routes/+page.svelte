@@ -4,8 +4,9 @@
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { hoveredInstance, selectedCourses, sidebar, undoStack } from '$lib/state.svelte.js';
 	import { itemizeCourseList } from '$lib/utils.js';
+	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
-	import { slide } from 'svelte/transition';
+	import { fly, slide, type FlyParams } from 'svelte/transition';
 
 	const { data } = $props();
 	let searchQuery = $state('');
@@ -33,6 +34,14 @@
 			}
 		}
 	};
+
+	function tabTransition(tab: 'all' | 'my', dir: 'in' | 'out'): FlyParams {
+		const easing = dir === 'in' ? cubicOut : cubicIn;
+		const duration = 200;
+		const delay = dir === 'in' ? duration : 0;
+		const x = 100;
+		return { duration, easing, delay, x: tab === 'all' ? x : -x };
+	}
 </script>
 
 <svelte:window {onkeydown} />
@@ -45,18 +54,30 @@
 			<button onclick={() => (tab = 'all')}>כל הקורסים</button>
 			<button onclick={() => (tab = 'my')}>הקורסים שלי</button>
 		</nav>
-		<div style:display={tab === 'all' ? 'contents' : 'none'}>
-			<input type="text" bind:value={searchQuery} />
-			<PaginatedList items={filteredCourses} />
-		</div>
-		<div style:display={tab === 'my' ? 'contents' : 'none'}>
-			{#if selectedCourses.length === 0}
-				<p class="warn" transition:slide>
-					כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b>
-				</p>
-			{/if}
-			<PaginatedList items={selectedCourses} mode="my" />
-		</div>
+
+		{#if tab === 'all'}
+			<div
+				class="list-container"
+				in:fly={tabTransition('all', 'in')}
+				out:fly={tabTransition('all', 'out')}
+			>
+				<input type="text" bind:value={searchQuery} />
+				<PaginatedList items={filteredCourses} />
+			</div>
+		{:else}
+			<div
+				class="list-container"
+				in:fly={tabTransition('my', 'in')}
+				out:fly={tabTransition('my', 'out')}
+			>
+				{#if selectedCourses.length === 0}
+					<p class="warn" transition:slide>
+						כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b>
+					</p>
+				{/if}
+				<PaginatedList items={selectedCourses} mode="my" />
+			</div>
+		{/if}
 	</div>
 	<div class="table-container" class:hidden={sidebar.isOpen}>
 		<TimeTable items={itemizeCourseList(selectedCourses)} preview={hoveredInstance.items} />
@@ -98,10 +119,15 @@
 		overflow: hidden;
 		padding: 8px;
 		border-radius: 8px;
+		.list-container {
+			display: grid;
+			gap: 12px;
+		}
 		& input {
 			padding: 8px;
 			border-radius: 8px;
 			border: 1px solid #ccc;
+			width: 100%;
 		}
 		& nav {
 			min-height: 2rem;

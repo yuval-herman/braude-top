@@ -2,7 +2,6 @@
 
 # Planned
 
-- animations
 - e2e testing
 - add ctrl-y to redo
 
