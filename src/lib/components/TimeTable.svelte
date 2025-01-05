@@ -16,7 +16,6 @@
 	const itemsByDay = $derived(
 		splitToDays(items.concat(previewItems.map((p) => ({ ...p, is_preview: true }))))
 	);
-	// $inspect(items);
 </script>
 
 {#snippet Item(item: Item, index: number)}
@@ -75,17 +74,18 @@
 		height: 100%;
 		width: 100%;
 		border-radius: 12px;
-		--border-width: 1px;
 	}
 
 	th,
 	td {
-		height: calc(100% * - (15 / 16));
 		border: 1px solid #ccc;
 	}
 
-	thead th {
-		border-top: none;
+	thead {
+		height: calc(100% / 17);
+		th {
+			border-top: none;
+		}
 	}
 	th:last-child,
 	td:last-child {
