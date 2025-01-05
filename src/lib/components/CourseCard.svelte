@@ -8,6 +8,7 @@
 		selectedCourses
 	} from '$lib/state.svelte';
 	import { css, instanceColors, itemizeCourse } from '$lib/utils';
+	import { flip } from 'svelte/animate';
 	import { fade, slide } from 'svelte/transition';
 
 	interface Props {
@@ -67,6 +68,7 @@
 					: undefined}
 				onmouseleave={mode === 'all' ? () => (hoveredInstance.items.length = 0) : undefined}
 				transition:slide
+				animate:flip={{ duration: 250, delay: 50 }}
 			>
 				{#if mode === 'my'}
 					<Indicator color={css.colors.str2color(course.name)} />

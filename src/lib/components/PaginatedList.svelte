@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { fade, slide } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 	import CourseCard from './CourseCard.svelte';
 
 	interface Props {
