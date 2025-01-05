@@ -1,10 +1,10 @@
 # WIP
 
-- testing!!!
+- animations
 
 # Planned
 
-- animations
+- e2e testing
 
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
 - another panel for extra info about a course
