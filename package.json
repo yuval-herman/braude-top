@@ -34,6 +34,7 @@
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@types/better-sqlite3": "^7.6.12",
 		"@types/node": "^22.10.2",
+		"@types/semver": "^7.5.8",
 		"prettier": "^3.3.2",
 		"prettier-plugin-svelte": "^3.2.6",
 		"storybook": "^8.4.7",
@@ -44,6 +45,7 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
-		"better-sqlite3": "^11.7.0"
+		"better-sqlite3": "^11.7.0",
+		"semver": "^7.6.3"
 	}
 }

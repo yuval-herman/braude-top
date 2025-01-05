@@ -1,5 +1,6 @@
 import { browser, version } from '$app/environment';
 import { TypedLocalStorage } from './storage';
+import semverMajor from 'semver/functions/major';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
 export const sidebar = $state({ isOpen: false });
@@ -10,7 +11,11 @@ export const undoStack: stackFunction[] = [];
 
 if (browser) {
 	const localVersion = TypedLocalStorage.getItem('version');
-	if (localVersion && localVersion < version && TypedLocalStorage.hasKey('selected')) {
+	if (
+		localVersion &&
+		semverMajor(localVersion) < semverMajor(version) &&
+		TypedLocalStorage.hasKey('selected')
+	) {
 		alert('האתר עודכן ולכן המערכת השמורה נמחקה');
 		TypedLocalStorage.removeItem('selected');
 	}
