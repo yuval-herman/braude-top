@@ -74,4 +74,23 @@ test.describe('main page', () => {
 
 		await expect(courseHeading).toBeHidden();
 	});
+
+	test('make sure course list is scrollable in desktop', async ({ page }) => {
+		const courseList = page.locator('header ~ ul');
+		const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);
+		await expect(isScrollable).toBe(true);
+	});
+
+	test('make sure course list is scrollable in mobile', async ({ page }) => {
+		page.setViewportSize({
+			width: 412,
+			height: 915
+		});
+
+		await page.getByRole('button', { name: 'רשימת קורסים' }).click();
+
+		const courseList = page.locator('header ~ ul');
+		const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);
+		await expect(isScrollable).toBe(true);
+	});
 });
