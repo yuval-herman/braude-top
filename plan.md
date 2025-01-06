@@ -1,7 +1,5 @@
 # WIP
 
-- another route for extra info about a course
-
 # Planned
 
 - work by year and semester

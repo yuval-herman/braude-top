@@ -1,6 +1,6 @@
 <script>
 	import '$lib/global.css';
-	import { theme } from '$lib/state.svelte';
+	// import { theme } from '$lib/state.svelte'; TODO
 
 	let { children } = $props();
 </script>

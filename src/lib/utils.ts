@@ -68,10 +68,11 @@ export function itemizeCourseList(courses: FullCourse[]): Item[] {
 	return items;
 }
 
-const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
-const hourFormatter = new Intl.DateTimeFormat('he-IL', {
+export const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
+export const hourFormatter = new Intl.DateTimeFormat('he-IL', {
 	timeStyle: 'short'
 });
+export const listFormatter = new Intl.ListFormat('he-IL');
 
 const date = new Date(0);
 export function getDay(day: number) {

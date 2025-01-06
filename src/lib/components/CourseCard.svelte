@@ -97,6 +97,9 @@
 						<span class="warn">הקורס מלא!</span>
 					{/if}
 				</div>
+				<span>
+					מספר זיהוי {instance.course_instance_id}
+				</span>
 				<div class="sessions">
 					{#each instance.sessions as session}
 						<div class="session">
