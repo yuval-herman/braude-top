@@ -1,11 +1,11 @@
 :root {
-	color-scheme: light dark;
+	--color-scheme: light dark;
 
 	--bg: light-dark(#e0e6eb, #383c3f);
-	--neutral: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 10%));
 
 	--contrast: #f1e3dd;
 	--light: light-dark(hsl(217, 50%, 80%), hsl(217, 40%, 65%));
+	--neutral: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 20%));
 	--dark: hsl(217, 50%, 20%);
 
 	--text: light-dark(black, white);
@@ -20,6 +20,9 @@
 
 	--border: light-dark(#bcccdc, #7a99b8);
 	--shadow: rgba(0, 0, 0, 0.1);
+}
+html {
+	color-scheme: var(--color-scheme);
 }
 
 body {

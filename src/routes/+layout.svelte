@@ -1,6 +1,45 @@
 <script>
-	let { children } = $props();
 	import '$lib/global.css';
+	import { theme } from '$lib/state.svelte';
+
+	let { children } = $props();
 </script>
 
+<nav>
+	<ul>
+		<li><a href="/">ראשי</a></li>
+	</ul>
+	<!-- <button
+		onclick={() => (theme.theme === 'dark' ? (theme.theme = 'light') : (theme.theme = 'dark'))}
+		>light/dark</button
+	>
+	TODO	
+	-->
+</nav>
 {@render children()}
+
+<style>
+	nav {
+		display: flex;
+		justify-content: space-between;
+		border-bottom: 1px solid var(--border);
+		background: var(--neutral);
+		padding: 8px 16px;
+	}
+
+	ul {
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	a {
+		text-decoration: none;
+		background: var(--bg);
+		padding: 4px 8px;
+		border-radius: 4px;
+		&:visited {
+			color: inherit;
+		}
+	}
+</style>
