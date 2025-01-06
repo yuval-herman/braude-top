@@ -128,7 +128,7 @@
 		cursor: pointer;
 	}
 	.info {
-		color: var(--info);
+		color: var(--text-secondary);
 	}
 	.tension {
 		margin: auto;
