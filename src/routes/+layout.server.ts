@@ -4,9 +4,8 @@ import {
 	getNonEmptyCourseInstances,
 	getNonEmptyCourses
 } from '$lib/server/db';
-import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async () => {
+export const load = async ({ params }) => {
 	const full_courses = getNonEmptyCourses().map((course) => ({
 		...course,
 		instances: getNonEmptyCourseInstances(course.course_id).map((instance) => ({
