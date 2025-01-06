@@ -66,11 +66,11 @@
 			flex-grow: 1;
 			list-style-type: none;
 			margin: 0;
-			border-radius: 12px;
+			border-radius: 8px;
 			overflow-y: scroll;
 			scrollbar-width: none; /* TODO: make a manual scrollbar, chrome's scrollbar looks awful and safari does not support styling... */
-			padding: 8px;
-			padding-right: 12px;
+			margin: 8px;
+			padding: 0;
 			li {
 				margin-bottom: calc(32px);
 				box-shadow: 5px 5px 5px var(--shadow);

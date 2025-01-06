@@ -5,20 +5,28 @@
 	let { children } = $props();
 </script>
 
-<nav>
-	<ul>
-		<li><a href="/">ראשי</a></li>
-	</ul>
+<div class="container">
+	<nav>
+		<ul>
+			<li><a href="/">ראשי</a></li>
+		</ul>
+	</nav>
 	<!-- <button
-		onclick={() => (theme.theme === 'dark' ? (theme.theme = 'light') : (theme.theme = 'dark'))}
-		>light/dark</button
+	onclick={() => (theme.theme === 'dark' ? (theme.theme = 'light') : (theme.theme = 'dark'))}
+	>light/dark</button
 	>
 	TODO	
 	-->
-</nav>
-{@render children()}
+	{@render children()}
+</div>
 
 <style>
+	.container {
+		height: 100%;
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+	}
 	nav {
 		display: flex;
 		justify-content: space-between;

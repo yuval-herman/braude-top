@@ -116,15 +116,17 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
-		max-height: 100%;
+		height: 100%;
 		overflow: hidden;
 
 		padding: 8px;
 		border-radius: 8px;
+
 		.list-container {
 			display: grid;
 			gap: 12px;
 			max-height: 100%;
+			overflow: hidden;
 		}
 		& input {
 			padding: 8px;
