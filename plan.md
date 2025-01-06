@@ -1,12 +1,13 @@
 # WIP
 
+- e2e testing
+
 # Planned
 
 - work by year and semester
 - replace logic for user downloading the entire db
 
 - add error pages
-- e2e testing
 - add ctrl-y to redo
 
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
