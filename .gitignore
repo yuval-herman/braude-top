@@ -25,4 +25,4 @@ vite.config.ts.timestamp-*
 
 src/fullcourses.json
 courses.db*
-utilities/deploy.js
+secrets.json
