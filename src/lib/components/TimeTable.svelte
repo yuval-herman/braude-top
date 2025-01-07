@@ -61,6 +61,15 @@
 					{/each}
 				{/if}
 			</tr>
+			{#if row === 4}
+				<tr>
+					<th class="lunch">הפסקת צהריים</th>
+
+					{#each { length: itemsByDay.length } as _}
+						<td></td>
+					{/each}
+				</tr>
+			{/if}
 		{/each}
 	</tbody>
 </table>
@@ -82,7 +91,7 @@
 	}
 
 	thead {
-		height: calc(100% / 17);
+		height: calc(100% / 19);
 		th {
 			border-top: none;
 		}
@@ -101,6 +110,12 @@
 	th,
 	td {
 		position: relative;
+		height: calc(100% / 19);
+	}
+
+	.lunch,
+	.lunch ~ td {
+		background: var(--shadow);
 	}
 
 	.item {

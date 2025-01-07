@@ -19,7 +19,8 @@ export const hoursList = [
 
 export function time2Index(timestring: string): number | undefined {
 	const [chour, cmin] = timestring.split(':').map(Number);
-	const index = hoursList.findIndex(({ hour, min }) => hour === chour && min === cmin);
+	let index = hoursList.findIndex(({ hour, min }) => hour === chour && min === cmin);
+	if (index > 4) index++; // take lunch into account
 	return index === -1 ? undefined : index + 1;
 }
 
