@@ -32,7 +32,12 @@
 </script>
 
 {#snippet YedionButton(course_id: number)}
-	<form action="https://info.braude.ac.il/yedion/fireflyweb.aspx" method="POST" target="_blank">
+	<form
+		id="yedion"
+		action="https://info.braude.ac.il/yedion/fireflyweb.aspx"
+		method="POST"
+		target="_blank"
+	>
 		<input type="hidden" name="PRGNAME" value="S_LOOK_FOR_NOSE" />
 		<input type="hidden" name="ARGUMENTS" value="-N{course_id}" />
 		<button type="submit">פתח את דף הקורס בתחנת המידע</button>
@@ -50,13 +55,15 @@
 	</header>
 	<main>
 		<div class="flex-info">
-			<a href={course.syllabus_link} target="_blank" rel="noopener noreferrer">סילבוס הקורס</a>
-			<span
+			<a id="syllabus" href={course.syllabus_link} target="_blank" rel="noopener noreferrer"
+				>סילבוס הקורס</a
+			>
+			<span id="points"
 				><b>נ"זים:</b>
 				{course.credit}
 			</span>
 			{#if properties.languages.size > 0}
-				<span>הקורס זמין ב{joinSet(properties.languages)} </span>
+				<span id="languages">הקורס זמין ב{joinSet(properties.languages)} </span>
 			{/if}
 			{@render YedionButton(course.course_id)}
 		</div>
@@ -79,7 +86,7 @@
 				{/if}
 				{#if properties.notes.length > 0}
 					<li>
-						<details>
+						<details id="notes">
 							<summary
 								>ישנן הערות על חלק מהקבוצות בקורס, מומלץ לקרוא את ההערות על מנת לוודא שאתם באמת
 								יכולים להירשם לקורס.
@@ -100,7 +107,7 @@
 				{/if}
 			</ul>
 		</div>
-		<div class="description">
+		<div class="description" id="description">
 			{#each course.description.split('\n') as paragraph}
 				<p>{paragraph}</p>
 			{/each}

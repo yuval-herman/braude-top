@@ -58,10 +58,60 @@ function contactPage() {
 
 	driverObj.drive();
 }
+function coursePage() {
+	const driverObj = driver({
+		...baseDriverConfig,
+		steps: [
+			{
+				popover: {
+					title: 'מידע על הקורס',
+					description: 'בדף הזה ניתן לראות כל מיני פריטי מידע על הקורס כגון:'
+				}
+			},
+			{
+				element: '#points',
+				popover: {
+					description: 'נקודות זכות'
+				}
+			},
+			{
+				element: '#description',
+				popover: {
+					description: 'תיאור הקורס ועוד...'
+				}
+			},
+			{
+				element: '#syllabus',
+				popover: {
+					title: 'קישור לידיעון',
+					description: 'בנוסף מופיעים קישורים שימושיים לידיעון, כגון סילבוס הקורס'
+				}
+			},
+			{
+				element: '#yedion',
+				popover: {
+					title: 'קישור לידיעון',
+					description: 'או קישור לאתר הידיעון עצמו'
+				}
+			},
+			{
+				element: '#notes',
+				popover: {
+					title: 'הערות',
+					description:
+						"לבסוף וכנראה הכי חשוב, מופיעות ההערות שמפרסמת המכללה לכל קורס. כאן יהיה רשום למי מותר להירשם לקורס (תכנה, מכונות, חשמל וכו') מומלץ לוודא שנרשמת רק לקורסים מותרים כאן או ישירות באתר הידיעון."
+				}
+			}
+		]
+	});
+
+	driverObj.drive();
+}
 
 const pageFunctions = new Map([
 	['/', mainPage],
-	['/contact', contactPage]
+	['/contact', contactPage],
+	['/course/[course_id]', coursePage]
 ]);
 
 export function showHelp(page: Page) {
