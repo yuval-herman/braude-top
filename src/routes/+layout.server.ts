@@ -5,7 +5,7 @@ import {
 	getNonEmptyCourses
 } from '$lib/server/db';
 
-export const load = async ({ params }) => {
+export const load = async ({ params, cookies }) => {
 	const full_courses = getNonEmptyCourses().map((course) => ({
 		...course,
 		instances: getNonEmptyCourseInstances(course.course_id).map((instance) => ({
@@ -14,5 +14,8 @@ export const load = async ({ params }) => {
 			exams: getInstancesExams(instance.course_instance_id)
 		}))
 	}));
-	return { full_courses };
+	let themeCookie = cookies.get('theme') ?? 'auto';
+	return { full_courses, themeCookie };
 };
+
+export const ssr = true;

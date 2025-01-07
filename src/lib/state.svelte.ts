@@ -4,7 +4,7 @@ import semverMajor from 'semver/functions/major';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
 export const sidebar = $state({ isOpen: false });
-// export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' }); TODO
+export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
 type stackFunction = () => void;
 
 export const undoStack: stackFunction[] = [];

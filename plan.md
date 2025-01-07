@@ -1,11 +1,10 @@
 # WIP
 
-- e2e testing
+- replace logic for user downloading the entire db
 
 # Planned
 
 - work by year and semester
-- replace logic for user downloading the entire db
 
 - add error pages
 - add ctrl-y to redo
