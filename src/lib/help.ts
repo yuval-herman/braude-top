@@ -1,5 +1,5 @@
 import type { Page } from '@sveltejs/kit';
-import { driver, type Config } from 'driver.js';
+import { driver, type Config, type DriveStep } from 'driver.js';
 import { TypedLocalStorage } from './storage';
 
 const baseDriverConfig: Config = {
@@ -35,60 +35,86 @@ function mainPage() {
 		});
 		driverObj.drive();
 	} else {
+		let steps: DriveStep[] = [
+			{
+				popover: {
+					title: 'דף ראשי',
+					description: 'זהו הדף הראשי של האתר, פה תבלו את רוב זמנכם בתכנון המערכת.',
+				},
+			},
+		];
+		const mobileMode = !document.querySelector('.list-container')?.checkVisibility();
+		const showListBtn = document.querySelector(
+			'th > [aria-label="רשימת קורסים"]'
+		) as HTMLButtonElement;
+		if (mobileMode) {
+			steps.push({
+				element: showListBtn,
+				popover: {
+					title: 'רשימת קורסים',
+					description: 'כדי לראות את רשימת הקורסים, ניתן ללחוץ על הכפתור הזה.',
+					onNextClick: () => {
+						showListBtn.click();
+						driverObj.moveNext();
+					},
+				},
+			});
+		}
+		steps = steps.concat([
+			{
+				element: '.list-container',
+				popover: {
+					title: 'רשימת קורסים',
+					description: 'כאן מופיעה רשימה של כל הקורסים בבראודה, ניתן לחפש קורסים בתיבת החיפוש.',
+				},
+			},
+			{
+				element: '.list-container li',
+				popover: {
+					title: 'תיבת קורס',
+					description: "כל קורס מופיע בתוך 'תיבה' משל עצמו",
+				},
+			},
+			{
+				element: '.instance',
+				popover: {
+					title: 'תיבת קבוצה',
+					description:
+						"לכל קורס ישנן כמה 'קבוצות'. קבוצות כשמן כן הן, חלוקה של סטודנטים לקבוצות בתוך הקורס. לכל קבוצה יהיה מרצה משלה ושעות למידה שונות. הצבעים השונים לקבוצות עוזרים להבדיל בין הרצאות, תרגולים וכו'",
+				},
+			},
+			{
+				element: '.instance',
+				popover: {
+					title: 'תיבת קבוצה',
+					description:
+						'ניתן לרחף עם העכבר מעל קבוצה בקורס כדי לראות איפה היא תופיע במערכת שעות. כדי לבחור קבוצה, פשוט נלחץ עליה והיא תופיע מיידית במערכת השעות.',
+				},
+			},
+			{
+				element: '[aria-label="מידע נוסף"]',
+				popover: {
+					title: 'מידע נוסף',
+					description: 'ניתן לראות מידע נוסף על הקורס בלחיצה כאן.',
+				},
+			},
+			{
+				element: '#my-courses',
+				popover: {
+					title: 'הקורסים שלי',
+					description: "כדי לראות את רשימת הקורסים שכבר בחרנו ניתן ללחוץ על 'הקורסים שלי'.",
+					onNextClick: () => {
+						if (mobileMode) {
+							showListBtn.click();
+						}
+						driverObj.moveNext();
+					},
+				},
+			},
+		]);
 		const driverObj = driver({
 			...baseDriverConfig,
-			steps: [
-				{
-					popover: {
-						title: 'דף ראשי',
-						description: 'זהו הדף הראשי של האתר, פה תבלו את רוב זמנכם בתכנון המערכת.',
-					},
-				},
-				{
-					element: '.list-container',
-					popover: {
-						title: 'רשימת קורסים',
-						description: 'כאן מופיעה רשימה של כל הקורסים בבראודה, ניתן לחפש קורסים בתיבת החיפוש.',
-					},
-				},
-				{
-					element: '.list-container li',
-					popover: {
-						title: 'תיבת קורס',
-						description: "כל קורס מופיע בתוך 'תיבה' משל עצמו",
-					},
-				},
-				{
-					element: '.instance',
-					popover: {
-						title: 'תיבת קבוצה',
-						description:
-							"לכל קורס ישנן כמה 'קבוצות'. קבוצות כשמן כן הן, חלוקה של סטודנטים לקבוצות בתוך הקורס. לכל קבוצה יהיה מרצה משלה ושעות למידה שונות. הצבעים השונים לקבוצות עוזרים להבדיל בין הרצאות, תרגולים וכו'",
-					},
-				},
-				{
-					element: '.instance',
-					popover: {
-						title: 'תיבת קבוצה',
-						description:
-							'ניתן לרחף עם העכבר מעל קבוצה בקורס כדי לראות איפה היא תופיע במערכת שעות. כדי לבחור קבוצה, פשוט נלחץ עליה והיא תופיע מיידית במערכת השעות.',
-					},
-				},
-				{
-					element: '[aria-label="מידע נוסף"]',
-					popover: {
-						title: 'מידע נוסף',
-						description: 'ניתן לראות מידע נוסף על הקורס בלחיצה כאן.',
-					},
-				},
-				{
-					element: '#my-courses',
-					popover: {
-						title: 'הקורסים שלי',
-						description: "כדי לראות את רשימת הקורסים שכבר בחרנו ניתן ללחוץ על 'הקורסים שלי'.",
-					},
-				},
-			],
+			steps,
 		});
 		driverObj.drive();
 	}
