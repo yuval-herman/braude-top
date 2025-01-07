@@ -29,7 +29,7 @@ type PossibleHours = [
 	{ hour: 19; min: 50 },
 	{ hour: 20; min: 50 },
 	{ hour: 21; min: 50 },
-	{ hour: 22; min: 50 }
+	{ hour: 22; min: 50 },
 ];
 
 type TimeString<TTime extends number = number> =

@@ -10,7 +10,7 @@ describe('Course transforming utilities', () => {
 			syllabus_link: '',
 			year: '',
 			name: 'קורס ריק',
-			instances: []
+			instances: [],
 		};
 		const result = itemizeCourse(emptyCourse);
 		expect(result).toEqual([]);
@@ -44,9 +44,9 @@ describe('Course transforming utilities', () => {
 							start_time: '8:30',
 							end_time: '9:30',
 							room: 'חדר 101',
-							semester: ''
-						}
-					]
+							semester: '',
+						},
+					],
 				},
 				{
 					type: 'מעבדה',
@@ -67,11 +67,11 @@ describe('Course transforming utilities', () => {
 							start_time: '10:30',
 							end_time: '12:20',
 							room: 'חדר 202',
-							semester: ''
-						}
-					]
-				}
-			]
+							semester: '',
+						},
+					],
+				},
+			],
 		};
 		const result = itemizeCourse(course);
 		expect(result).toEqual([
@@ -84,8 +84,8 @@ describe('Course transforming utilities', () => {
 				value: {
 					instructor: 'מרצה א',
 					name: 'קורס ראשון',
-					room: 'חדר 101'
-				}
+					room: 'חדר 101',
+				},
 			},
 			{
 				colorIndicator: '#52a59a',
@@ -96,9 +96,9 @@ describe('Course transforming utilities', () => {
 				value: {
 					instructor: 'מרצה ב',
 					name: 'קורס ראשון',
-					room: 'חדר 202'
-				}
-			}
+					room: 'חדר 202',
+				},
+			},
 		]);
 	});
 
@@ -123,7 +123,7 @@ describe('Course transforming utilities', () => {
 					instructor: 'מרצה ג',
 					is_full: 0,
 					language: '',
-					sessions: []
+					sessions: [],
 				},
 				{
 					type: 'מעבדה',
@@ -146,11 +146,11 @@ describe('Course transforming utilities', () => {
 							// @ts-expect-error
 							end_time: '16:00',
 							room: 'חדר 303',
-							semester: ''
-						}
-					]
-				}
-			]
+							semester: '',
+						},
+					],
+				},
+			],
 		};
 		expect(() => itemizeCourse(edgeCaseCourse)).toThrowError('day is not recognized');
 		edgeCaseCourse.instances[1].sessions[0].week_day = 'א';
@@ -171,9 +171,9 @@ describe('Course transforming utilities', () => {
 				value: {
 					instructor: 'מרצה ד',
 					name: 'קורס קצה',
-					room: 'חדר 303'
-				}
-			}
+					room: 'חדר 303',
+				},
+			},
 		]);
 	});
 });
@@ -206,11 +206,11 @@ describe('Course list transforming utilities', () => {
 						start_time: '8:30',
 						end_time: '10:30',
 						room: 'חדר 101',
-						semester: ''
-					}
-				]
-			}
-		]
+						semester: '',
+					},
+				],
+			},
+		],
 	};
 
 	const course2: FullCourse = {
@@ -240,11 +240,11 @@ describe('Course list transforming utilities', () => {
 						start_time: '10:30',
 						end_time: '11:30',
 						room: 'חדר 102',
-						semester: ''
-					}
-				]
-			}
-		]
+						semester: '',
+					},
+				],
+			},
+		],
 	};
 
 	it('detects no overlap between non-overlapping courses', () => {
@@ -335,11 +335,11 @@ describe('Course list transforming utilities', () => {
 							start_time: '9:30',
 							end_time: '11:30',
 							room: 'חדר 103',
-							semester: ''
-						}
-					]
-				}
-			]
+							semester: '',
+						},
+					],
+				},
+			],
 		};
 
 		const result = itemizeCourseList([course1, course2, course3]);

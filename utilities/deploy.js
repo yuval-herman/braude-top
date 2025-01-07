@@ -7,7 +7,7 @@ import secrets from '../secrets.json' with { type: 'json' };
  */
 function runCommands(commands) {
 	execSync(`ssh ${secrets.server} "${commands.join(' && ')}"`, {
-		stdio: 'inherit'
+		stdio: 'inherit',
 	});
 }
 
@@ -25,7 +25,7 @@ runCommands([
 
 	// Recreate and copy backup into it
 	'mkdir -p braude-scheduler/data',
-	`cp -r ${isoTime}/data braude-scheduler`
+	`cp -r ${isoTime}/data braude-scheduler`,
 ]);
 
 // Compress build
@@ -51,5 +51,5 @@ runCommands([
 	'cp ../braude-fetcher/courses.db data/',
 
 	// Start the server
-	'systemctl start braude-scheduler.service'
+	'systemctl start braude-scheduler.service',
 ]);

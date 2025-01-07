@@ -9,7 +9,7 @@ export const actions = {
 
 		setContactMessage(message);
 		return { success: true };
-	}
+	},
 };
 
 function verifyMessage(message: any): message is ContactMessage {

@@ -6,7 +6,7 @@ const baseDriverConfig: Config = {
 	nextBtnText: 'הבא',
 	prevBtnText: 'הקודם',
 	doneBtnText: 'סיום',
-	progressText: '{{current}} מתוך {{total}}'
+	progressText: '{{current}} מתוך {{total}}',
 };
 
 function mainPage() {
@@ -17,18 +17,18 @@ function mainPage() {
 				popover: {
 					title: 'ברוכים הבאים לbraude.top!',
 					description:
-						'עשיתי מאמצים רבים כדי שהאתר יהיה אינטואיטיבי ופשוט לשימוש, אבל אם אתם מסתבכים, בניתי מערכת עזרה אינטראקטיבית שתעזור לכם להישאר על הגל.'
-				}
+						'עשיתי מאמצים רבים כדי שהאתר יהיה אינטואיטיבי ופשוט לשימוש, אבל אם אתם מסתבכים, בניתי מערכת עזרה אינטראקטיבית שתעזור לכם להישאר על הגל.',
+				},
 			},
 			{
 				element: '#help-button',
 				popover: {
 					title: 'כפתור הטיפים הפלאי!',
 					description: 'אם אתם לא בטוחים מה לעשות לחצו כאן בכל שלב, תכנון נעים!',
-					side: 'bottom'
-				}
-			}
-		]
+					side: 'bottom',
+				},
+			},
+		],
 	});
 
 	driverObj.drive();
@@ -41,8 +41,8 @@ function contactPage() {
 			{
 				popover: {
 					title: 'יצירת קשר',
-					description: 'מכאן ניתן לשלוח לי (המפתח) הודעות לגבי באגים או בקשות ספציפיות.'
-				}
+					description: 'מכאן ניתן לשלוח לי (המפתח) הודעות לגבי באגים או בקשות ספציפיות.',
+				},
 			},
 			{
 				element: 'form',
@@ -50,10 +50,10 @@ function contactPage() {
 					title: 'מילוי פרטים',
 					description:
 						'את הפרטים יש למלא כאן, את השם והמייל שלך ניתן למלא אם אתם רוצים שאחזור אליכם לגבי ההודעה במייל.',
-					side: 'top'
-				}
-			}
-		]
+					side: 'top',
+				},
+			},
+		],
 	});
 
 	driverObj.drive();
@@ -65,44 +65,44 @@ function coursePage() {
 			{
 				popover: {
 					title: 'מידע על הקורס',
-					description: 'בדף הזה ניתן לראות כל מיני פריטי מידע על הקורס כגון:'
-				}
+					description: 'בדף הזה ניתן לראות כל מיני פריטי מידע על הקורס כגון:',
+				},
 			},
 			{
 				element: '#points',
 				popover: {
-					description: 'נקודות זכות'
-				}
+					description: 'נקודות זכות',
+				},
 			},
 			{
 				element: '#description',
 				popover: {
-					description: 'תיאור הקורס ועוד...'
-				}
+					description: 'תיאור הקורס ועוד...',
+				},
 			},
 			{
 				element: '#syllabus',
 				popover: {
 					title: 'קישור לידיעון',
-					description: 'בנוסף מופיעים קישורים שימושיים לידיעון, כגון סילבוס הקורס'
-				}
+					description: 'בנוסף מופיעים קישורים שימושיים לידיעון, כגון סילבוס הקורס',
+				},
 			},
 			{
 				element: '#yedion',
 				popover: {
 					title: 'קישור לידיעון',
-					description: 'או קישור לאתר הידיעון עצמו'
-				}
+					description: 'או קישור לאתר הידיעון עצמו',
+				},
 			},
 			{
 				element: '#notes',
 				popover: {
 					title: 'הערות',
 					description:
-						"לבסוף וכנראה הכי חשוב, מופיעות ההערות שמפרסמת המכללה לכל קורס. כאן יהיה רשום למי מותר להירשם לקורס (תכנה, מכונות, חשמל וכו') מומלץ לוודא שנרשמת רק לקורסים מותרים כאן או ישירות באתר הידיעון."
-				}
-			}
-		]
+						"לבסוף וכנראה הכי חשוב, מופיעות ההערות שמפרסמת המכללה לכל קורס. כאן יהיה רשום למי מותר להירשם לקורס (תכנה, מכונות, חשמל וכו') מומלץ לוודא שנרשמת רק לקורסים מותרים כאן או ישירות באתר הידיעון.",
+				},
+			},
+		],
 	});
 
 	driverObj.drive();
@@ -111,7 +111,7 @@ function coursePage() {
 const pageFunctions = new Map([
 	['/', mainPage],
 	['/contact', contactPage],
-	['/course/[course_id]', coursePage]
+	['/course/[course_id]', coursePage],
 ]);
 
 export function showHelp(page: Page) {

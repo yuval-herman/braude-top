@@ -2,7 +2,7 @@ import {
 	getInstancesExams,
 	getInstancesSession,
 	getNonEmptyCourseInstances,
-	getNonEmptyCourses
+	getNonEmptyCourses,
 } from '$lib/server/coursesDB';
 
 export const load = async ({ params, cookies }) => {
@@ -11,8 +11,8 @@ export const load = async ({ params, cookies }) => {
 		instances: getNonEmptyCourseInstances(course.course_id).map((instance) => ({
 			...instance,
 			sessions: getInstancesSession(instance.course_instance_id),
-			exams: getInstancesExams(instance.course_instance_id)
-		}))
+			exams: getInstancesExams(instance.course_instance_id),
+		})),
 	}));
 	let themeCookie = cookies.get('theme') ?? 'auto';
 	return { full_courses, themeCookie };

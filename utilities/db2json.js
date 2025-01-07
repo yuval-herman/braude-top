@@ -40,8 +40,8 @@ const full_courses = getNonEmptyCourses().map((course) => ({
 	instances: getNonEmptyCourseInstances(course.course_id).map((instance) => ({
 		...instance,
 		sessions: getInstancesSession(instance.course_instance_id),
-		exams: getInstancesExams(instance.course_instance_id)
-	}))
+		exams: getInstancesExams(instance.course_instance_id),
+	})),
 }));
 
 writeFileSync(OUTPUT_PATH, JSON.stringify(full_courses));

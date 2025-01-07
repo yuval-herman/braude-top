@@ -4,7 +4,7 @@
 	import allCourses from '../fullcourses.json';
 	const { Story } = defineMeta({
 		title: 'CourseCard',
-		component: CourseCard
+		component: CourseCard,
 	});
 </script>
 

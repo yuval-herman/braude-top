@@ -14,7 +14,7 @@ export const hoursList = [
 	{ hour: 19, min: 50 },
 	{ hour: 20, min: 50 },
 	{ hour: 21, min: 50 },
-	{ hour: 22, min: 50 }
+	{ hour: 22, min: 50 },
 ] as const;
 
 export function time2Index(timestring: string): number | undefined {
@@ -45,7 +45,7 @@ export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 				start,
 				type,
 				value: { name, room, instructor },
-				colorIndicator: colors.str2color(name)
+				colorIndicator: colors.str2color(name),
 			};
 		})
 	);
@@ -71,7 +71,7 @@ export function itemizeCourseList(courses: FullCourse[]): Item[] {
 
 export const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
 export const hourFormatter = new Intl.DateTimeFormat('he-IL', {
-	timeStyle: 'short'
+	timeStyle: 'short',
 });
 export const listFormatter = new Intl.ListFormat('he-IL');
 
@@ -128,7 +128,7 @@ const colors = {
 			hex = (num * 10 ** shift).toString(16);
 		}
 		return '#' + hex;
-	}
+	},
 };
 
 export const css = { colors } as const;
@@ -137,6 +137,6 @@ export const instanceColors = new Map(
 		הרצאה: colors.lighten('var(--primary)'),
 		תרגיל: colors.colorMix('var(--primary)', 'PaleGreen', 50),
 		מעבדה: colors.colorMix('var(--primary)', 'Aquamarine', 50),
-		default: 'var(--primary)'
+		default: 'var(--primary)',
 	})
 );

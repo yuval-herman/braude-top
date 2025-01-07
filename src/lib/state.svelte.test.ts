@@ -9,7 +9,7 @@ describe('Selected courses state', () => {
 		syllabus_link: '',
 		year: '',
 		name: 'קורס ריק',
-		instances: []
+		instances: [],
 	};
 	const instance: FullCourseInstance = {
 		type: 'הרצאה',
@@ -30,9 +30,9 @@ describe('Selected courses state', () => {
 				start_time: '8:30',
 				end_time: '9:30',
 				room: 'חדר 101',
-				semester: ''
-			}
-		]
+				semester: '',
+			},
+		],
 	};
 	it('checks the state starts empty', () => {
 		expect(selectedCourses.length).toBe(0);

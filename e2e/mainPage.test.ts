@@ -16,7 +16,7 @@ const hoursList = [
 	'19:50',
 	'20:50',
 	'21:50',
-	'22:50'
+	'22:50',
 ];
 
 test.describe('main page', () => {
@@ -86,7 +86,7 @@ test.describe('main page', () => {
 	test('make sure course list is scrollable in mobile', async ({ page }) => {
 		page.setViewportSize({
 			width: 412,
-			height: 915
+			height: 915,
 		});
 
 		await page.getByRole('button', { name: 'רשימת קורסים' }).click();

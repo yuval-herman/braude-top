@@ -5,7 +5,7 @@
 		addSelectedCourse,
 		hoveredInstance,
 		removeSelectedCourse,
-		selectedCourses
+		selectedCourses,
 	} from '$lib/state.svelte';
 	import { css, instanceColors, itemizeCourse } from '$lib/utils';
 	import { flip } from 'svelte/animate';

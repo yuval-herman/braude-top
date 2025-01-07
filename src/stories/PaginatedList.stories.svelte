@@ -4,7 +4,7 @@
 	import items from '../fullcourses.json';
 	const { Story } = defineMeta({
 		title: 'PaginatedList',
-		component: PaginatedList
+		component: PaginatedList,
 	});
 </script>
 

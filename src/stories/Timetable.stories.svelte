@@ -8,8 +8,8 @@
 		title: 'TimeTable',
 		component: TimeTable,
 		parameters: {
-			layout: 'fullscreen'
-		}
+			layout: 'fullscreen',
+		},
 	});
 
 	const items = itemizeCourse(allCourses[0])
@@ -21,13 +21,13 @@
 <Story
 	name="Filled"
 	args={{
-		items
+		items,
 	}}
 />
 <Story
 	name="With preview"
 	args={{
 		items: items.slice(0, -2),
-		preview: items.slice(-2)
+		preview: items.slice(-2),
 	}}
 />
