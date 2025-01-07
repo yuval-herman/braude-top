@@ -2,12 +2,22 @@
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
+
 	import { hoveredInstance, selectedCourses, sidebar, undoStack } from '$lib/state.svelte.js';
 	import { itemizeCourseList } from '$lib/utils.js';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
 	import { fly, slide, type FlyParams } from 'svelte/transition';
 
+	import { browser } from '$app/environment';
+	import { TypedLocalStorage } from '$lib/storage.js';
+	import { showHelp } from '$lib/help.js';
+	import { page } from '$app/state';
+
+	if (browser && !TypedLocalStorage.getItem('onboarded')) {
+		TypedLocalStorage.setItem('onboarded', true);
+		showHelp(page);
+	}
 	const { data } = $props();
 	let searchQuery = $state('');
 	$effect(() => {

@@ -1,6 +1,10 @@
 <script lang="ts">
 	import '$lib/global.css';
+	import 'driver.js/dist/driver.css';
+
 	import { theme } from '$lib/state.svelte';
+	import { showHelp } from '$lib/help.js';
+	import { page } from '$app/state';
 
 	let { children, data } = $props();
 	const { themeCookie } = data;
@@ -24,23 +28,32 @@
 			<li><a href="/">ראשי</a></li>
 			<li><a href="/contact">יצירת קשר</a></li>
 		</ul>
-		<button
-			aria-label="שינוי צבעים בהיר/כהה"
-			onclick={() => {
-				if (theme.theme === 'dark') {
-					theme.theme = 'light';
-					document.cookie = 'theme=light; SameSite=None; Secure';
-				} else {
-					theme.theme = 'dark';
-					document.cookie = 'theme=dark; SameSite=None; Secure';
-				}
-			}}
-		>
-			<svg class="sun-moon" viewBox="0 0 100 100">
-				<circle class="sun" cx="50" cy="50" r="30" />
-				<circle class="moon-bite" cx={theme.theme === 'light' ? 110 : 65} cy="45" r="30" />
-			</svg>
-		</button>
+		<ul>
+			<li>
+				<button aria-label="עזרה" class="help" id="help-button" onclick={() => showHelp(page)}
+					>?</button
+				>
+			</li>
+			<li>
+				<button
+					aria-label="שינוי צבעים בהיר/כהה"
+					onclick={() => {
+						if (theme.theme === 'dark') {
+							theme.theme = 'light';
+							document.cookie = 'theme=light; SameSite=None; Secure';
+						} else {
+							theme.theme = 'dark';
+							document.cookie = 'theme=dark; SameSite=None; Secure';
+						}
+					}}
+				>
+					<svg class="sun-moon" viewBox="0 0 100 100">
+						<circle class="sun" cx="50" cy="50" r="30" />
+						<circle class="moon-bite" cx={theme.theme === 'light' ? 110 : 65} cy="45" r="30" />
+					</svg>
+				</button>
+			</li>
+		</ul>
 	</nav>
 
 	{@render children()}
@@ -63,9 +76,12 @@
 			background: var(--nav-background);
 
 			ul {
+				display: flex;
+				align-items: center;
 				list-style-type: none;
 				margin: 0;
 				padding: 0;
+				gap: 4px;
 				li {
 					display: inline-block;
 					padding-left: 8px;
@@ -79,6 +95,14 @@
 				}
 			}
 
+			.help {
+				font-size: 28px;
+				color: light-dark(var(--dark), var(--light));
+				background: var(--info);
+				padding: 0 8px;
+				font-weight: bold;
+				border-radius: 8px;
+			}
 			button {
 				border: none;
 				background: inherit;

@@ -1,6 +1,7 @@
 interface StorageItems {
 	selected: FullCourse[];
 	version: string; // semver, can be compared with normal comparison operators
+	onboarded: boolean; // whether the user has been onboraded
 }
 
 export class TypedLocalStorage {
