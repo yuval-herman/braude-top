@@ -20,7 +20,7 @@
 
 		<form action="?/contact" method="post" use:enhance>
 			<label
-				>שם:
+				>שם (לא חובה):
 				<input type="text" name="name" placeholder="הזן את שמך" />
 			</label>
 
