@@ -1,10 +1,24 @@
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	import { slide } from 'svelte/transition';
+
+	const { form } = $props();
+</script>
+
 <div class="container">
 	<header>
 		<h1>דיווח ובקשות</h1>
 	</header>
 	<main>
 		<h4>כאן ניתן ליצור איתי קשר על מנת לדווח על באגים או לבקש פיצ'רים</h4>
-		<form action="?/contact" method="post">
+
+		{#if form?.success}
+			<span transition:slide class="success">הבקשה נשלחה בהצלחה!</span>
+		{:else if form?.success === false}
+			<span transition:slide class="failure">הבקשה לא התקבלה בעקבות תקלה...</span>
+		{/if}
+
+		<form action="?/contact" method="post" use:enhance>
 			<label
 				>שם:
 				<input type="text" name="name" placeholder="הזן את שמך" />
@@ -50,6 +64,17 @@
 			padding: 1rem;
 			display: grid;
 			gap: 8px;
+			.success,
+			.failure {
+				padding: 8px;
+				border-radius: 8px;
+			}
+			.failure {
+				background: var(--warn);
+			}
+			.success {
+				background: var(--success);
+			}
 			form {
 				input,
 				select {
