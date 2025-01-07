@@ -22,7 +22,7 @@ const hoursList = [
 test.describe('main page', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
-		await page.keyboard.press('Escape');
+		page.locator('#driver-popover-content').press('Escape');
 	});
 
 	test('home page has expected elements', async ({ page }) => {
@@ -52,7 +52,7 @@ test.describe('main page', () => {
 
 		await expect(courseTitle).toBeTruthy();
 
-		const firstInstance = firstCourse.locator('header ~ div > div').first();
+		const firstInstance = firstCourse.locator('.instance').first();
 		await expect(firstInstance).toBeVisible();
 
 		firstInstance.click({ timeout: 500 });
