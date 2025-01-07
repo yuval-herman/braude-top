@@ -30,6 +30,7 @@
 
 		border-top-right-radius: 12px;
 		font-weight: bold;
+		border: solid 1px var(--border);
 	}
 
 	@media (width > 770px) {
