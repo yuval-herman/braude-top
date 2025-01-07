@@ -1,4 +1,4 @@
-import { getFullCourse } from '$lib/server/db';
+import { getFullCourse } from '$lib/server/coursesDB';
 
 export const load = async ({ params, setHeaders }) => {
 	setHeaders({ 'cache-control': 'max-age=3600' });

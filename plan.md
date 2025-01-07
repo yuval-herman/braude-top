@@ -1,6 +1,7 @@
 # WIP
 
 - replace logic for user downloading the entire db
+- add contact page
 
 # Planned
 

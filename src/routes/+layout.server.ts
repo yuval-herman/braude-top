@@ -3,7 +3,7 @@ import {
 	getInstancesSession,
 	getNonEmptyCourseInstances,
 	getNonEmptyCourses
-} from '$lib/server/db';
+} from '$lib/server/coursesDB';
 
 export const load = async ({ params, cookies }) => {
 	const full_courses = getNonEmptyCourses().map((course) => ({

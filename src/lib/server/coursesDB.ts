@@ -1,16 +1,16 @@
 import Database from 'better-sqlite3';
 
-const db = new Database('data/courses.db');
+const coursesDB = new Database('data/courses.db');
 
 /** Retrieves all the courses */
 export const getCourses = (() => {
-	const stmt = db.prepare<[], Course>('SELECT * FROM courses ORDER by name');
+	const stmt = coursesDB.prepare<[], Course>('SELECT * FROM courses ORDER by name');
 	return () => stmt.all();
 })();
 
 /** Retrieves full course by id */
 export const getFullCourse = (() => {
-	const courseStmt = db.prepare<number, Course>('SELECT * from courses WHERE course_id = ?');
+	const courseStmt = coursesDB.prepare<number, Course>('SELECT * from courses WHERE course_id = ?');
 	return (id: number | string): FullCourse | undefined => {
 		const course = courseStmt.get(id as number);
 		if (course === undefined) return;
@@ -27,7 +27,7 @@ export const getFullCourse = (() => {
 
 /** Retrieves all the courses that have sessions*/
 export const getNonEmptyCourses = (() => {
-	const stmt = db.prepare<[], Course>(
+	const stmt = coursesDB.prepare<[], Course>(
 		'SELECT distinct c.* from courses c \
 		join course_instances using (course_id) \
 		join sessions USING (course_instance_id)'
@@ -37,7 +37,7 @@ export const getNonEmptyCourses = (() => {
 
 /** Retrieves all the course instances for a given course id */
 export const getCourseInstances = (() => {
-	const stmt = db.prepare<number, CourseInstance>(
+	const stmt = coursesDB.prepare<number, CourseInstance>(
 		'SELECT * FROM course_instances WHERE course_id = ?'
 	);
 	return (id: number | string) => stmt.all(id as number);
@@ -45,7 +45,7 @@ export const getCourseInstances = (() => {
 
 /** Retrieves all the course instances for a given course id that have sessions*/
 export const getNonEmptyCourseInstances = (() => {
-	const stmt = db.prepare<number, CourseInstance>(
+	const stmt = coursesDB.prepare<number, CourseInstance>(
 		'SELECT distinct c.* from course_instances c \
 		JOIN sessions USING (course_instance_id) \
 		WHERE course_id = ?'
@@ -55,7 +55,7 @@ export const getNonEmptyCourseInstances = (() => {
 
 /** Retrieves all the instance session for a given course instance id */
 export const getInstancesSession = (() => {
-	const stmt = db.prepare<number, CourseSession>(
+	const stmt = coursesDB.prepare<number, CourseSession>(
 		'SELECT * from sessions where course_instance_id = ?'
 	);
 	return (id: number | string) => stmt.all(id as number);
@@ -63,6 +63,8 @@ export const getInstancesSession = (() => {
 
 /** Retrieves all the exams for a given course instance id */
 export const getInstancesExams = (() => {
-	const stmt = db.prepare<number, CourseExam>('SELECT * from exams WHERE course_instance_id = ?');
+	const stmt = coursesDB.prepare<number, CourseExam>(
+		'SELECT * from exams WHERE course_instance_id = ?'
+	);
 	return (id: number | string) => stmt.all(id as number);
 })();

@@ -23,6 +23,10 @@ Thumbs.db
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
+# SqliteDatabses
+*.db
+*.db-shm
+*.db-wal
+
 src/fullcourses.json
-courses.db*
 secrets.json
