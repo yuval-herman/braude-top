@@ -63,7 +63,7 @@
 			</tr>
 			{#if row === 4}
 				<tr>
-					<th class="lunch">הפסקת צהריים</th>
+					<th class="hour lunch">הפסקת צהריים</th>
 
 					{#each { length: itemsByDay.length } as _}
 						<td></td>
@@ -147,6 +147,17 @@
 		}
 		.item {
 			font-size: x-small;
+		}
+	}
+	@media (max-width: 400px) {
+		th {
+			font-size: small;
+		}
+		.hour {
+			font-size: x-small;
+		}
+		.item {
+			font-size: xx-small;
 		}
 	}
 </style>
