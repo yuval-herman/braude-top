@@ -3,4 +3,5 @@ interface ContactMessage {
 	email?: string;
 	type: string;
 	message: string;
+	data: string;
 }

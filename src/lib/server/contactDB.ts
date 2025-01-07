@@ -8,7 +8,7 @@ contactDB.exec(schema);
 /** Store a contact message */
 export const setContactMessage = (() => {
 	const stmt = contactDB.prepare<ContactMessage>(
-		'INSERT INTO messages (name, email, type, message) values (:name, :email, :type, :message)'
+		'INSERT INTO messages (name, email, type, message, date) values (:name, :email, :type, :message, :date)'
 	);
 	return (message: ContactMessage) => stmt.run(message);
 })();
