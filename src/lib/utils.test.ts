@@ -165,8 +165,8 @@ describe('Course transforming utilities', () => {
 			{
 				colorIndicator: '#7c73e4',
 				day: 0,
-				end: 10,
-				start: 9,
+				start: 10,
+				end: 11,
 				type: 'מעבדה',
 				value: {
 					instructor: 'מרצה ד',

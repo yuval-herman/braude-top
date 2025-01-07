@@ -5,6 +5,7 @@ const hoursList = [
 	'10:30',
 	'11:30',
 	'12:20',
+	'הפסקת צהריים',
 	'12:50',
 	'13:50',
 	'14:50',
@@ -21,6 +22,7 @@ const hoursList = [
 test.describe('main page', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
+		await page.keyboard.press('Escape');
 	});
 
 	test('home page has expected elements', async ({ page }) => {
