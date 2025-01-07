@@ -71,7 +71,7 @@
 				in:fly={tabTransition('all', 'in')}
 				out:fly={tabTransition('all', 'out')}
 			>
-				<input type="text" bind:value={searchQuery} />
+				<input type="text" bind:value={searchQuery} placeholder="חפש כאן..." />
 				<PaginatedList items={filteredCourses} />
 			</div>
 		{:else}
