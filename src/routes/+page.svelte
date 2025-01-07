@@ -63,7 +63,7 @@
 			<div class="menu-button">
 				<MenuButton />
 			</div>
-			<button onclick={() => (tab = 'all')}>כל הקורסים</button>
+			<button id="all-courses" onclick={() => (tab = 'all')}>כל הקורסים</button>
 			<button id="my-courses" onclick={() => (tab = 'my')}>הקורסים שלי</button>
 		</nav>
 

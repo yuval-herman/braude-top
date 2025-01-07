@@ -20,7 +20,7 @@ function mainPage() {
 					popover: {
 						title: 'ברוכים הבאים לbraude.top!',
 						description:
-							'עשיתי מאמצים רבים כדי שהאתר יהיה אינטואיטיבי ופשוט לשימוש, אבל אם אתם מסתבכים, בניתי מערכת עזרה אינטראקטיבית שתעזור לכם להישאר על הגל.',
+							'עשיתי מאמצים רבים כדי שהאתר יהיה אינטואיטיבי ופשוט לשימוש, אבל אם אתם מסתבכים, בניתי מערכת עזרה אינטראקטיבית שתעזור לכם להישאר על הגל🌊.',
 					},
 				},
 				{
@@ -35,19 +35,25 @@ function mainPage() {
 		});
 		driverObj.drive();
 	} else {
+		const hiddenListMode = !document.querySelector('.list-container')?.checkVisibility();
+		const showListBtn = document.querySelector(
+			'th > [aria-label="רשימת קורסים"]'
+		) as HTMLButtonElement;
+		const showMyCourseBtn = document.querySelector('#my-courses') as HTMLButtonElement;
+
 		let steps: DriveStep[] = [
 			{
 				popover: {
 					title: 'דף ראשי',
 					description: 'זהו הדף הראשי של האתר, פה תבלו את רוב זמנכם בתכנון המערכת.',
+					onPopoverRender: () => {
+						(document.querySelector('#all-courses') as HTMLButtonElement).click();
+					},
 				},
 			},
 		];
-		const mobileMode = !document.querySelector('.list-container')?.checkVisibility();
-		const showListBtn = document.querySelector(
-			'th > [aria-label="רשימת קורסים"]'
-		) as HTMLButtonElement;
-		if (mobileMode) {
+
+		if (hiddenListMode) {
 			steps.push({
 				element: showListBtn,
 				popover: {
@@ -80,7 +86,9 @@ function mainPage() {
 				popover: {
 					title: 'תיבת קבוצה',
 					description:
-						"לכל קורס ישנן כמה 'קבוצות'. קבוצות כשמן כן הן, חלוקה של סטודנטים לקבוצות בתוך הקורס. לכל קבוצה יהיה מרצה משלה ושעות למידה שונות. הצבעים השונים לקבוצות עוזרים להבדיל בין הרצאות, תרגולים וכו'",
+						"לכל קורס ישנן כמה 'קבוצות'.<br>\
+						קבוצות כשמן כן הן, חלוקה של סטודנטים לקבוצות בתוך הקורס. לכל קבוצה יהיה מרצה משלה ושעות למידה שונות.<br>\
+						הצבעים השונים לקבוצות עוזרים להבדיל בין הרצאות, תרגולים וכו'",
 				},
 			},
 			{
@@ -89,6 +97,10 @@ function mainPage() {
 					title: 'תיבת קבוצה',
 					description:
 						'ניתן לרחף עם העכבר מעל קבוצה בקורס כדי לראות איפה היא תופיע במערכת שעות. כדי לבחור קבוצה, פשוט נלחץ עליה והיא תופיע מיידית במערכת השעות.',
+					onNextClick: () => {
+						(document.querySelector('.instance') as HTMLDivElement).click();
+						driverObj.moveNext();
+					},
 				},
 			},
 			{
@@ -104,19 +116,42 @@ function mainPage() {
 					title: 'הקורסים שלי',
 					description: "כדי לראות את רשימת הקורסים שכבר בחרנו ניתן ללחוץ על 'הקורסים שלי'.",
 					onNextClick: () => {
-						if (mobileMode) {
-							showListBtn.click();
-						}
+						showMyCourseBtn.click();
+						setTimeout(() => {
+							driverObj.moveNext();
+						}, 250);
+					},
+				},
+			},
+			{
+				element: '.list-container',
+				popover: {
+					title: 'הקורסים שלי',
+					description:
+						'כאן תופיע רשימת הקורסים שבחרנו.<br>\
+						לחלק מהקורסים יש דרישה להירשם גם לשיעורי תרגול ומעבדות.<br>\
+						האתר עושה מאמץ לוודא שאכן הוספתם את כל השיעורים שהקורס דורש, אבל מומלץ בחום לוודא זאת באתר הידיעון.',
+					onNextClick: () => {
+						if (hiddenListMode) showListBtn.click();
 						driverObj.moveNext();
 					},
 				},
 			},
+			{
+				popover: {
+					title: 'זה הכל!',
+					description:
+						'לכל דף באתר יש מדריך משל עצמו, אז אם אתם מסתבכים כפתור המדריך תמיד פה.<br>\
+						בהצלחה בתכנון המערכת!',
+				},
+			},
 		]);
+
 		const driverObj = driver({
 			...baseDriverConfig,
 			steps,
 		});
-		driverObj.drive();
+		driverObj.drive(0);
 	}
 }
 
