@@ -1,5 +1,6 @@
 import type { Page } from '@sveltejs/kit';
-import { driver, type Config, type DriveStep } from 'driver.js';
+import { driver, type Config } from 'driver.js';
+import { TypedLocalStorage } from './storage';
 
 const baseDriverConfig: Config = {
 	showProgress: true,
@@ -10,28 +11,87 @@ const baseDriverConfig: Config = {
 };
 
 function mainPage() {
-	const driverObj = driver({
-		...baseDriverConfig,
-		steps: [
-			{
-				popover: {
-					title: 'ברוכים הבאים לbraude.top!',
-					description:
-						'עשיתי מאמצים רבים כדי שהאתר יהיה אינטואיטיבי ופשוט לשימוש, אבל אם אתם מסתבכים, בניתי מערכת עזרה אינטראקטיבית שתעזור לכם להישאר על הגל.',
+	const onboarded = TypedLocalStorage.getItem('onboarded');
+	if (!onboarded) {
+		const driverObj = driver({
+			...baseDriverConfig,
+			steps: [
+				{
+					popover: {
+						title: 'ברוכים הבאים לbraude.top!',
+						description:
+							'עשיתי מאמצים רבים כדי שהאתר יהיה אינטואיטיבי ופשוט לשימוש, אבל אם אתם מסתבכים, בניתי מערכת עזרה אינטראקטיבית שתעזור לכם להישאר על הגל.',
+					},
 				},
-			},
-			{
-				element: '#help-button',
-				popover: {
-					title: 'כפתור הטיפים הפלאי!',
-					description: 'אם אתם לא בטוחים מה לעשות לחצו כאן בכל שלב, תכנון נעים!',
-					side: 'bottom',
+				{
+					element: '#help-button',
+					popover: {
+						title: 'כפתור הטיפים הפלאי!',
+						description: 'אם אתם לא בטוחים מה לעשות לחצו כאן בכל שלב, תכנון נעים!',
+						side: 'bottom',
+					},
 				},
-			},
-		],
-	});
-
-	driverObj.drive();
+			],
+		});
+		driverObj.drive();
+	} else {
+		const driverObj = driver({
+			...baseDriverConfig,
+			steps: [
+				{
+					popover: {
+						title: 'דף ראשי',
+						description: 'זהו הדף הראשי של האתר, פה תבלו את רוב זמנכם בתכנון המערכת.',
+					},
+				},
+				{
+					element: '.list-container',
+					popover: {
+						title: 'רשימת קורסים',
+						description: 'כאן מופיעה רשימה של כל הקורסים בבראודה, ניתן לחפש קורסים בתיבת החיפוש.',
+					},
+				},
+				{
+					element: '.list-container li',
+					popover: {
+						title: 'תיבת קורס',
+						description: "כל קורס מופיע בתוך 'תיבה' משל עצמו",
+					},
+				},
+				{
+					element: '.instance',
+					popover: {
+						title: 'תיבת קבוצה',
+						description:
+							"לכל קורס ישנן כמה 'קבוצות'. קבוצות כשמן כן הן, חלוקה של סטודנטים לקבוצות בתוך הקורס. לכל קבוצה יהיה מרצה משלה ושעות למידה שונות. הצבעים השונים לקבוצות עוזרים להבדיל בין הרצאות, תרגולים וכו'",
+					},
+				},
+				{
+					element: '.instance',
+					popover: {
+						title: 'תיבת קבוצה',
+						description:
+							'ניתן לרחף עם העכבר מעל קבוצה בקורס כדי לראות איפה היא תופיע במערכת שעות. כדי לבחור קבוצה, פשוט נלחץ עליה והיא תופיע מיידית במערכת השעות.',
+					},
+				},
+				{
+					element: '[aria-label="מידע נוסף"]',
+					popover: {
+						title: 'מידע נוסף',
+						description: 'ניתן לראות מידע נוסף על הקורס בלחיצה כאן.',
+					},
+				},
+				{
+					element: '#my-courses',
+					popover: {
+						title: 'הקורסים שלי',
+						description: "כדי לראות את רשימת הקורסים שכבר בחרנו ניתן ללחוץ על 'הקורסים שלי'.",
+					},
+				},
+			],
+		});
+		driverObj.drive();
+	}
 }
 
 function contactPage() {
@@ -108,7 +168,7 @@ function coursePage() {
 	driverObj.drive();
 }
 
-const pageFunctions = new Map([
+const pageFunctions = new Map<string, (page: Page) => void>([
 	['/', mainPage],
 	['/contact', contactPage],
 	['/course/[course_id]', coursePage],
@@ -120,5 +180,5 @@ export function showHelp(page: Page) {
 	if (!helpFunc) {
 		throw new Error(`no help function defined for page ${page.url} -- ${page.route.id}`);
 	}
-	helpFunc();
+	helpFunc(page);
 }

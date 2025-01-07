@@ -9,15 +9,17 @@
 	import type { KeyboardEventHandler } from 'svelte/elements';
 	import { fly, slide, type FlyParams } from 'svelte/transition';
 
-	import { browser } from '$app/environment';
-	import { TypedLocalStorage } from '$lib/storage.js';
-	import { showHelp } from '$lib/help.js';
 	import { page } from '$app/state';
+	import { showHelp } from '$lib/help.js';
+	import { TypedLocalStorage } from '$lib/storage.js';
+	import { onMount } from 'svelte';
 
-	if (browser && !TypedLocalStorage.getItem('onboarded')) {
-		TypedLocalStorage.setItem('onboarded', true);
-		showHelp(page);
-	}
+	onMount(() => {
+		if (!TypedLocalStorage.getItem('onboarded')) {
+			showHelp(page);
+			TypedLocalStorage.setItem('onboarded', true);
+		}
+	});
 	const { data } = $props();
 	let searchQuery = $state('');
 	$effect(() => {
@@ -62,7 +64,7 @@
 				<MenuButton />
 			</div>
 			<button onclick={() => (tab = 'all')}>כל הקורסים</button>
-			<button onclick={() => (tab = 'my')}>הקורסים שלי</button>
+			<button id="my-courses" onclick={() => (tab = 'my')}>הקורסים שלי</button>
 		</nav>
 
 		{#if tab === 'all'}
