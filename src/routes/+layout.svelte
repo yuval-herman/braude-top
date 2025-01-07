@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { browser } from '$app/environment';
 	import '$lib/global.css';
 	import { theme } from '$lib/state.svelte';
 
@@ -23,6 +22,7 @@
 	<nav>
 		<ul>
 			<li><a href="/">ראשי</a></li>
+			<li><a href="/contact">יצירת קשר</a></li>
 		</ul>
 		<button
 			aria-label="שינוי צבעים בהיר/כהה"
@@ -47,55 +47,57 @@
 </div>
 
 <style>
-	button,
-	nav {
-		background: var(--neutral);
-	}
-
-	button {
-		border: none;
-		.sun-moon {
-			width: 28px;
-			height: 28px;
-		}
-
-		.sun {
-			fill: #ffd700;
-			transition: fill 2s ease-in-out;
-		}
-
-		.moon-bite {
-			fill: var(--neutral);
-			transition: all 1s;
-		}
-	}
-
 	.container {
 		height: 100%;
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-	}
-	nav {
-		display: flex;
-		justify-content: space-between;
-		border-bottom: 1px solid var(--border);
-		padding: 8px 16px;
-	}
+		--nav-background: var(--neutral);
 
-	ul {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-	}
+		nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			border-bottom: 1px solid var(--border);
+			padding: 8px 16px;
+			background: var(--nav-background);
 
-	a {
-		text-decoration: none;
-		background: var(--bg);
-		padding: 4px 8px;
-		border-radius: 4px;
-		&:visited {
-			color: inherit;
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+				li {
+					display: inline-block;
+					padding-left: 8px;
+				}
+				a {
+					text-decoration: none;
+					background: var(--bg);
+					padding: 4px 8px;
+					border-radius: 4px;
+					color: inherit;
+				}
+			}
+
+			button {
+				border: none;
+				background: inherit;
+
+				.sun-moon {
+					width: 28px;
+					height: 28px;
+				}
+
+				.sun {
+					fill: #ffd700;
+					transition: fill 2s ease-in-out;
+				}
+
+				.moon-bite {
+					fill: var(--nav-background);
+					transition: all 1s;
+				}
+			}
 		}
 	}
 </style>
