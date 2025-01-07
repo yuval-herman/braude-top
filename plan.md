@@ -1,7 +1,7 @@
 # WIP
 
 - replace logic for user downloading the entire db
-- add contact page
+- add hints for users when using the site
 
 # Planned
 
