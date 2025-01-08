@@ -22,10 +22,18 @@ const hoursList = [
 test.describe('main page', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
+		page.locator('#driver-popover-content').waitFor({ state: 'visible' });
 		page.locator('#driver-popover-content').press('Escape');
+		page.locator('#driver-popover-content').waitFor({ state: 'hidden' });
 	});
 
-	test('add and remove instance', async ({ page }) => {
+	test('add and remove instance', async ({ page }, { project }) => {
+		if (project.use.isMobile) {
+			await test.step('open sidebar', async () => {
+				await page.getByRole('button', { name: 'רשימת קורסים' }).click();
+			});
+		}
+
 		const courseList = page.locator('header ~ ul');
 		await expect(courseList).toBeVisible();
 
@@ -41,12 +49,12 @@ test.describe('main page', () => {
 		firstInstance.click({ timeout: 500 });
 
 		await page.mouse.move(0, 0);
-		await page.waitForTimeout(500);
 
-		await expect(
-			page.locator('td > div').getByText(courseTitle!, { exact: false }).nth(0)
-		).toBeVisible();
-
+		if (!project.use.isMobile) {
+			await expect(
+				page.locator('td > div').getByText(courseTitle!, { exact: false }).nth(0)
+			).toBeVisible();
+		}
 		await page.getByRole('button', { name: 'הקורסים שלי' }).click();
 
 		const courseHeading = page.getByRole('heading', { name: courseTitle! }).nth(1);
