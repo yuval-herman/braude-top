@@ -116,9 +116,25 @@
 				{#each course.instances as { exams, course_instance_id } (course_instance_id)}
 					{#each exams as exam (exam.date)}
 						<p transition:slide|global>
-							<span>{exam.exam_type},</span>
-							<span>מועד {exam.exam_round},</span>
-							<span>ב-{exam.date}</span>
+							{#if exam.exam_type === 'ללא בחינה - עבודה, פרוייקט,דוח'}
+								<span>{exam.exam_type} להגשה</span>
+							{:else}
+								<span
+									>מועד {exam.exam_round === 1
+										? 'ראשון'
+										: exam.exam_round === 2
+											? 'שני'
+											: exam.exam_round},</span
+								>
+								{#if !exam.exam_type}
+									<span>בחינה,</span>
+								{:else if ['בחינה רגילה', 'בחינה במעבדה', 'בחינה מפוצלת', 'מבחן בית'].includes(exam.exam_type)}
+									<span>{exam.exam_type},</span>
+								{:else if exam.exam_type === 'ללא השגחה'}
+									<span>בחינה ללא השגחה</span>
+								{/if}
+							{/if}
+							<span>בתאריך {exam.date}</span>
 						</p>
 					{/each}
 				{/each}

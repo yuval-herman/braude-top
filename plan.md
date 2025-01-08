@@ -1,15 +1,7 @@
 # WIP
 
-- e2e tests
-  - help
-    - onboarding on main page
-    - help on main page
-    - help on contact page
-    - help on course info page
-
 # Planned
 
-- fix exams showing undefined
 - work by year and semester
 - analytics
 

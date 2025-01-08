@@ -51,7 +51,13 @@ interface CourseExam {
 	exam_round: number;
 	course_type: string;
 	date: string;
-	exam_type: string;
+	exam_type?:
+		| 'בחינה רגילה'
+		| 'בחינה במעבדה'
+		| 'ללא בחינה - עבודה, פרוייקט,דוח'
+		| 'מבחן בית'
+		| 'ללא השגחה'
+		| 'בחינה מפוצלת';
 }
 
 interface CourseInstance {
