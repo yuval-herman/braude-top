@@ -1,9 +1,8 @@
 import { browser, version } from '$app/environment';
-import { TypedLocalStorage } from './storage';
 import semverMajor from 'semver/functions/major';
+import { TypedLocalStorage } from './storage';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
-export const sidebar = $state({ isOpen: false });
 export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
 type stackFunction = () => void;
 

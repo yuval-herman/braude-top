@@ -1,12 +1,12 @@
 # WIP
 
-- animation when opening side panel
 - test site help
 
 # Planned
 
 - work by year and semester
 
+- animation when opening side panel
 - add error pages
 - add ctrl-y to redo
 

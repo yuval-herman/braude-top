@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { sidebar } from '$lib/state.svelte';
+	import { pushState } from '$app/navigation';
+	import { page } from '$app/state';
 </script>
 
-<button aria-label="רשימת קורסים" onclick={() => (sidebar.isOpen = !sidebar.isOpen)}
+<button
+	aria-label="רשימת קורסים"
+	onclick={() => (page.state.sidebarOpen ? history.back() : pushState('', { sidebarOpen: true }))}
 	><svg
 		xmlns="http://www.w3.org/2000/svg"
 		width="24"

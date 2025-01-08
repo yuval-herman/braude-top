@@ -3,7 +3,7 @@
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
 
-	import { hoveredInstance, selectedCourses, sidebar, undoStack } from '$lib/state.svelte.js';
+	import { hoveredInstance, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { itemizeCourseList } from '$lib/utils.js';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
@@ -58,7 +58,7 @@
 
 <svelte:window {onkeydown} />
 <main>
-	<div class="selector" class:hidden={!sidebar.isOpen}>
+	<div class="selector" class:hidden={!page.state.sidebarOpen}>
 		<nav>
 			<div class="menu-button">
 				<MenuButton />
@@ -91,7 +91,7 @@
 			</div>
 		{/if}
 	</div>
-	<div class="table-container" class:hidden={sidebar.isOpen}>
+	<div class="table-container" class:hidden={page.state.sidebarOpen}>
 		<TimeTable items={itemizeCourseList(selectedCourses)} preview={hoveredInstance.items} />
 	</div>
 </main>
