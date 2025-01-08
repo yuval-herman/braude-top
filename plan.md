@@ -1,10 +1,27 @@
 # WIP
 
-- test site help
+- e2e tests
+  - theme change
+  - main flows
+    - add course
+    - add two instances
+    - remove single instance
+    - remove course
+    - show preview
+    - search courses
+    - move pages
+    - scroll
+    - switch between list of my and all courses
+  - help
+    - onboarding on main page
+    - help on main page
+    - help on contact page
+    - help on course info page
 
 # Planned
 
 - work by year and semester
+- analytics
 
 - animation when opening side panel
 - add error pages
