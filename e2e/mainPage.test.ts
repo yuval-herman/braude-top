@@ -24,7 +24,7 @@ test.describe('main page', () => {
 		await page.goto('/');
 		page.locator('#driver-popover-content').waitFor({ state: 'visible' });
 		page.locator('#driver-popover-content').press('Escape');
-		page.locator('#driver-popover-content').waitFor({ state: 'hidden' });
+		page.locator('#driver-popover-content').waitFor({ state: 'detached' });
 	});
 
 	test('add and remove instance', async ({ page }, { project }) => {
@@ -47,8 +47,6 @@ test.describe('main page', () => {
 		await expect(firstInstance).toBeVisible();
 
 		firstInstance.click({ timeout: 500 });
-
-		await page.mouse.move(0, 0);
 
 		if (!project.use.isMobile) {
 			await expect(
