@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
+	use: { trace: 'on' },
 	webServer: {
 		command: 'npm run build && npm run preview',
 		port: 4173,
