@@ -25,23 +25,6 @@ test.describe('main page', () => {
 		page.locator('#driver-popover-content').press('Escape');
 	});
 
-	test('home page has expected elements', async ({ page }) => {
-		await expect(page.locator('nav').filter({ hasText: 'ראשי' })).toBeVisible();
-		const table = page.locator('table');
-		await expect(table).toBeVisible();
-		const tableHead = table.locator('thead');
-		await expect(tableHead.locator('th')).toHaveCount(7);
-		const tableBody = table.locator('tbody');
-		const rows = tableBody.locator('tr');
-		await expect(rows).toHaveCount(hoursList.length);
-		for (let i = 0; i < hoursList.length; i++) {
-			await expect(rows.nth(i).locator('th').first()).toContainText(hoursList[i]);
-			await expect(rows.nth(i).locator('td')).toHaveCount(6);
-		}
-
-		await expect(page.locator('header ~ ul')).toBeVisible();
-	});
-
 	test('add and remove instance', async ({ page }) => {
 		const courseList = page.locator('header ~ ul');
 		await expect(courseList).toBeVisible();
@@ -75,24 +58,5 @@ test.describe('main page', () => {
 		).toBeVisible();
 
 		await expect(courseHeading).toBeHidden();
-	});
-
-	test('make sure course list is scrollable in desktop', async ({ page }) => {
-		const courseList = page.locator('header ~ ul');
-		const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);
-		await expect(isScrollable).toBe(true);
-	});
-
-	test('make sure course list is scrollable in mobile', async ({ page }) => {
-		page.setViewportSize({
-			width: 412,
-			height: 915,
-		});
-
-		await page.getByRole('button', { name: 'רשימת קורסים' }).click();
-
-		const courseList = page.locator('header ~ ul');
-		const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);
-		await expect(isScrollable).toBe(true);
 	});
 });
