@@ -1,7 +1,6 @@
 # WIP
 
 - e2e tests
-  - theme change
   - main flows
     - add course
     - add two instances

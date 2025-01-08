@@ -1,23 +1,4 @@
 import { expect, test } from '@playwright/test';
-const hoursList = [
-	'8:30',
-	'9:30',
-	'10:30',
-	'11:30',
-	'12:20',
-	'הפסקת צהריים',
-	'12:50',
-	'13:50',
-	'14:50',
-	'15:50',
-	'16:50',
-	'17:50',
-	'18:50',
-	'19:50',
-	'20:50',
-	'21:50',
-	'22:50',
-];
 
 test.describe('main page', () => {
 	test.beforeEach(async ({ page }) => {
@@ -64,5 +45,11 @@ test.describe('main page', () => {
 		).toBeVisible();
 
 		await expect(courseHeading).toBeHidden();
+	});
+
+	test('change theme', async ({ page }) => {
+		await expect(page.getByRole('table')).toHaveCSS('background-color', 'rgb(224, 230, 235)');
+		await page.getByLabel('שינוי צבעים בהיר/כהה').click();
+		await expect(page.getByRole('table')).toHaveCSS('background-color', 'rgb(56, 60, 63)');
 	});
 });
