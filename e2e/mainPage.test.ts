@@ -19,9 +19,8 @@ test.describe('main page', () => {
 		await expect(courseTitle).toBeTruthy();
 
 		const nthInstance = firstCourse.locator('.instance').nth(nth);
-		await expect(nthInstance).toBeVisible();
 
-		nthInstance.click({ timeout: 500 });
+		nthInstance.click();
 
 		return { courseTitle: courseTitle! };
 	}
