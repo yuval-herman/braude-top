@@ -1,9 +1,6 @@
 # WIP
 
 - e2e tests
-  - main flows
-    - scroll
-    - switch between list of my and all courses
   - help
     - onboarding on main page
     - help on main page
