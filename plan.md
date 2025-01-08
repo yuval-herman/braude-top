@@ -2,10 +2,6 @@
 
 - e2e tests
   - main flows
-    - add course
-    - add two instances
-    - remove single instance
-    - remove course
     - show preview
     - search courses
     - move pages

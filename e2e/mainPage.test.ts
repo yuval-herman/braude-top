@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 
 test.describe('main page', () => {
 	test.beforeEach(async ({ page }) => {
@@ -8,14 +8,8 @@ test.describe('main page', () => {
 		page.locator('#driver-popover-content').waitFor({ state: 'detached' });
 	});
 
-	test('add and remove instance', async ({ page }, { project }) => {
-		if (project.use.isMobile) {
-			await test.step('open sidebar', async () => {
-				await page.getByRole('button', { name: 'רשימת קורסים' }).click();
-			});
-		}
-
-		const courseList = page.locator('header ~ ul');
+	async function toggleInstance(page: Page, nth = 0) {
+		const courseList = page.locator('.list-container ul');
 		await expect(courseList).toBeVisible();
 
 		const firstCourse = courseList.locator('li').first();
@@ -24,27 +18,70 @@ test.describe('main page', () => {
 
 		await expect(courseTitle).toBeTruthy();
 
-		const firstInstance = firstCourse.locator('.instance').first();
-		await expect(firstInstance).toBeVisible();
+		const nthInstance = firstCourse.locator('.instance').nth(nth);
+		await expect(nthInstance).toBeVisible();
 
-		firstInstance.click({ timeout: 500 });
+		nthInstance.click({ timeout: 500 });
 
-		if (!project.use.isMobile) {
+		return { courseTitle: courseTitle! };
+	}
+
+	test.describe('add and remove instances', () => {
+		test.beforeEach(async ({ page }, { project }) => {
+			if (project.use.isMobile) {
+				await test.step('open sidebar', async () => {
+					await page.getByRole('button', { name: 'רשימת קורסים' }).click();
+				});
+			}
+		});
+
+		test('add and remove one instance', async ({ page }, { project }) => {
+			const { courseTitle } = await toggleInstance(page);
+
+			if (!project.use.isMobile) {
+				await expect(
+					page.locator('td > div').getByText(courseTitle, { exact: false }).nth(0)
+				).toBeVisible();
+			}
+
+			await page.getByRole('button', { name: 'הקורסים שלי' }).click();
+			await page.waitForTimeout(500);
+
+			const courseHeading = page.getByRole('heading', { name: courseTitle });
+			await expect(courseHeading).toBeVisible();
+
+			await toggleInstance(page);
+
 			await expect(
-				page.locator('td > div').getByText(courseTitle!, { exact: false }).nth(0)
+				page.getByText("כדי לראות קורסים צריך לבחור אותם בלשונית 'כל הקורסים'")
 			).toBeVisible();
-		}
-		await page.getByRole('button', { name: 'הקורסים שלי' }).click();
 
-		const courseHeading = page.getByRole('heading', { name: courseTitle! }).nth(1);
-		await courseHeading.waitFor({ state: 'visible', timeout: 1000 });
+			await expect(courseHeading).toBeHidden();
+		});
+		test('add two instances and remove one', async ({ page }, { project }) => {
+			const { courseTitle } = await toggleInstance(page);
+			await toggleInstance(page, 1);
 
-		await page.locator('header ~ div > div').first().click();
-		await expect(
-			page.getByText("כדי לראות קורסים צריך לבחור אותם בלשונית 'כל הקורסים'")
-		).toBeVisible();
+			if (!project.use.isMobile) {
+				await expect(
+					page.locator('td > div').getByText(courseTitle, { exact: false }).nth(0)
+				).toBeVisible();
+			}
 
-		await expect(courseHeading).toBeHidden();
+			await page.getByRole('button', { name: 'הקורסים שלי' }).click();
+			await page.waitForTimeout(500);
+
+			const courseHeading = page.getByRole('heading', { name: courseTitle });
+			await expect(courseHeading).toBeVisible();
+
+			await toggleInstance(page);
+
+			await expect(
+				page.getByText("כדי לראות קורסים צריך לבחור אותם בלשונית 'כל הקורסים'")
+			).toBeHidden();
+
+			await expect(page.getByRole('heading', { name: courseTitle })).toBeVisible();
+		});
 	});
 
 	test('change theme', async ({ page }) => {
