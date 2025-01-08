@@ -3,9 +3,9 @@ import { expect, Page, test } from '@playwright/test';
 test.describe('main page', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
-		page.locator('#driver-popover-content').waitFor({ state: 'visible' });
-		page.locator('#driver-popover-content').press('Escape');
-		page.locator('#driver-popover-content').waitFor({ state: 'detached' });
+		await page.locator('#driver-popover-content').waitFor({ state: 'visible' });
+		await page.locator('#driver-popover-content').press('Escape');
+		await page.locator('#driver-popover-content').waitFor({ state: 'detached' });
 	});
 
 	async function toggleInstance(page: Page, nth = 0) {
@@ -24,6 +24,57 @@ test.describe('main page', () => {
 
 		return { courseTitle: courseTitle! };
 	}
+
+	test('search course', async ({ page }, { project }) => {
+		if (project.use.isMobile) {
+			await test.step('open sidebar', async () => {
+				await page.getByRole('button', { name: 'רשימת קורסים' }).click();
+			});
+		}
+
+		await page.getByPlaceholder('חפש כאן').fill('אלגברה');
+		await expect(page.getByRole('heading', { name: 'אלגברה', exact: true })).toBeVisible();
+
+		await page.getByPlaceholder('חפש כאן').fill('מבוא למדעי');
+		await expect(page.getByRole('heading', { name: 'מבוא למדעי המחשב (מל"מ)' })).toBeVisible();
+
+		await page.getByPlaceholder('חפש כאן').fill('');
+		await expect(page.getByRole('heading', { name: 'מבוא למדעי המחשב (מל"מ)' })).toBeHidden();
+	});
+
+	test('move course list pages', async ({ page }, { project }) => {
+		if (project.use.isMobile) {
+			await test.step('open sidebar', async () => {
+				await page.getByRole('button', { name: 'רשימת קורסים' }).click();
+			});
+		}
+
+		const first = await page.locator('.list-container li header h3').first().ariaSnapshot();
+		let current = first;
+		await expect(page.getByText("עמ' 1", { exact: true })).toBeVisible();
+		await page.getByRole('button', { name: 'הבא' }).click();
+		await expect(page.locator('.list-container li header h3').first()).not.toMatchAriaSnapshot(
+			current
+		);
+
+		current = await page.locator('.list-container li header h3').first().ariaSnapshot();
+		await expect(page.getByText("עמ' 2", { exact: true })).toBeVisible();
+		await page.getByRole('button', { name: 'הבא' }).click();
+		await expect(page.locator('.list-container li header h3').first()).not.toMatchAriaSnapshot(
+			current
+		);
+
+		current = await page.locator('.list-container li header h3').first().ariaSnapshot();
+		await expect(page.getByText("עמ' 3", { exact: true })).toBeVisible();
+		await page.getByRole('button', { name: 'הקודם' }).click();
+		await expect(page.locator('.list-container li header h3').first()).not.toMatchAriaSnapshot(
+			current
+		);
+
+		await page.getByRole('button', { name: 'הקודם' }).click();
+		await expect(page.getByText("עמ' 1", { exact: true })).toBeVisible();
+		await expect(page.locator('.list-container li header h3').first()).toMatchAriaSnapshot(first);
+	});
 
 	test.describe('add and remove instances', () => {
 		test.beforeEach(async ({ page }, { project }) => {

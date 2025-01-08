@@ -41,6 +41,12 @@ test.describe('main page', () => {
 		await expect(page.locator('header ~ ul')).toBeVisible();
 	});
 
+	test('course preview show on hover', async ({ page }) => {
+		await expect(page.locator('td > .item')).toBeHidden();
+		await page.locator('.instance').nth(1).hover();
+		await expect(page.locator('td > .item')).toBeVisible();
+	});
+
 	test('make sure course list is scrollable', async ({ page }) => {
 		const courseList = page.locator('header ~ ul');
 		const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);

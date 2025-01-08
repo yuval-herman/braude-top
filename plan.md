@@ -2,9 +2,6 @@
 
 - e2e tests
   - main flows
-    - show preview
-    - search courses
-    - move pages
     - scroll
     - switch between list of my and all courses
   - help
@@ -15,6 +12,7 @@
 
 # Planned
 
+- fix exams showing undefined
 - work by year and semester
 - analytics
 
