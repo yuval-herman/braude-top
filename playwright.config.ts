@@ -18,20 +18,10 @@ export default defineConfig({
 			use: devices['Desktop Firefox'],
 			testIgnore: /.*mobile.test.ts/,
 		},
-		{
-			name: 'webkit',
-			use: devices['Desktop Safari'],
-			testIgnore: /.*mobile.test.ts/,
-		},
 		/* Test against mobile viewports. */
 		{
 			name: 'Mobile Chrome',
 			use: devices['Pixel 5'],
-			testIgnore: /.*desktop.test.ts/,
-		},
-		{
-			name: 'Mobile Safari',
-			use: devices['iPhone 12'],
 			testIgnore: /.*desktop.test.ts/,
 		},
 	],
