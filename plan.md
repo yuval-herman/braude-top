@@ -1,7 +1,7 @@
 # WIP
 
-- replace logic for user downloading the entire db
-- add hints for users when using the site
+- animation when opening side panel
+- test site help
 
 # Planned
 
@@ -17,5 +17,6 @@
 
 # Considering
 
+- replace logic for user downloading the entire db
 - get more info on course מחלקה (need to scrape)
 - automatically try to register to courses using user credentials
