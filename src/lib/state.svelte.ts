@@ -1,5 +1,4 @@
-import { browser, version } from '$app/environment';
-import semverMajor from 'semver/functions/major';
+import { browser } from '$app/environment';
 import { TypedLocalStorage } from './storage';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
@@ -8,19 +7,6 @@ type stackFunction = () => void;
 
 export const undoStack: stackFunction[] = [];
 // export const redoStack: stackFunction[] = [];
-
-if (browser) {
-	const localVersion = TypedLocalStorage.getItem('version');
-	if (
-		localVersion &&
-		semverMajor(localVersion) < semverMajor(version) &&
-		TypedLocalStorage.hasKey('selected')
-	) {
-		alert('האתר עודכן ולכן המערכת השמורה נמחקה');
-		TypedLocalStorage.removeItem('selected');
-	}
-	TypedLocalStorage.setItem('version', version);
-}
 
 export const selectedCourses = $state<FullCourse[]>(
 	(() => {

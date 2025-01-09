@@ -1,3 +1,6 @@
+import { browser, version } from '$app/environment';
+import semverMajor from 'semver/functions/major';
+
 interface StorageItems {
 	selected: FullCourse[];
 	version: string; // semver, can be compared with normal comparison operators
@@ -22,4 +25,18 @@ export class TypedLocalStorage {
 	static hasKey<TKey extends keyof StorageItems>(key: TKey): boolean {
 		return key in localStorage;
 	}
+}
+
+if (browser) {
+	const localVersion = TypedLocalStorage.getItem('version');
+	if (
+		localVersion &&
+		semverMajor(localVersion) < semverMajor(version) &&
+		TypedLocalStorage.hasKey('selected')
+	) {
+		alert('האתר עודכן ולכן המערכת השמורה נמחקה');
+		TypedLocalStorage.removeItem('selected');
+		TypedLocalStorage.removeItem('onboarded');
+	}
+	TypedLocalStorage.setItem('version', version);
 }
