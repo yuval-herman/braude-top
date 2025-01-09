@@ -67,6 +67,11 @@ interface CourseInstance {
 	hours: number;
 	group_name: string;
 	is_full: number;
+	waiting_list: boolean;
+	studied_online: boolean;
+	faculty: string;
+	attendance_mandatory: boolean;
+	has_lab: boolean;
 	language: string | null;
 	extra_notes: string | null;
 	instructor: string;
