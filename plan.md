@@ -3,7 +3,7 @@
 # Planned
 
 - work by year and semester
-- analytics
+- improve analytics (add an Analytics component? use:action?)
 
 - animation when opening side panel
 - add error pages

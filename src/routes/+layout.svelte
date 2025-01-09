@@ -5,6 +5,7 @@
 	import { theme } from '$lib/state.svelte';
 	import { showHelp } from '$lib/help.js';
 	import { page } from '$app/state';
+	import { onNavigate } from '$app/navigation';
 
 	let { children, data } = $props();
 	const { themeCookie } = data;
@@ -16,6 +17,13 @@
 	if (validateTheme(themeCookie) && theme.theme !== themeCookie) {
 		theme.theme = themeCookie;
 	}
+
+	onNavigate(({ to }) => {
+		if (!to) return;
+		window.goatcounter.count({
+			path: to.url.pathname + to.url.search + to.url.hash,
+		});
+	});
 </script>
 
 <svelte:head>
