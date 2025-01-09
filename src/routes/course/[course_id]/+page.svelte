@@ -3,9 +3,6 @@
 
 	const { data } = $props();
 	const { course } = data;
-	if (course === undefined) {
-		throw new Error('Course not found');
-	}
 
 	const properties = $derived.by(() => {
 		const languages = new Set<string>();

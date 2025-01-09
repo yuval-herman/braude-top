@@ -1,7 +1,5 @@
 # WIP
 
-- add error pages
-
 # Planned
 
 - work by year and semester
