@@ -1,5 +1,5 @@
 import { browser, version } from '$app/environment';
-import semverMajor from 'semver/functions/major';
+import semverMinor from 'semver/functions/minor';
 
 interface StorageItems {
 	selected: FullCourse[];
@@ -31,7 +31,7 @@ if (browser) {
 	const localVersion = TypedLocalStorage.getItem('version');
 	if (
 		localVersion &&
-		semverMajor(localVersion) < semverMajor(version) &&
+		semverMinor(localVersion) < semverMinor(version) &&
 		TypedLocalStorage.hasKey('selected')
 	) {
 		alert('האתר עודכן ולכן המערכת השמורה נמחקה');
