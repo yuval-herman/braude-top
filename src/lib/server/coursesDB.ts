@@ -40,7 +40,7 @@ export const getCourseInstances = (() => {
 	const stmt = coursesDB.prepare<number, CourseInstance>(
 		'SELECT * FROM course_instances WHERE course_id = ?'
 	);
-	return (id: number | string) => stmt.all(id as number);
+	return (id: number | string) => stmt.all(id as number).map(transformCourseInstance);
 })();
 
 /** Retrieves all the course instances for a given course id that have sessions*/
@@ -50,7 +50,7 @@ export const getNonEmptyCourseInstances = (() => {
 		JOIN sessions USING (course_instance_id) \
 		WHERE course_id = ?'
 	);
-	return (id: number | string) => stmt.all(id as number);
+	return (id: number | string) => stmt.all(id as number).map(transformCourseInstance);
 })();
 
 /** Retrieves all the instance session for a given course instance id */
@@ -68,3 +68,8 @@ export const getInstancesExams = (() => {
 	);
 	return (id: number | string) => stmt.all(id as number);
 })();
+
+function transformCourseInstance(instance: CourseInstance): CourseInstance {
+	if (typeof instance.faculty === 'string') instance.faculty = JSON.parse(instance.faculty);
+	return instance;
+}

@@ -69,7 +69,7 @@ interface CourseInstance {
 	is_full: number;
 	waiting_list: boolean;
 	studied_online: boolean;
-	faculty: string;
+	faculty: string[];
 	attendance_mandatory: boolean;
 	has_lab: boolean;
 	language: string | null;
