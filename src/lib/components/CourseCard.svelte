@@ -7,7 +7,7 @@
 		removeSelectedCourse,
 		selectedCourses,
 	} from '$lib/state.svelte';
-	import { css, instanceColors, itemizeCourse } from '$lib/utils';
+	import { css, instanceColors, itemizeCourse, listFormatter } from '$lib/utils';
 	import { flip } from 'svelte/animate';
 	import { fade, slide } from 'svelte/transition';
 
@@ -97,9 +97,12 @@
 						<span class="warn">הקורס מלא!</span>
 					{/if}
 				</div>
-				<span>
-					מספר זיהוי {instance.course_instance_id}
-				</span>
+				<div class="instance-details important">
+					{#if instance.faculty}
+						<span>מיועד ל{listFormatter.format(instance.faculty)} </span>
+					{/if}
+				</div>
+
 				<div class="sessions">
 					{#each instance.sessions as session}
 						<div class="session">
@@ -227,6 +230,12 @@
 			}
 			.instance-details {
 				margin-bottom: 8px;
+				&.important {
+					color: white;
+					background: var(--dark);
+					border-radius: 8px;
+					padding: 4px 6px;
+				}
 			}
 			.sessions {
 				color: black;

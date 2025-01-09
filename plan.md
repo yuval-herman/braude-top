@@ -1,10 +1,8 @@
 # WIP
 
-- get more info on course מחלקה (need to scrape)
+- timetable support multiple items at once
 
 # Planned
-
-- timetable support multiple items at once
 
 - work by year and semester
 - improve analytics (add an Analytics component? use:action?)
