@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="he" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>שגיאת מערכת - Braude Top</title>
+		<style>
+			body {
+				font-family: monospace;
+				font-size: 17px;
+				background-color: #000;
+				color: #00ff00;
+				margin: 0;
+				padding: 20px;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
+				overflow: hidden;
+			}
+			#terminal {
+				width: 80%;
+				max-width: 800px;
+				background-color: #111;
+				padding: 20px;
+				border-radius: 5px;
+				box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+				overflow: hidden;
+			}
+			.text {
+				word-wrap: break-word;
+				line-height: 1.5;
+				text-align: left;
+			}
+			ul {
+				list-style: none;
+			}
+			li {
+				display: inline;
+			}
+			.cursor {
+				display: inline-block;
+				width: 10px;
+				height: 20px;
+				background-color: #00ff00;
+				vertical-align: middle;
+			}
+			.animation {
+				animation: blink 1.5s steps(2, jump-none) infinite;
+			}
+			@keyframes blink {
+				from {
+					opacity: 1;
+				}
+				to {
+					opacity: 0;
+				}
+			}
+			a {
+				color: #00ff00;
+				text-decoration: underline;
+			}
+			a:hover {
+				text-decoration: none;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="terminal">
+			<ul class="text">
+				<span class="cursor"></span>
+			</ul>
+		</div>
+	</body>
+	<script>
+		const list = document.getElementsByClassName('text')[0];
+		const cursor = document.getElementsByClassName('cursor')[0];
+		console.log(cursor);
+
+		const messages = [
+			'<b>SYSTEM ERROR</b>',
+			'ERROR CODE: %sveltekit.status%',
+			'ERROR MESSAGE: %sveltekit.error.message%',
+			'system utterly broken',
+			'system state unrecoverable',
+			'fetching admin message',
+			'. . . . .',
+			'admin message recovered',
+			'===ADMIN MESSAGE START===',
+			'<span dir="rtl">נראה ששברת לי את השרת, זה לא נורא יפה...</span>',
+			'<span dir="rtl">בתור סליחה, אשמח אם תוכל לשלוח לי מייל איך זה קרה, אני אשמח לתקן את הבעיה</span>',
+			'<span dir="rtl">הכל אמור לעבוד שוב אחרי רענון של הדף, מצטער על התקלה😅</span>',
+			'<span dir="rtl">זה המייל שלי: <a href="mailto:yuvalherman99@gmail.com">yuvalherman99@gmail.com</a></span>',
+			'<span dir="rtl">אשמח שתשלח לי לפה את כל הפרטים, או לפחות תעתיק את כל התוכן של הדף הזה ותשלח לי אותו</span>',
+			'<span dir="rtl">אתה יכול לנסות לרענן את הדף עכשיו, אם אתה מגיע עדיין לדף הזה, בהחלט כדאי שתשלח לי מייל...</span>',
+			'===ADMIN MESSAGE END===',
+		].reverse();
+		(async () => {
+			while (messages.length > 0) {
+				let res;
+				const promise = new Promise((resolve) => {
+					res = resolve;
+				});
+				const li = document.createElement('li');
+				list.removeChild(cursor);
+				list.append(li);
+				list.append(cursor);
+				const letters = messages.pop().split('');
+				let index = 0;
+				const interval = 2000 / letters.length;
+				const id = setInterval(() => {
+					if (letters.length === index) {
+						res();
+						return;
+					}
+					index++;
+					li.innerHTML = letters.slice(0, index).join('');
+				}, interval);
+				await promise;
+				clearInterval(id);
+				const br = document.createElement('br');
+				list.append(br);
+			}
+			cursor.classList.add('animation');
+		})();
+	</script>
+</html>
