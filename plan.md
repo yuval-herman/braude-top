@@ -1,6 +1,10 @@
 # WIP
 
+- get more info on course מחלקה (need to scrape)
+
 # Planned
+
+- timetable support multiple items at once
 
 - work by year and semester
 - improve analytics (add an Analytics component? use:action?)
@@ -10,6 +14,7 @@
 - add instructor pages
 
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
+- fuzzy search
 
 - course searching filters
 - export timetable
@@ -18,5 +23,6 @@
 
 - animation when opening side panel
 - replace logic for user downloading the entire db
-- get more info on course מחלקה (need to scrape)
 - automatically try to register to courses using user credentials
+- show empty rooms to study in (suggest user add to timetable windows?)
+- show a map, tell the user how long he has to walk between classes
