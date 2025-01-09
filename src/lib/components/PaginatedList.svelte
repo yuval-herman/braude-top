@@ -67,7 +67,7 @@
 			list-style-type: none;
 			margin: 0;
 			border-radius: 8px;
-			overflow-y: scroll;
+			overflow: hidden scroll;
 			scrollbar-width: none; /* TODO: make a manual scrollbar, chrome's scrollbar looks awful and safari does not support styling... */
 			margin: 8px;
 			padding: 0;
