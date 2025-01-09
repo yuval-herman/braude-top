@@ -1,12 +1,13 @@
 # WIP
 
+- add error pages
+
 # Planned
 
 - work by year and semester
 - improve analytics (add an Analytics component? use:action?)
 
 - animation when opening side panel
-- add error pages
 - add ctrl-y to redo
 
 - some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
