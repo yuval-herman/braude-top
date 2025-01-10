@@ -1,6 +1,6 @@
 # WIP
 
-- timetable support multiple items at once
+- update tests for timetable new behavior
 
 # Planned
 
