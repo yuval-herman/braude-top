@@ -97,11 +97,11 @@
 						<span class="warn">הקורס מלא!</span>
 					{/if}
 				</div>
-				<div class="instance-details important">
-					{#if instance.faculty}
+				{#if instance.faculty.length}
+					<div class="instance-details important">
 						<span>מיועד ל{listFormatter.format(instance.faculty)} </span>
-					{/if}
-				</div>
+					</div>
+				{/if}
 
 				<div class="sessions">
 					{#each instance.sessions as session}
