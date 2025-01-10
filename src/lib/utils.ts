@@ -61,8 +61,14 @@ export function itemizeCourseList(courses: FullCourse[]): Item[] {
 				((istart <= jstart && jstart < iend) || (istart < jend && jstart < istart)) &&
 				iday === jday
 			) {
-				items[i].is_overlapping = true;
-				items[j].is_overlapping = true;
+				if (items[i].overlapping) {
+					items[i].overlapping!.overlapIndex += 1;
+				} else if (items[j].overlapping) {
+					items[j].overlapping!.overlapIndex += 1;
+				} else {
+					items[i].overlapping = { overlapIndex: 0 };
+					items[j].overlapping = { overlapIndex: 1 };
+				}
 			}
 		}
 	}

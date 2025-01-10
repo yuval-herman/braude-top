@@ -22,10 +22,14 @@
 	<div
 		class="item"
 		class:preview={item.is_preview}
+		class:overlap={item.overlapping && item.overlapping.overlapIndex < 2}
+		style:--overlap-index={(item.overlapping?.overlapIndex ?? 0) < 2
+			? item.overlapping?.overlapIndex
+			: undefined}
+		style:background={(item.overlapping?.overlapIndex ?? 0) < 2 ? undefined : 'red'}
 		style:top="calc({item.start - 1} * (100% + 1px))"
 		style:height="calc({item.end - item.start} * (100% + 1px))"
 		style:z-index={index}
-		style:background={item.is_overlapping ? 'red' : instanceColors.get(item.type)}
 	>
 		<Indicator color={item.colorIndicator} />
 		{item.value.name}
@@ -139,6 +143,10 @@
 		&.preview {
 			opacity: 50%;
 		}
+	}
+	.overlap {
+		width: 50%;
+		left: calc(50% * var(--overlap-index));
 	}
 
 	@media (max-width: 480px) {
