@@ -1,7 +1,5 @@
 # WIP
 
-- update tests for timetable new behavior
-
 # Planned
 
 - work by year and semester

@@ -52,4 +52,21 @@ test.describe('main page', () => {
 		const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);
 		await expect(isScrollable).toBe(true);
 	});
+
+	test('two overlapping items show side by side', async ({ page }) => {
+		await page.getByText('תרגיל של מר גבינט איתי בעברית יום ב חדר 201 M 12:50-14:').click();
+		await page.getByText('תרגיל של ד"ר אברוס רנטה בעברית יום ב חדר 708 L 12:50-14:').click();
+		await page.mouse.move(0, 0);
+		await expect(page.locator('tbody')).toMatchAriaSnapshot(
+			`- cell /אבטחת מידע וקריפטולוגיה מר גבינט איתי \\d+ M אבטחת מידע וקריפטולוגיה ד"ר אברוס רנטה \\d+ L/`
+		);
+		await expect(page.getByText('אבטחת מידע וקריפטולוגיה מר גבינט איתי 201 M')).toHaveCSS(
+			'--overlap-index',
+			'0'
+		);
+		await expect(page.getByText('אבטחת מידע וקריפטולוגיה ד"ר אברוס רנטה 708 L')).toHaveCSS(
+			'--overlap-index',
+			'1'
+		);
+	});
 });
