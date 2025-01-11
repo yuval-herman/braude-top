@@ -17,10 +17,13 @@
 - course searching filters
 - export timetable
 
+- show time between sessions
+- show walk time between buildings
+- show a map, tell the user how long he has to walk between classes
+- show empty rooms to study in (suggest user add to timetable windows?)
+
 # Considering
 
 - animation when opening side panel
 - replace logic for user downloading the entire db
 - automatically try to register to courses using user credentials
-- show empty rooms to study in (suggest user add to timetable windows?)
-- show a map, tell the user how long he has to walk between classes
