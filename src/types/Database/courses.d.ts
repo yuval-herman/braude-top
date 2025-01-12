@@ -49,6 +49,7 @@ interface CourseInstance {
 	course_id: number;
 	course_instance_id: number;
 	type: string;
+	year: number;
 	hours: number;
 	group_name: string;
 	is_full: number;
@@ -66,7 +67,7 @@ interface CourseInstance {
 interface Course {
 	course_id: number;
 	name: string;
-	year: string;
+	year: number;
 	credit: number;
 	description: string;
 	syllabus_link: string | null;
