@@ -32,7 +32,7 @@
 		</header>
 	{/if}
 	<ul>
-		{#each pageItems as course (course.course_id)}
+		{#each pageItems as course (course.course_id + course.year)}
 			<li transition:slide>
 				<CourseCard {course} {mode} />
 			</li>
