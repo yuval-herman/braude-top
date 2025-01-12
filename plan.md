@@ -1,7 +1,5 @@
 # WIP
 
-- add help for semester selector
-
 # Planned
 
 - replace logic for user downloading the entire db

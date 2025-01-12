@@ -75,6 +75,13 @@ function mainPage() {
 				},
 			},
 			{
+				element: 'label:has(#year-semester)',
+				popover: {
+					title: 'בחירת סמסטר',
+					description: 'כאן ניתן לבחור את הסמסטר שאתם מעוניינים לעבוד איתו.',
+				},
+			},
+			{
 				element: '.list-container li',
 				popover: {
 					title: 'תיבת קורס',
