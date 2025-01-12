@@ -1,6 +1,6 @@
 # WIP
 
-- some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
+- clean up code
 
 # Planned
 
