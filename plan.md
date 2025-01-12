@@ -1,18 +1,18 @@
 # WIP
 
-- fix very long loading time
+- some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
 
 # Planned
 
 - replace logic for user downloading the entire db
-- save schedule for every semester on its own
+
 - improve analytics (add an Analytics component? use:action?)
+- save schedule for every semester on its own
 
 - add ctrl-y to redo
 - add users comments on course page (ratings, comments)
 - add instructor pages
 
-- some extra details for created timetable screen (e.g נ"ז, שעות הרצאה, שעות תרגול וכו')
 - fuzzy search
 
 - course searching filters

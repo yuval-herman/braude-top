@@ -54,6 +54,11 @@
 		const x = 100;
 		return { duration, easing, delay, x: tab === 'all' ? x : -x };
 	}
+
+	export const snapshot = {
+		capture: () => tab,
+		restore: (value) => (tab = value),
+	};
 </script>
 
 <svelte:window {onkeydown} />
@@ -86,6 +91,15 @@
 					<p class="warn" transition:slide>
 						כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b>
 					</p>
+				{:else}
+					<div class="small-info">
+						<span>נ"ז {selectedCourses.reduce((p, c) => p + c.credit, 0)}</span><span
+							>שעות לימוד {selectedCourses.reduce(
+								(p, c) => p + c.instances.reduce((p, c) => p + c.hours, 0),
+								0
+							)}</span
+						>
+					</div>
 				{/if}
 				<PaginatedList items={selectedCourses} mode="my" />
 			</div>
@@ -139,6 +153,14 @@
 			gap: 12px;
 			max-height: 100%;
 			overflow: hidden;
+			.small-info {
+				background: var(--info);
+				border-radius: 8px;
+				padding: 4px 8px;
+				span {
+					margin: 4px;
+				}
+			}
 		}
 		& input {
 			padding: 8px;
