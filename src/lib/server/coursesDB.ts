@@ -69,6 +69,27 @@ export const getInstancesExams = (() => {
 	return (id: number | string) => stmt.all(id as number);
 })();
 
+/** Retrieves the actual years that exists on courses in the db */
+export const getYearsAvailable = (() => {
+	const stmt = coursesDB
+		.prepare<[], number>('SELECT DISTINCT year FROM courses ORDER by year DESC')
+		.pluck();
+	return () => stmt.all();
+})();
+
+/** Retrieves the actual years that exists on courses in the db */
+export const getSemestersAvailable = (() => {
+	const stmt = coursesDB
+		.prepare<number, number>(
+			'SELECT DISTINCT semester FROM sessions\
+			JOIN course_instances USING (course_instance_id)\
+			WHERE year = ?\
+			ORDER by semester'
+		)
+		.pluck();
+	return (year: number) => stmt.all(year);
+})();
+
 function transformCourseInstance(instance: CourseInstance): CourseInstance {
 	if (typeof instance.faculty === 'string') instance.faculty = JSON.parse(instance.faculty);
 	return instance;
