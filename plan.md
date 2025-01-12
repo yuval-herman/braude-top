@@ -1,11 +1,10 @@
 # WIP
 
-- add tests for new semester and year ui
 - add help for semester selector
-- replace logic for user downloading the entire db
 
 # Planned
 
+- replace logic for user downloading the entire db
 - save schedule for every semester on its own
 - improve analytics (add an Analytics component? use:action?)
 
