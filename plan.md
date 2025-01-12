@@ -1,5 +1,7 @@
 # WIP
 
+- fix very long loading time
+
 # Planned
 
 - replace logic for user downloading the entire db

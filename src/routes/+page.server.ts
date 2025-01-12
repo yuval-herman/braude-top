@@ -26,7 +26,7 @@ export const load = async ({ url, parent }) => {
 
 	const full_courses = getNonEmptyCourses({ year, semester }).map((course) => ({
 		...course,
-		instances: getNonEmptyCourseInstances(course.course_id).map((instance) => ({
+		instances: getNonEmptyCourseInstances(course.course_id, year).map((instance) => ({
 			...instance,
 			sessions: getInstancesSession(instance.course_instance_id),
 			exams: getInstancesExams(instance.course_instance_id),
