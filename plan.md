@@ -1,8 +1,9 @@
 # WIP
 
+- work by year and semester
+
 # Planned
 
-- work by year and semester
 - improve analytics (add an Analytics component? use:action?)
 
 - add ctrl-y to redo
