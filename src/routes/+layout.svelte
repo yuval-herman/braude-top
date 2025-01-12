@@ -2,10 +2,10 @@
 	import '$lib/global.css';
 	import 'driver.js/dist/driver.css';
 
-	import { theme } from '$lib/state.svelte';
-	import { showHelp } from '$lib/help.js';
+	import { goto, onNavigate, replaceState } from '$app/navigation';
 	import { page } from '$app/state';
-	import { onNavigate } from '$app/navigation';
+	import { showHelp } from '$lib/help.js';
+	import { theme } from '$lib/state.svelte';
 
 	let { children, data } = $props();
 	const { themeCookie } = data;
@@ -36,6 +36,25 @@
 			<li><a href="/">ראשי</a></li>
 			<li><a href="/contact">יצירת קשר</a></li>
 		</ul>
+		<label
+			>סמסטר
+			<select
+				name="year-semester"
+				id="year-semester"
+				onchange={({ currentTarget: { value } }) => {
+					const { year, semester } = JSON.parse(value);
+					goto(`/?year=${year}&semester=${semester}`, { replaceState: false, state: page.state });
+				}}
+			>
+				{#each data.availableTimeSpans as { year, semesters }}
+					<optgroup label={year.toString()}>
+						{#each semesters as semester}
+							<option value={JSON.stringify({ year, semester })}>{semester}</option>
+						{/each}
+					</optgroup>
+				{/each}
+			</select>
+		</label>
 		<ul>
 			<li>
 				<button aria-label="עזרה" class="help" id="help-button" onclick={() => showHelp(page)}

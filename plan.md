@@ -1,6 +1,7 @@
 # WIP
 
 - work by year and semester
+- replace logic for user downloading the entire db
 
 # Planned
 
@@ -24,5 +25,4 @@
 # Considering
 
 - animation when opening side panel
-- replace logic for user downloading the entire db
 - automatically try to register to courses using user credentials

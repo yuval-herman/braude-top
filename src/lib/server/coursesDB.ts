@@ -27,12 +27,18 @@ export const getFullCourse = (() => {
 
 /** Retrieves all the courses that have sessions*/
 export const getNonEmptyCourses = (() => {
-	const stmt = coursesDB.prepare<[], Course>(
-		'SELECT distinct c.* from courses c \
-		join course_instances using (course_id) \
-		join sessions USING (course_instance_id)'
+	type TimeSpan = {
+		year: number;
+		semester: string;
+	};
+
+	const stmt = coursesDB.prepare<TimeSpan, Course>(
+		'SELECT distinct c.* from courses c\
+		 join course_instances using (course_id)\
+		 join sessions USING (course_instance_id)\
+		 WHERE c.year = :year AND semester = :semester'
 	);
-	return () => stmt.all();
+	return (span: TimeSpan) => stmt.all(span);
 })();
 
 /** Retrieves all the course instances for a given course id */
@@ -80,7 +86,7 @@ export const getYearsAvailable = (() => {
 /** Retrieves the actual years that exists on courses in the db */
 export const getSemestersAvailable = (() => {
 	const stmt = coursesDB
-		.prepare<number, number>(
+		.prepare<number, string>(
 			'SELECT DISTINCT semester FROM sessions\
 			JOIN course_instances USING (course_instance_id)\
 			WHERE year = ?\
