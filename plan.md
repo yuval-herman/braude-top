@@ -1,10 +1,12 @@
 # WIP
 
-- work by year and semester
+- add tests for new semester and year ui
+- add help for semester selector
 - replace logic for user downloading the entire db
 
 # Planned
 
+- save schedule for every semester on its own
 - improve analytics (add an Analytics component? use:action?)
 
 - add ctrl-y to redo
