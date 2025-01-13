@@ -1,9 +1,10 @@
 # WIP
 
-- clean up code
+- update storybook and tests
 
 # Planned
 
+- rewrite PaginatedList
 - replace logic for user downloading the entire db
 
 - improve analytics (add an Analytics component? use:action?)
