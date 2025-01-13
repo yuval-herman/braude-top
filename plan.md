@@ -1,15 +1,13 @@
 # WIP
 
-- update tests
-
 # Planned
 
-- add site info pannel (visits, last course update etc...)
+- rewrite tests, make them deterministic using mock db
+- add site info panel (visits, last course update etc...)
 
 - add beta.braude.top domain to test site on the web (maybe allow users to check beta features?)
 - make sure user is aware if he is selecting multiple (unrequired) sessions (such as too many lectures)
 
-- improve analytics (add an Analytics component? use:action?)
 - save schedule for every semester on its own
 
 - add ctrl-y to redo
@@ -30,3 +28,7 @@
 
 - animation when opening side panel
 - automatically try to register to courses using user credentials
+
+# Archive
+
+- improve analytics (add an Analytics component? use:action?)
