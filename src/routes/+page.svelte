@@ -7,7 +7,7 @@
 	import { showHelp } from '$lib/help.js';
 	import { hoveredInstance, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { TypedLocalStorage } from '$lib/storage.js';
-	import { itemizeCourseList } from '$lib/utils.js';
+	import { debounce, itemizeCourseList } from '$lib/utils.js';
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
@@ -73,11 +73,13 @@
 				<input
 					type="text"
 					placeholder="חפש כאן..."
-					oninput={({ currentTarget: { value } }) => {
+					oninput={debounce((ev) => {
+						if (!(ev.target instanceof HTMLInputElement)) return;
+						const { value } = ev.target;
 						const url = new URL(page.url);
 						url.searchParams.set('query', value.toLowerCase());
 						goto(url, { replaceState: false, state: page.state, keepFocus: true });
-					}}
+					}, 300)}
 				/>
 				<PaginatedList items={data.full_courses ?? []} />
 			</div>

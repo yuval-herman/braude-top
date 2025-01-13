@@ -15,8 +15,8 @@
 		theme.theme = themeCookie;
 	}
 
-	onNavigate(({ to }) => {
-		if (!to) return;
+	onNavigate(({ to, type }) => {
+		if (!to || type !== 'link') return;
 		window.goatcounter.count({
 			path: to.url.pathname + to.url.search + to.url.hash,
 		});

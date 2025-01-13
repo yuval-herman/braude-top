@@ -94,6 +94,14 @@ export function getPropertiesOfCourse(course: FullCourse) {
 	return { languages, types, fullInstances, notes };
 }
 
+export function debounce<TArgs extends any[]>(func: (...args: TArgs) => void, delay: number) {
+	let timeout: ReturnType<typeof setTimeout>;
+	return (...args: TArgs) => {
+		clearTimeout(timeout);
+		timeout = setTimeout(() => func(...args), delay);
+	};
+}
+
 export const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
 export const hourFormatter = new Intl.DateTimeFormat('he-IL', {
 	timeStyle: 'short',
