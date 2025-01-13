@@ -1,11 +1,12 @@
 # WIP
 
-- update storybook and tests
-- rewrite PaginatedList
-- replace logic for user downloading the entire db
+- replace user workflow
+  - search course and select it
+  - go to selected courses list and select sessions
 
 # Planned
 
+- update tests
 - improve analytics (add an Analytics component? use:action?)
 - save schedule for every semester on its own
 
