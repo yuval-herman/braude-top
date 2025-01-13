@@ -1,5 +1,5 @@
 import {
-	getNonEmptyCourses,
+	queryNonEmptyCourses,
 	getNonEmptyCourseInstances,
 	getInstancesSession,
 	getInstancesExams,
@@ -7,6 +7,8 @@ import {
 import { error } from '@sveltejs/kit';
 
 export const load = async ({ url, parent }) => {
+	let query = url.searchParams.get('query');
+	if (!query) return;
 	let year: number = Number(url.searchParams.get('year'));
 	let semester: string | undefined = url.searchParams.get('semester') ?? undefined;
 	const available = (await parent()).availableTimeSpans;
@@ -26,7 +28,7 @@ export const load = async ({ url, parent }) => {
 		error(404, `סמסטר ${semester} לא נמצא לשנת ${year}`);
 	}
 
-	const full_courses = getNonEmptyCourses({ year, semester }).map((course) => ({
+	const full_courses = queryNonEmptyCourses({ year, semester, query }).map((course) => ({
 		...course,
 		instances: getNonEmptyCourseInstances(course.course_id, year).map((instance) => ({
 			...instance,

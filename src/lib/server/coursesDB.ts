@@ -25,20 +25,25 @@ export const getFullCourse = (() => {
 	};
 })();
 
-/** Retrieves all the courses that have sessions*/
-export const getNonEmptyCourses = (() => {
-	type TimeSpan = {
+/** Search all the course  that have sessions for a query*/
+export const queryNonEmptyCourses = (() => {
+	type Args = {
 		year: number;
 		semester: string;
+		query: string;
 	};
 
-	const stmt = coursesDB.prepare<TimeSpan, Course>(
+	const stmt = coursesDB.prepare<Args, Course>(
 		'SELECT distinct c.* from courses c\
 		 join course_instances using (course_id)\
 		 join sessions USING (course_instance_id)\
-		 WHERE c.year = :year AND semester = :semester'
+		 WHERE c.year = :year AND semester = :semester AND name LIKE :query\
+		 LIMIT 5'
 	);
-	return (span: TimeSpan) => stmt.all(span);
+	return (args: Args) => {
+		args.query = `%${args.query}%`;
+		return stmt.all(args);
+	};
 })();
 
 /** Retrieves all the course instances for a given course id */

@@ -44,7 +44,10 @@
 				id="year-semester"
 				onchange={({ currentTarget: { value } }) => {
 					const { year, semester } = JSON.parse(value);
-					goto(`/?year=${year}&semester=${semester}`, { replaceState: false, state: page.state });
+					const url = new URL(page.url);
+					url.searchParams.set('year', year);
+					url.searchParams.set('semester', semester);
+					goto(url, { replaceState: false, state: page.state });
 				}}
 			>
 				{#each data.availableTimeSpans as { year, semesters }}

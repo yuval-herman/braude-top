@@ -1,28 +1,20 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
+	import { showHelp } from '$lib/help.js';
 	import { hoveredInstance, selectedCourses, undoStack } from '$lib/state.svelte.js';
+	import { TypedLocalStorage } from '$lib/storage.js';
 	import { itemizeCourseList } from '$lib/utils.js';
+	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
 	import { fly, slide, type FlyParams } from 'svelte/transition';
-	import { page } from '$app/state';
-	import { showHelp } from '$lib/help.js';
-	import { TypedLocalStorage } from '$lib/storage.js';
-	import { onMount } from 'svelte';
 
 	const { data } = $props();
-	let searchQuery = $state('');
 	let tab = $state<'all' | 'my'>('all');
-
-	const filteredCourses = $derived(
-		data.full_courses.filter((c) => c.name.toLowerCase().includes(searchQuery))
-	);
-
-	$effect(() => {
-		searchQuery = searchQuery.toLowerCase();
-	});
 
 	onMount(() => {
 		if (!TypedLocalStorage.getItem('onboarded')) {
@@ -78,8 +70,16 @@
 				in:fly={tabTransition('all', 'in')}
 				out:fly={tabTransition('all', 'out')}
 			>
-				<input type="text" bind:value={searchQuery} placeholder="חפש כאן..." />
-				<PaginatedList items={filteredCourses} />
+				<input
+					type="text"
+					placeholder="חפש כאן..."
+					oninput={({ currentTarget: { value } }) => {
+						const url = new URL(page.url);
+						url.searchParams.set('query', value.toLowerCase());
+						goto(url, { replaceState: false, state: page.state, keepFocus: true });
+					}}
+				/>
+				<PaginatedList items={data.full_courses ?? []} />
 			</div>
 		{:else}
 			<div
