@@ -39,7 +39,8 @@ function mainPage() {
 		const showListBtn = document.querySelector(
 			'th > [aria-label="רשימת קורסים"]'
 		) as HTMLButtonElement;
-		const showMyCourseBtn = document.querySelector('#my-courses') as HTMLButtonElement;
+		const showMyCourseBtn = document.getElementById('my-courses') as HTMLButtonElement;
+		const courseQueryInput = document.getElementById('course-query') as HTMLInputElement;
 
 		let steps: DriveStep[] = [
 			{
@@ -48,6 +49,20 @@ function mainPage() {
 					description: 'זהו הדף הראשי של האתר, פה תבלו את רוב זמנכם בתכנון המערכת.',
 					onPopoverRender: () => {
 						(document.querySelector('#all-courses') as HTMLButtonElement).click();
+					},
+				},
+			},
+			{
+				element: 'label:has(#year-semester)',
+				popover: {
+					title: 'בחירת סמסטר',
+					description: 'כאן ניתן לבחור את הסמסטר שאתם מעוניינים לעבוד איתו.',
+					onNextClick: () => {
+						if (!hiddenListMode) {
+							courseQueryInput.value = 'נתונים';
+							courseQueryInput.dispatchEvent(new Event('input', { bubbles: true }));
+						}
+						driverObj.moveNext();
 					},
 				},
 			},
@@ -61,6 +76,8 @@ function mainPage() {
 					description: 'כדי לראות את רשימת הקורסים, ניתן ללחוץ על הכפתור הזה.',
 					onNextClick: () => {
 						showListBtn.click();
+						courseQueryInput.value = 'נתונים';
+						courseQueryInput.dispatchEvent(new Event('input', { bubbles: true }));
 						driverObj.moveNext();
 					},
 				},
@@ -71,14 +88,8 @@ function mainPage() {
 				element: '.list-container',
 				popover: {
 					title: 'רשימת קורסים',
-					description: 'כאן מופיעה רשימה של כל הקורסים בבראודה. ניתן לחפש קורסים בתיבת החיפוש.',
-				},
-			},
-			{
-				element: 'label:has(#year-semester)',
-				popover: {
-					title: 'בחירת סמסטר',
-					description: 'כאן ניתן לבחור את הסמסטר שאתם מעוניינים לעבוד איתו.',
+					description:
+						'כאן מופיעה רשימה של הקורסים בסמסטר הנבחר, כדי לראות קורסים יש לחפש אותם על פי שם בתיבת החיפוש.',
 				},
 			},
 			{

@@ -71,6 +71,7 @@
 				out:fly={tabTransition('all', 'out')}
 			>
 				<input
+					id="course-query"
 					type="text"
 					placeholder="חפש כאן..."
 					oninput={debounce((ev) => {

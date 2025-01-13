@@ -1,9 +1,5 @@
 # WIP
 
-- replace user workflow
-  - search course and select it
-  - go to selected courses list and select sessions
-
 # Planned
 
 - add beta.braude.top domain to test site on the web (maybe allow users to check beta features?)
