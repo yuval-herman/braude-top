@@ -6,6 +6,8 @@
 
 # Planned
 
+- add beta.braude.top domain to test site on the web (maybe allow users to check beta features?)
+
 - update tests
 - improve analytics (add an Analytics component? use:action?)
 - save schedule for every semester on its own
