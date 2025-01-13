@@ -24,7 +24,7 @@ export function time2Index(timestring: string): number | undefined {
 	return index === -1 ? undefined : index + 1;
 }
 
-export function itemizeCourse({ name, instances }: FullCourse): Item[] {
+export function itemizeCourse({ name, instances, course_id }: FullCourse): Item[] {
 	const first_day = 1488;
 	return instances.flatMap(({ sessions, instructor, type }) =>
 		sessions.map(({ week_day, start_time, end_time, room }): Item => {
@@ -45,7 +45,7 @@ export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 				start,
 				type,
 				value: { name, room, instructor },
-				colorIndicator: colors.str2color(name),
+				colorIndicator: colors.num2color(course_id),
 			};
 		})
 	);
@@ -113,6 +113,19 @@ export function randomNumber(min: number, max: number) {
 	return Math.random() * (max - min) + min;
 }
 
+/**
+ * Creates a random function using the provided four seed (a,b,c,d)
+ */
+function hashNumber(num: number) {
+	num |= 0;
+	num = (num + 0x9e3779b9) | 0;
+	let t = num ^ (num >>> 16);
+	t = Math.imul(t, 0x21f0aaad);
+	t = t ^ (t >>> 15);
+	t = Math.imul(t, 0x735a2d97);
+	return ((t = t ^ (t >>> 15)) >>> 0) / 4294967296;
+}
+
 type Range = { from: number; to: number };
 const colors = {
 	colorMix(a: string, b: string, percent: number = 50) {
@@ -147,12 +160,7 @@ const colors = {
 		return color;
 	},
 	num2color(num: number) {
-		let hex = num.toString(16);
-		if (hex.length !== 6) {
-			const shift = 6 - hex.length;
-			hex = (num * 10 ** shift).toString(16);
-		}
-		return '#' + hex;
+		return '#' + Math.trunc(hashNumber(num) * 16 ** 6).toString(16);
 	},
 };
 

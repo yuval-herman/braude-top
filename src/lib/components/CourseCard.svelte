@@ -98,7 +98,7 @@
 				animate:flip={{ duration: 250, delay: 50 }}
 			>
 				{#if mode === 'my'}
-					<Indicator color={css.colors.str2color(course.name)} />
+					<Indicator color={css.colors.num2color(course.course_id)} />
 				{/if}
 				<div class="instance-details">
 					<span>{instance.type}</span>
