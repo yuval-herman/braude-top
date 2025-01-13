@@ -1,7 +1,5 @@
 # WIP
 
-- add clear all button for selected
-
 # Planned
 
 - add site info panel (visits, last course update etc...)

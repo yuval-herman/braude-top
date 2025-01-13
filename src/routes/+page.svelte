@@ -6,7 +6,7 @@
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { showHelp } from '$lib/help.js';
 	import { hoveredInstance, selectedCourses, undoStack } from '$lib/state.svelte.js';
-	import { getCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
+	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
 	import { debounce, itemizeCourseList } from '$lib/utils.js';
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
@@ -104,7 +104,16 @@
 						כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b>
 					</p>
 				{:else}
-					<div class="small-info">
+					<button
+						transition:slide
+						onclick={() => {
+							if (confirm('מערכת השעות הולכת להמחק, להמשיך?')) {
+								selectedCourses.length = 0;
+								setCurrentSelected([], data.year, data.semester);
+							}
+						}}>מחק הכל</button
+					>
+					<div transition:slide class="small-info">
 						<span>נ"ז {selectedCourses.reduce((p, c) => p + c.credit, 0)}</span><span
 							>שעות לימוד {selectedCourses.reduce(
 								(p, c) => p + c.instances.reduce((p, c) => p + c.hours, 0),
