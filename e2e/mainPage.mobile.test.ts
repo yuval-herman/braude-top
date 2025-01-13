@@ -22,6 +22,7 @@ const hoursList = [
 
 test.describe('main page', () => {
 	test.beforeEach(async ({ page }) => {
+		await page.route('https://stats.braude.top/count.js', (route) => route.abort());
 		await page.goto('/');
 		page.locator('#driver-popover-content').press('Escape');
 	});
@@ -44,7 +45,16 @@ test.describe('main page', () => {
 
 	test('make sure course list is scrollable', async ({ page }) => {
 		await page.getByRole('button', { name: 'רשימת קורסים' }).click();
-		const courseList = page.locator('header ~ ul');
+		await page.getByPlaceholder('חפש כאן').click();
+		await page.getByPlaceholder('חפש כאן').fill('אלגברה');
+		await expect(
+			page.getByText(
+				'אלגברה הרצאה של ד"ר עבד אל פתאח עבד אל חלים בעברית, הקורס מלא! מיועד לתעשייה וני'
+			)
+		).toBeVisible();
+		const courseList = page.locator('ul').filter({
+			hasText: 'אלגברה הרצאה של ד"ר עבד אל פתאח עבד אל חלים בעברית, הקורס מלא! מיועד לתעשייה וני',
+		});
 		const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);
 		await expect(isScrollable).toBe(true);
 	});

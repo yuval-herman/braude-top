@@ -21,6 +21,7 @@ const hoursList = [
 
 test.describe('main page', () => {
 	test.beforeEach(async ({ page }) => {
+		await page.route('https://stats.braude.top/count.js', (route) => route.abort());
 		await page.goto('/');
 		page.locator('#driver-popover-content').press('Escape');
 	});
@@ -38,35 +39,56 @@ test.describe('main page', () => {
 			await expect(rows.nth(i).locator('th').first()).toContainText(hoursList[i]);
 			await expect(rows.nth(i).locator('td')).toHaveCount(6);
 		}
-		await expect(page.locator('header ~ ul')).toBeVisible();
+		await expect(page.locator('header ~ ul')).toBeHidden();
 	});
 
-	test('course preview show on hover', async ({ page }) => {
-		await expect(page.locator('td > .item')).toBeHidden();
-		await page.locator('.instance').nth(1).hover();
-		await expect(page.locator('td > .item')).toBeVisible();
-	});
+	test.describe('course list', () => {
+		test.beforeEach(async ({ page }) => {
+			await page.getByPlaceholder('חפש כאן').click();
+			await page.getByPlaceholder('חפש כאן').fill('אלגברה');
+			await expect(
+				page.getByText(
+					'אלגברה הרצאה של ד"ר עבד אל פתאח עבד אל חלים בעברית, הקורס מלא! מיועד לתעשייה וני'
+				)
+			).toBeVisible();
+		});
 
-	test('make sure course list is scrollable', async ({ page }) => {
-		const courseList = page.locator('header ~ ul');
-		const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);
-		await expect(isScrollable).toBe(true);
-	});
+		test('course preview show on hover', async ({ page }) => {
+			await expect(page.locator('td > .item')).toBeHidden();
+			await page.locator('.instance').nth(1).hover();
+			await expect(page.locator('td > .item')).toBeVisible();
+		});
 
-	test('two overlapping items show side by side', async ({ page }) => {
-		await page.getByText('תרגיל של מר גבינט איתי בעברית יום ב חדר 201 M 12:50-14:').click();
-		await page.getByText('תרגיל של ד"ר אברוס רנטה בעברית יום ב חדר 708 L 12:50-14:').click();
-		await page.mouse.move(0, 0);
-		await expect(page.locator('tbody')).toMatchAriaSnapshot(
-			`- cell /אבטחת מידע וקריפטולוגיה מר גבינט איתי \\d+ M אבטחת מידע וקריפטולוגיה ד"ר אברוס רנטה \\d+ L/`
-		);
-		await expect(page.getByText('אבטחת מידע וקריפטולוגיה מר גבינט איתי 201 M')).toHaveCSS(
-			'--overlap-index',
-			'0'
-		);
-		await expect(page.getByText('אבטחת מידע וקריפטולוגיה ד"ר אברוס רנטה 708 L')).toHaveCSS(
-			'--overlap-index',
-			'1'
-		);
+		test('make sure course list is scrollable', async ({ page }) => {
+			const courseList = page.locator('ul').filter({
+				hasText: 'אלגברה הרצאה של ד"ר עבד אל פתאח עבד אל חלים בעברית, הקורס מלא! מיועד לתעשייה וני',
+			});
+			const isScrollable = await courseList.evaluate((el) => el.scrollHeight > el.clientHeight);
+			await expect(isScrollable).toBe(true);
+		});
+
+		test('two overlapping items show side by side', async ({ page }) => {
+			await page
+				.getByText(
+					'הרצאה של ד"ר עבד אל פתאח עבד אל חלים בעברית, הקורס מלא! מיועד לתעשייה וניהול יום'
+				)
+				.click();
+			await page
+				.getByText('הרצאה של ד"ר פוגרבניאק ילנה בעברית מיועד לביוטכנולוגיה יום ה חדר 102 EM 08:30-')
+				.click();
+			await page.mouse.move(0, 0);
+
+			await expect(page.locator('tbody')).toMatchAriaSnapshot(
+				`- cell /אלגברה ד"ר עבד אל פתאח עבד אל חלים \\d+ EM אלגברה ד"ר פוגרבניאק ילנה \\d+ EM/`
+			);
+			await expect(page.getByText('אלגברה ד"ר עבד אל פתאח עבד אל חלים 103 EM')).toHaveCSS(
+				'--overlap-index',
+				'0'
+			);
+			await expect(page.getByText('אלגברה ד"ר פוגרבניאק ילנה 102')).toHaveCSS(
+				'--overlap-index',
+				'1'
+			);
+		});
 	});
 });
