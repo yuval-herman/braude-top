@@ -38,8 +38,6 @@ export function getCurrentSelected(year: number, semester: string): FullCourse[]
 }
 export function setCurrentSelected(courses: FullCourse[], year: number, semester: string) {
 	if (!browser) return;
-	console.log(year, semester);
-
 	return TypedLocalStorage.setItem(`selected-${year}-${semester}`, courses);
 }
 

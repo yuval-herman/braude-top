@@ -386,7 +386,6 @@ describe('Course list transforming utilities', () => {
 
 		const result = itemizeCourseList([course1, course2, course3]);
 		expect(result).toHaveLength(3);
-		console.log(result[0].overlapping, result[1].overlapping, result[2].overlapping);
 
 		expect(result[0].overlapping).toBeTruthy(); // Overlaps with course2 and course3
 		expect(result[1].overlapping).toBeTruthy(); // Overlaps with course1 and course3
