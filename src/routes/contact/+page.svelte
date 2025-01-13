@@ -18,7 +18,17 @@
 			<span transition:slide class="failure">הבקשה לא התקבלה בעקבות תקלה...</span>
 		{/if}
 
-		<form action="?/contact" method="post" use:enhance>
+		<form
+			action="?/contact"
+			method="post"
+			use:enhance
+			onsubmit={() =>
+				window.goatcounter.count({
+					event: true,
+					path: 'sent-contact-message',
+					title: 'User sent a message',
+				})}
+		>
 			<label
 				>שם (לא חובה):
 				<input type="text" name="name" placeholder="הזן את שמך" />
