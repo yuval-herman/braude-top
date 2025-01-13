@@ -8,7 +8,7 @@ describe('Course transforming utilities', () => {
 			credit: 0,
 			description: '',
 			syllabus_link: '',
-			year: '',
+			year: 2025,
 			name: 'קורס ריק',
 			instances: [],
 		};
@@ -22,10 +22,16 @@ describe('Course transforming utilities', () => {
 			credit: 0,
 			description: '',
 			syllabus_link: '',
-			year: '',
+			year: 2025,
 			name: 'קורס ראשון',
 			instances: [
 				{
+					year: 2025,
+					attendance_mandatory: false,
+					has_lab: false,
+					studied_online: false,
+					waiting_list: false,
+					faculty: [],
 					type: 'הרצאה',
 					co_requirements: '',
 					course_id: 1,
@@ -49,6 +55,12 @@ describe('Course transforming utilities', () => {
 					],
 				},
 				{
+					year: 2025,
+					attendance_mandatory: false,
+					has_lab: false,
+					studied_online: false,
+					waiting_list: false,
+					faculty: [],
 					type: 'מעבדה',
 					co_requirements: '',
 					course_id: 1,
@@ -108,10 +120,16 @@ describe('Course transforming utilities', () => {
 			credit: 0,
 			description: '',
 			syllabus_link: '',
-			year: '',
+			year: 2025,
 			name: 'קורס קצה',
 			instances: [
 				{
+					year: 2025,
+					attendance_mandatory: false,
+					has_lab: false,
+					studied_online: false,
+					waiting_list: false,
+					faculty: [],
 					type: 'הרצאה',
 					co_requirements: '',
 					course_id: 2,
@@ -126,6 +144,12 @@ describe('Course transforming utilities', () => {
 					sessions: [],
 				},
 				{
+					year: 2025,
+					attendance_mandatory: false,
+					has_lab: false,
+					studied_online: false,
+					waiting_list: false,
+					faculty: [],
 					type: 'מעבדה',
 					co_requirements: '',
 					course_id: 2,
@@ -184,10 +208,16 @@ describe('Course list transforming utilities', () => {
 		credit: 0,
 		description: '',
 		syllabus_link: '',
-		year: '',
+		year: 2025,
 		name: 'קורס ראשון',
 		instances: [
 			{
+				year: 2025,
+				attendance_mandatory: false,
+				has_lab: false,
+				studied_online: false,
+				waiting_list: false,
+				faculty: [],
 				type: 'הרצאה',
 				co_requirements: '',
 				course_id: 1,
@@ -218,10 +248,16 @@ describe('Course list transforming utilities', () => {
 		credit: 0,
 		description: '',
 		syllabus_link: '',
-		year: '',
+		year: 2025,
 		name: 'קורס שני',
 		instances: [
 			{
+				year: 2025,
+				attendance_mandatory: false,
+				has_lab: false,
+				studied_online: false,
+				waiting_list: false,
+				faculty: [],
 				type: 'מעבדה',
 				co_requirements: '',
 				course_id: 2,
@@ -250,8 +286,8 @@ describe('Course list transforming utilities', () => {
 	it('detects no overlap between non-overlapping courses', () => {
 		const result = itemizeCourseList([course1, course2]);
 		expect(result).toHaveLength(2);
-		expect(result[0].is_overlapping).toBeUndefined();
-		expect(result[1].is_overlapping).toBeUndefined();
+		expect(result[0].overlapping).toBeUndefined();
+		expect(result[1].overlapping).toBeUndefined();
 	});
 
 	it('detects overlap when the first course partially overlaps the second', () => {
@@ -262,8 +298,8 @@ describe('Course list transforming utilities', () => {
 
 		const result = itemizeCourseList([course1, course2]);
 		expect(result).toHaveLength(2);
-		expect(result[0].is_overlapping).toBe(true);
-		expect(result[1].is_overlapping).toBe(true);
+		expect(result[0].overlapping).toBeTruthy();
+		expect(result[1].overlapping).toBeTruthy();
 	});
 
 	it('detects overlap when the second course partially overlaps the first', () => {
@@ -274,8 +310,8 @@ describe('Course list transforming utilities', () => {
 
 		const result = itemizeCourseList([course1, course2]);
 		expect(result).toHaveLength(2);
-		expect(result[0].is_overlapping).toBe(true);
-		expect(result[1].is_overlapping).toBe(true);
+		expect(result[0].overlapping).toBeTruthy();
+		expect(result[1].overlapping).toBeTruthy();
 	});
 
 	it('detects overlap when courses have the exact same timing', () => {
@@ -286,8 +322,8 @@ describe('Course list transforming utilities', () => {
 
 		const result = itemizeCourseList([course1, course2]);
 		expect(result).toHaveLength(2);
-		expect(result[0].is_overlapping).toBe(true);
-		expect(result[1].is_overlapping).toBe(true);
+		expect(result[0].overlapping).toBeTruthy();
+		expect(result[1].overlapping).toBeTruthy();
 	});
 
 	it('detects no overlap when courses are adjacent but not overlapping', () => {
@@ -298,8 +334,8 @@ describe('Course list transforming utilities', () => {
 
 		const result = itemizeCourseList([course1, course2]);
 		expect(result).toHaveLength(2);
-		expect(result[0].is_overlapping).toBeUndefined();
-		expect(result[1].is_overlapping).toBeUndefined();
+		expect(result[0].overlapping).toBeUndefined();
+		expect(result[1].overlapping).toBeUndefined();
 	});
 
 	it('handles multiple overlaps in a complex schedule', () => {
@@ -313,10 +349,16 @@ describe('Course list transforming utilities', () => {
 			credit: 0,
 			description: '',
 			syllabus_link: '',
-			year: '',
+			year: 2025,
 			name: 'קורס שלישי',
 			instances: [
 				{
+					year: 2025,
+					attendance_mandatory: false,
+					has_lab: false,
+					studied_online: false,
+					waiting_list: false,
+					faculty: [],
 					type: 'תרגול',
 					co_requirements: '',
 					course_id: 3,
@@ -344,8 +386,10 @@ describe('Course list transforming utilities', () => {
 
 		const result = itemizeCourseList([course1, course2, course3]);
 		expect(result).toHaveLength(3);
-		expect(result[0].is_overlapping).toBe(true); // Overlaps with course2 and course3
-		expect(result[1].is_overlapping).toBe(true); // Overlaps with course1 and course3
-		expect(result[2].is_overlapping).toBe(true); // Overlaps with course1 and course2
+		console.log(result[0].overlapping, result[1].overlapping, result[2].overlapping);
+
+		expect(result[0].overlapping).toBeTruthy(); // Overlaps with course2 and course3
+		expect(result[1].overlapping).toBeTruthy(); // Overlaps with course1 and course3
+		expect(result[2].overlapping).toBeTruthy(); // Overlaps with course1 and course2
 	});
 });
