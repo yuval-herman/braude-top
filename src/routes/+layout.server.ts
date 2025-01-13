@@ -5,7 +5,9 @@ export const load = async ({ cookies }) => {
 		year: y,
 		semesters: getSemestersAvailable(y),
 	}));
+
 	let themeCookie = cookies.get('theme') ?? 'auto';
+
 	return { themeCookie, availableTimeSpans };
 };
 

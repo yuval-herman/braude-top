@@ -2,17 +2,27 @@
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
-
 	import { hoveredInstance, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { itemizeCourseList } from '$lib/utils.js';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
 	import { fly, slide, type FlyParams } from 'svelte/transition';
-
 	import { page } from '$app/state';
 	import { showHelp } from '$lib/help.js';
 	import { TypedLocalStorage } from '$lib/storage.js';
 	import { onMount } from 'svelte';
+
+	const { data } = $props();
+	let searchQuery = $state('');
+	let tab = $state<'all' | 'my'>('all');
+
+	const filteredCourses = $derived(
+		data.full_courses.filter((c) => c.name.toLowerCase().includes(searchQuery))
+	);
+
+	$effect(() => {
+		searchQuery = searchQuery.toLowerCase();
+	});
 
 	onMount(() => {
 		if (!TypedLocalStorage.getItem('onboarded')) {
@@ -20,16 +30,6 @@
 			TypedLocalStorage.setItem('onboarded', true);
 		}
 	});
-	const { data } = $props();
-	let searchQuery = $state('');
-	$effect(() => {
-		searchQuery = searchQuery.toLowerCase();
-	});
-	const filteredCourses = $derived(
-		data.full_courses.filter((c) => c.name.toLowerCase().includes(searchQuery))
-	);
-
-	let tab = $state<'all' | 'my'>('all');
 
 	const onkeydown: KeyboardEventHandler<Window> = (e) => {
 		if (e.metaKey || e.ctrlKey) {

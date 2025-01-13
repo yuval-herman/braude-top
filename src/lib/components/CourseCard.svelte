@@ -1,6 +1,4 @@
 <script lang="ts">
-	import Indicator from './Indicator.svelte';
-
 	import {
 		addSelectedCourse,
 		hoveredInstance,
@@ -10,30 +8,35 @@
 	import { css, instanceColors, itemizeCourse, listFormatter } from '$lib/utils';
 	import { flip } from 'svelte/animate';
 	import { fade, slide } from 'svelte/transition';
+	import Indicator from './Indicator.svelte';
 
 	interface Props {
 		course: FullCourse;
 		mode?: 'all' | 'my';
 	}
+
 	const { course, mode = 'all' }: Props = $props();
+
+	// warn when the course registration is incomplete
+	const warn = $derived(registrationIncomplete(mode, course));
+
+	function registrationIncomplete(mode: 'all' | 'my', course: FullCourse): boolean {
+		if (mode === 'all') return false;
+		return !course.instances.every(
+			(i) =>
+				!i.co_requirements ||
+				(JSON.parse(i.co_requirements) as number[]).some((req) =>
+					selectedCourses.find((c) => c.instances.find((i) => i.course_instance_id === req))
+				)
+		);
+	}
+
 	function instanceInSelected(instance: CourseInstance) {
 		return selectedCourses.some((c) =>
 			c.instances.some((i) => i.course_instance_id === instance.course_instance_id)
 		);
 	}
 
-	// warn when the course registration is incomplete
-	const warn = $derived.by(
-		() =>
-			mode === 'my' &&
-			!course.instances.every(
-				(i) =>
-					!i.co_requirements ||
-					(JSON.parse(i.co_requirements) as number[]).some((req) =>
-						selectedCourses.find((c) => c.instances.find((i) => i.course_instance_id === req))
-					)
-			)
-	);
 	function getColor(instance: CourseInstance, hover = false) {
 		let color = instanceColors.get(instance.type) ?? (instanceColors.get('default') as string);
 		if (

@@ -10,10 +10,12 @@ export const load = async ({ url, parent }) => {
 	let year: number = Number(url.searchParams.get('year'));
 	let semester: string | undefined = url.searchParams.get('semester') ?? undefined;
 	const available = (await parent()).availableTimeSpans;
+
 	if (!year || !semester) {
 		year ||= available[0].year;
 		semester ||= available.find((i) => i.year === year)?.semesters[0];
 	}
+
 	if (!semester) {
 		error(404, `לא נמצא סמסטר לשנת ${year}`);
 	} else if (!available.some((span) => span.year === year)) {

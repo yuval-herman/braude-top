@@ -7,13 +7,14 @@
 		mode?: 'all' | 'my';
 		items: FullCourse[];
 	}
+
 	const { itemPerPage = 10, items, mode = 'all' }: Props = $props();
 	let currentPage = $state(0);
-
 	const lastPage = $derived(Math.floor(items.length / itemPerPage));
 	const pageItems = $derived(
 		items.slice(itemPerPage * currentPage, itemPerPage * (currentPage + 1))
 	);
+
 	$effect(() => {
 		if (pageItems.length === 0) currentPage = 0;
 	});

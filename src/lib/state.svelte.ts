@@ -1,20 +1,15 @@
 import { browser } from '$app/environment';
 import { TypedLocalStorage } from './storage';
 
-export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
-export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
 type stackFunction = () => void;
 
+const cache = browser ? (TypedLocalStorage.getItem('selected') ?? []) : [];
+
+export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
+export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
 export const undoStack: stackFunction[] = [];
 // export const redoStack: stackFunction[] = [];
-
-export const selectedCourses = $state<FullCourse[]>(
-	(() => {
-		if (!browser) return [];
-		const cache = TypedLocalStorage.getItem('selected');
-		return cache || [];
-	})()
-);
+export const selectedCourses = $state<FullCourse[]>(cache);
 
 export function addSelectedCourse(course: FullCourse, saveUndo = true) {
 	const exitingCourse = selectedCourses.find((c) => c.course_id === course.course_id);
@@ -31,6 +26,7 @@ export function addSelectedCourse(course: FullCourse, saveUndo = true) {
 	browser && TypedLocalStorage.setItem('selected', selectedCourses);
 	saveUndo && undoStack.push(() => removeSelectedCourse(course, false));
 }
+
 export function removeSelectedCourse(course: FullCourse, saveUndo = true) {
 	const i = selectedCourses.findIndex((c) => c.course_id === course.course_id);
 	if (i === -1) throw new Error('Tried to remove non exiting course');

@@ -75,6 +75,25 @@ export function itemizeCourseList(courses: FullCourse[]): Item[] {
 	return items;
 }
 
+export function getPropertiesOfCourse(course: FullCourse) {
+	const languages = new Set<string>();
+	const types = new Set<string>();
+	const notes: { id: number; note: string }[] = [];
+	let fullInstances = new Map<string, number>();
+
+	for (const instance of course.instances) {
+		if (instance.language) languages.add(instance.language);
+		if (instance.is_full)
+			fullInstances.set(instance.type, (fullInstances.get(instance.type) ?? 0) + 1);
+		if (instance.extra_notes)
+			notes.push({ note: instance.extra_notes, id: instance.course_instance_id });
+
+		types.add(instance.type);
+	}
+
+	return { languages, types, fullInstances, notes };
+}
+
 export const dayFormatter = new Intl.DateTimeFormat('he-IL', { weekday: 'long' });
 export const hourFormatter = new Intl.DateTimeFormat('he-IL', {
 	timeStyle: 'short',

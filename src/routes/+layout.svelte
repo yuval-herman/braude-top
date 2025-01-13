@@ -2,17 +2,14 @@
 	import '$lib/global.css';
 	import 'driver.js/dist/driver.css';
 
-	import { goto, onNavigate, replaceState } from '$app/navigation';
+	import { goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { showHelp } from '$lib/help.js';
 	import { theme } from '$lib/state.svelte';
 
 	let { children, data } = $props();
-	const { themeCookie } = data;
 
-	function validateTheme(themeStr?: string): themeStr is 'auto' | 'light' | 'dark' {
-		return !!themeStr && ['auto', 'light', 'dark'].includes(themeStr);
-	}
+	const { themeCookie } = data;
 
 	if (validateTheme(themeCookie) && theme.theme !== themeCookie) {
 		theme.theme = themeCookie;
@@ -24,6 +21,10 @@
 			path: to.url.pathname + to.url.search + to.url.hash,
 		});
 	});
+
+	function validateTheme(themeStr?: string): themeStr is 'auto' | 'light' | 'dark' {
+		return !!themeStr && ['auto', 'light', 'dark'].includes(themeStr);
+	}
 </script>
 
 <svelte:head>

@@ -1,9 +1,13 @@
 <script lang="ts">
-	import { getDay, getHour, hoursList, instanceColors } from '$lib/utils';
+	import { getDay, getHour, hoursList } from '$lib/utils';
 	import Indicator from './Indicator.svelte';
 	import MenuButton from './MenuButton.svelte';
 
 	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
+	const itemsByDay = $derived(
+		splitToDays(items.concat(previewItems.map((p) => ({ ...p, is_preview: true }))))
+	);
+
 	function splitToDays(items: Item[]) {
 		const daysArr: Item[][] = Array(6);
 		for (let i = 0; i < items.length; i++) {
@@ -12,10 +16,6 @@
 		}
 		return daysArr;
 	}
-
-	const itemsByDay = $derived(
-		splitToDays(items.concat(previewItems.map((p) => ({ ...p, is_preview: true }))))
-	);
 </script>
 
 {#snippet Item(item: Item, index: number)}
