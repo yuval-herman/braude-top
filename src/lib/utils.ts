@@ -53,23 +53,15 @@ export function itemizeCourse({ name, instances }: FullCourse): Item[] {
 
 export function itemizeCourseList(courses: FullCourse[]): Item[] {
 	const items = courses.flatMap(itemizeCourse);
-	for (let i = 0; i < items.length; i++) {
-		const { start: istart, end: iend, day: iday } = items[i];
-		for (let j = i + 1; j < items.length; j++) {
-			const { start: jstart, end: jend, day: jday } = items[j];
-			if (
-				((istart <= jstart && jstart < iend) || (istart < jend && jstart < istart)) &&
-				iday === jday
-			) {
-				if (items[i].overlapping) {
-					items[i].overlapping!.overlapIndex += 1;
-				} else if (items[j].overlapping) {
-					items[j].overlapping!.overlapIndex += 1;
-				} else {
-					items[i].overlapping = { overlapIndex: 0 };
-					items[j].overlapping = { overlapIndex: 1 };
-				}
-			}
+	items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
+	for (let i = 0; i < items.length - 1; i++) {
+		const curr = items[i];
+		const next = items[i + 1];
+		if (next.day === curr.day && next.start < curr.end) {
+			// TODO there could be more then one overlap, but since the ui does not support it ATM this is fine
+			if (curr.overlapping) curr.overlapping.overlapIndex++;
+			else curr.overlapping = { overlapIndex: 0 };
+			next.overlapping = { overlapIndex: 1 };
 		}
 	}
 	return items;
