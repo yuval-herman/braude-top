@@ -82,7 +82,11 @@
 						goto(url, { replaceState: false, state: page.state, keepFocus: true });
 					}, 300)}
 				/>
-				<PaginatedList items={data.full_courses ?? []} />
+				{#if data.full_courses?.length}
+					<PaginatedList items={data.full_courses} />
+				{:else}
+					<i class="info" transition:slide>חפש קורסים בתיבת החיפוש!</i>
+				{/if}
 			</div>
 		{:else}
 			<div
@@ -116,6 +120,11 @@
 <style>
 	.warn {
 		color: var(--warn);
+		text-align: center;
+		margin: 1.5rem;
+	}
+	.info {
+		color: var(--info);
 		text-align: center;
 		margin: 1.5rem;
 	}
