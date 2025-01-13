@@ -1,17 +1,20 @@
 import { browser } from '$app/environment';
-import { TypedLocalStorage } from './storage';
+import { setCurrentSelected } from './storage';
 
 type stackFunction = () => void;
-
-const cache = browser ? (TypedLocalStorage.getItem('selected') ?? []) : [];
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
 export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
 export const undoStack: stackFunction[] = [];
 // export const redoStack: stackFunction[] = [];
-export const selectedCourses = $state<FullCourse[]>(cache);
+export const selectedCourses = $state<FullCourse[]>([]);
 
-export function addSelectedCourse(course: FullCourse, saveUndo = true) {
+export function addSelectedCourse(
+	course: FullCourse,
+	year: number,
+	semester: string,
+	saveUndo = true
+) {
 	const exitingCourse = selectedCourses.find((c) => c.course_id === course.course_id);
 	if (exitingCourse) {
 		const exitingInstancesIds = exitingCourse.instances.map((i) => i.course_instance_id);
@@ -23,11 +26,16 @@ export function addSelectedCourse(course: FullCourse, saveUndo = true) {
 	} else {
 		selectedCourses.push(structuredClone(course));
 	}
-	browser && TypedLocalStorage.setItem('selected', selectedCourses);
-	saveUndo && undoStack.push(() => removeSelectedCourse(course, false));
+	browser && setCurrentSelected(selectedCourses, year, semester);
+	saveUndo && undoStack.push(() => removeSelectedCourse(course, year, semester, false));
 }
 
-export function removeSelectedCourse(course: FullCourse, saveUndo = true) {
+export function removeSelectedCourse(
+	course: FullCourse,
+	year: number,
+	semester: string,
+	saveUndo = true
+) {
 	const i = selectedCourses.findIndex((c) => c.course_id === course.course_id);
 	if (i === -1) throw new Error('Tried to remove non exiting course');
 	const exitingCourse = selectedCourses[i];
@@ -41,6 +49,6 @@ export function removeSelectedCourse(course: FullCourse, saveUndo = true) {
 	} else {
 		exitingCourse.instances = instances;
 	}
-	browser && TypedLocalStorage.setItem('selected', selectedCourses);
-	saveUndo && undoStack.push(() => addSelectedCourse(course, false));
+	browser && setCurrentSelected(selectedCourses, year, semester);
+	saveUndo && undoStack.push(() => addSelectedCourse(course, year, semester, false));
 }

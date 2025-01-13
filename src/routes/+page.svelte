@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { afterNavigate, goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { showHelp } from '$lib/help.js';
 	import { hoveredInstance, selectedCourses, undoStack } from '$lib/state.svelte.js';
-	import { TypedLocalStorage } from '$lib/storage.js';
+	import { getCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
 	import { debounce, itemizeCourseList } from '$lib/utils.js';
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
@@ -21,6 +21,11 @@
 			showHelp(page);
 			TypedLocalStorage.setItem('onboarded', true);
 		}
+	});
+
+	afterNavigate(() => {
+		selectedCourses.length = 0;
+		selectedCourses.push(...getCurrentSelected(data.year, data.semester));
 	});
 
 	const onkeydown: KeyboardEventHandler<Window> = (e) => {

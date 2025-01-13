@@ -3,6 +3,7 @@
 # Planned
 
 - add beta.braude.top domain to test site on the web (maybe allow users to check beta features?)
+- make sure user is aware if he is selecting multiple (unrequired) sessions (such as too many lectures)
 
 - update tests
 - improve analytics (add an Analytics component? use:action?)

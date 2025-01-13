@@ -9,6 +9,7 @@
 	import { flip } from 'svelte/animate';
 	import { fade, slide } from 'svelte/transition';
 	import Indicator from './Indicator.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
 		course: FullCourse;
@@ -79,8 +80,16 @@
 				style:--instance-background-hover={getColor(instance, true)}
 				onclick={() =>
 					instanceInSelected(instance)
-						? removeSelectedCourse({ ...course, instances: [instance] })
-						: addSelectedCourse({ ...course, instances: [instance] })}
+						? removeSelectedCourse(
+								{ ...course, instances: [instance] },
+								page.data.year,
+								page.data.semester
+							)
+						: addSelectedCourse(
+								{ ...course, instances: [instance] },
+								page.data.year,
+								page.data.semester
+							)}
 				onmouseenter={mode === 'all'
 					? () => (hoveredInstance.items = itemizeCourse({ ...course, instances: [instance] }))
 					: undefined}

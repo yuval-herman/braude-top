@@ -4,7 +4,14 @@ declare global {
 	namespace App {
 		// interface Error {}
 		// interface Locals {}
-		// interface PageData {}
+		interface PageData {
+			availableTimeSpans: {
+				year: number;
+				semesters: string[];
+			}[];
+			year: number;
+			semester: string;
+		}
 		interface PageState {
 			sidebarOpen: boolean;
 		}

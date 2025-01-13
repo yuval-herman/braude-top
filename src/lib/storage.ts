@@ -1,8 +1,9 @@
 import { browser, version } from '$app/environment';
+
 import semverMinor from 'semver/functions/minor';
 
 interface StorageItems {
-	selected: FullCourse[];
+	[key: `selected-${number}-${string}`]: FullCourse[];
 	version: string; // semver, can be compared with normal comparison operators
 	onboarded: boolean; // whether the user has been onboraded
 }
@@ -25,18 +26,29 @@ export class TypedLocalStorage {
 	static hasKey<TKey extends keyof StorageItems>(key: TKey): boolean {
 		return key in localStorage;
 	}
+
+	static keys(): (keyof StorageItems)[] {
+		return Object.keys(localStorage) as (keyof StorageItems)[];
+	}
+}
+
+export function getCurrentSelected(year: number, semester: string): FullCourse[] {
+	if (!browser) return [];
+	return TypedLocalStorage.getItem(`selected-${year}-${semester}`) ?? [];
+}
+export function setCurrentSelected(courses: FullCourse[], year: number, semester: string) {
+	if (!browser) return;
+	console.log(year, semester);
+
+	return TypedLocalStorage.setItem(`selected-${year}-${semester}`, courses);
 }
 
 if (browser) {
 	const localVersion = TypedLocalStorage.getItem('version');
-	if (
-		localVersion &&
-		semverMinor(localVersion) < semverMinor(version) &&
-		TypedLocalStorage.hasKey('selected')
-	) {
+	const selectedList = TypedLocalStorage.keys().filter((k) => k.startsWith('selected'));
+	if (localVersion && semverMinor(localVersion) < semverMinor(version) && selectedList.length) {
 		alert('האתר עודכן ולכן המערכת השמורה נמחקה');
-		TypedLocalStorage.removeItem('selected');
-		TypedLocalStorage.removeItem('onboarded');
+		selectedList.forEach(TypedLocalStorage.removeItem);
 	}
 	TypedLocalStorage.setItem('version', version);
 }
