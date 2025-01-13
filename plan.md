@@ -1,11 +1,10 @@
 # WIP
 
 - update storybook and tests
-
-# Planned
-
 - rewrite PaginatedList
 - replace logic for user downloading the entire db
+
+# Planned
 
 - improve analytics (add an Analytics component? use:action?)
 - save schedule for every semester on its own

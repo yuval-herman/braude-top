@@ -1,8 +1,8 @@
 <script module>
-	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import TimeTable from '$lib/components/TimeTable.svelte';
+	import { itemizeCourseList } from '$lib/utils';
+	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import allCourses from '../fullcourses.json';
-	import { itemizeCourse } from '$lib/utils';
 
 	const { Story } = defineMeta({
 		title: 'TimeTable',
@@ -12,9 +12,7 @@
 		},
 	});
 
-	const items = itemizeCourse(allCourses[0])
-		.slice(0, 4)
-		.concat(itemizeCourse(allCourses[1]).slice(2));
+	const items = itemizeCourseList(allCourses.slice(0, 3));
 </script>
 
 <Story name="Empty" />
