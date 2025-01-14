@@ -12,4 +12,9 @@ interface Item {
 	indicatorColor: string;
 	is_preview?: boolean;
 	overlapping?: { overlapIndex: number };
+	walk?: {
+		dist: number;
+		time: number;
+		freeTime: number; // Time the student has to walk
+	};
 }

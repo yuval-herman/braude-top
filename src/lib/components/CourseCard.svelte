@@ -39,17 +39,21 @@
 		);
 	}
 
-	function getColor(instance: CourseInstance, hover = false) {
-		let color = instanceColors.get(instance.type) ?? (instanceColors.get('default') as string);
+	function getColor(instance: CourseInstance) {
+		let background = css.colors.num2color(course.course_id);
 		if (
 			mode === 'all' &&
 			selectedCourses.find((c) =>
 				c.instances.find((i) => i.course_instance_id === instance.course_instance_id)
 			)
 		) {
-			color = css.colors.saturate(color, -25);
+			background = css.colors.lighten(background, -15);
 		}
-		return hover ? css.colors.lighten(color) : color;
+		return {
+			hover: css.colors.lighten(background),
+			Indicator: instanceColors.get(instance.type) ?? (instanceColors.get('default') as string),
+			background,
+		};
 	}
 </script>
 
@@ -73,15 +77,15 @@
 	<div class="instances">
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		{#each course.instances as instance, i (instance.course_instance_id)}
-			{@const background = css.colors.num2color(course.course_id)}
+			{@const c = getColor(instance)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class="instance"
 				style="z-index: {course.instances.length - i};"
-				style:--instance-background={background}
-				style:--instance-background-hover={getColor(instance, true)}
+				style:--instance-background={c.background}
+				style:--instance-background-hover={c.hover}
 				style:color={css.a11y.getContrast({
-					background,
+					background: c.background,
 					light: 'var(--text-light)',
 					dark: 'var(--text-dark)',
 				})}
@@ -104,7 +108,7 @@
 				transition:slide
 				animate:flip={{ duration: 250, delay: 50 }}
 			>
-				<Indicator color={getColor(instance)} />
+				<Indicator color={c.Indicator} />
 				<div class="instance-details">
 					<span>{instance.type}</span>
 					<span>של</span>

@@ -19,7 +19,16 @@ export const hoursList = [
 	{ hour: 22, min: 50 },
 ] as const;
 
-export const buildings = ['D', 'EF', 'EM', 'L', 'M', 'P', 'fab lab', 'אולם ספורט'];
+export const buildings = [
+	'D',
+	'EF',
+	'EM',
+	'L',
+	'M',
+	'P',
+	'אולם ספורט',
+	// 'fab lab',
+] as const;
 export const walkTimes = {
 	D: {
 		EF: { dist: 207, time: 4 },
@@ -28,7 +37,7 @@ export const walkTimes = {
 		M: { dist: 220, time: 4 },
 		'אולם ספורט': { dist: 110, time: 2 },
 		P: { dist: 534, time: 7 },
-		'fab lab': undefined,
+		// 'fab lab': undefined,
 	},
 	EF: {
 		D: { dist: 207, time: 4 },
@@ -37,7 +46,7 @@ export const walkTimes = {
 		M: { dist: 81, time: 1 },
 		'אולם ספורט': { dist: 101, time: 1 },
 		P: { dist: 698, time: 12 },
-		'fab lab': undefined,
+		// 'fab lab': undefined,
 	},
 	EM: {
 		D: { dist: 478, time: 6 },
@@ -46,7 +55,7 @@ export const walkTimes = {
 		M: { dist: 242, time: 4 },
 		'אולם ספורט': { dist: 230, time: 4 },
 		P: { dist: 636, time: 11 },
-		'fab lab': undefined,
+		// 'fab lab': undefined,
 	},
 	L: {
 		D: { dist: 329, time: 5 },
@@ -55,7 +64,7 @@ export const walkTimes = {
 		M: { dist: 29, time: 1 },
 		'אולם ספורט': { dist: 249, time: 3 },
 		P: { dist: 732, time: 12 },
-		'fab lab': undefined,
+		// 'fab lab': undefined,
 	},
 	M: {
 		D: { dist: 220, time: 4 },
@@ -64,7 +73,7 @@ export const walkTimes = {
 		L: { dist: 29, time: 1 },
 		'אולם ספורט': { dist: 164, time: 2 },
 		P: { dist: 772, time: 12 },
-		'fab lab': undefined,
+		// 'fab lab': undefined,
 	},
 	'אולם ספורט': {
 		D: { dist: 110, time: 2 },
@@ -73,7 +82,7 @@ export const walkTimes = {
 		L: { dist: 249, time: 3 },
 		M: { dist: 164, time: 2 },
 		P: { dist: 596, time: 11 },
-		'fab lab': undefined,
+		// 'fab lab': undefined,
 	},
 	P: {
 		D: { dist: 534, time: 7 },
@@ -82,17 +91,17 @@ export const walkTimes = {
 		L: { dist: 732, time: 12 },
 		M: { dist: 772, time: 12 },
 		'אולם ספורט': { dist: 596, time: 11 },
-		'fab lab': undefined,
+		// 'fab lab': undefined,
 	},
-	'fab lab': {
-		D: undefined,
-		EF: undefined,
-		EM: undefined,
-		L: undefined,
-		M: undefined,
-		P: undefined,
-		'אולם ספורט': undefined,
-	},
+	// 'fab lab': {
+	// 	D: undefined,
+	// 	EF: undefined,
+	// 	EM: undefined,
+	// 	L: undefined,
+	// 	M: undefined,
+	// 	P: undefined,
+	// 	'אולם ספורט': undefined,
+	// },
 } as const;
 
 export function time2Index(timestring: string): number | undefined {
