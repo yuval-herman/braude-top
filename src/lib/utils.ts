@@ -163,9 +163,34 @@ const colors = {
 	num2color(num: number) {
 		return '#' + Math.trunc(hashNumber(num) * 16 ** 6).toString(16);
 	},
+	parseColor(input: string) {
+		if (input.startsWith('#')) {
+			let collen = (input.length - 1) / 3;
+			let fact = [17, 1, 0.062272][collen - 1];
+			return [
+				Math.round(parseInt(input.slice(1, collen), 16) * fact),
+				Math.round(parseInt(input.slice(1 + collen, collen), 16) * fact),
+				Math.round(parseInt(input.slice(1 + 2 * collen, collen), 16) * fact),
+			];
+		} else
+			return input
+				.split('(')[1]
+				.split(')')[0]
+				.split(',')
+				.map((x) => +x);
+	},
 };
 
-export const css = { colors } as const;
+const a11y = {
+	getContrast({ background, dark, light }: { background: string; light: string; dark: string }) {
+		const rgb = colors.parseColor(background);
+		// http://www.w3.org/TR/AERT#color-contrast
+		const brightness = Math.round((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000);
+		return brightness > 125 ? dark : light;
+	},
+};
+
+export const css = { colors, a11y } satisfies Record<string, Record<string, Function>>;
 export const instanceColors = new Map(
 	Object.entries({
 		הרצאה: colors.lighten('var(--primary)'),

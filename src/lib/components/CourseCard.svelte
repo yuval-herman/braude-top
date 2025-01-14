@@ -72,12 +72,18 @@
 	<div class="instances">
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		{#each course.instances as instance, i (instance.course_instance_id)}
+			{@const background = css.colors.num2color(course.course_id)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class="instance"
 				style="z-index: {course.instances.length - i};"
-				style:--instance-background={css.colors.num2color(course.course_id)}
+				style:--instance-background={background}
 				style:--instance-background-hover={getColor(instance, true)}
+				style:color={css.a11y.getContrast({
+					background,
+					light: 'var(--text-light)',
+					dark: 'var(--text-dark)',
+				})}
 				onclick={() =>
 					instanceInSelected(instance)
 						? removeSelectedCourse(

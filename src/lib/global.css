@@ -6,7 +6,9 @@
 	--neutral: light-dark(hsl(0, 0%, 95%), hsl(0, 0%, 20%));
 	--dark: hsl(217, 50%, 20%);
 
-	--text: light-dark(black, white);
+	--text-light: white;
+	--text-dark: black;
+	--text: light-dark(var(--text-dark), var(--text-light));
 	--text-secondary: light-dark(#444, #bbb);
 
 	--primary: light-dark(#8d9db6, #22447a);
