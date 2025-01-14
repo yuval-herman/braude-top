@@ -8,7 +8,8 @@ interface Item {
 		instructor: string;
 		name: string;
 	}; // Value to show in cell
-	colorIndicator: string;
+	bgColor: string;
+	indicatorColor: string;
 	is_preview?: boolean;
 	overlapping?: { overlapIndex: number };
 }

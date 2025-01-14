@@ -26,12 +26,12 @@
 		style:--overlap-index={(item.overlapping?.overlapIndex ?? 0) < 2
 			? item.overlapping?.overlapIndex
 			: undefined}
-		style:background={(item.overlapping?.overlapIndex ?? 0) < 2 ? undefined : 'red'}
+		style:--item-bg={(item.overlapping?.overlapIndex ?? 0) < 2 ? item.bgColor : 'red'}
 		style:top="calc({item.start - 1} * (100% + 1px))"
 		style:height="calc({item.end - item.start} * (100% + 1px))"
 		style:z-index={index}
 	>
-		<Indicator color={item.colorIndicator} />
+		<Indicator color={item.indicatorColor} />
 		{item.value.name}
 		{item.value.instructor}
 		{item.value.room}
@@ -130,6 +130,7 @@
 		width: 100%;
 		left: 0;
 		padding: 6px;
+		padding-right: 10px;
 
 		text-align: center;
 		font-size: small;
@@ -137,7 +138,7 @@
 		white-space: wrap;
 		word-break: break-all;
 
-		background: var(--primary);
+		background: var(--item-bg);
 		border-radius: 16px;
 		box-shadow: 5px 5px 5px var(--shadow);
 		&.preview {

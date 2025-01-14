@@ -76,7 +76,7 @@
 			<div
 				class="instance"
 				style="z-index: {course.instances.length - i};"
-				style:--instance-background={getColor(instance)}
+				style:--instance-background={css.colors.num2color(course.course_id)}
 				style:--instance-background-hover={getColor(instance, true)}
 				onclick={() =>
 					instanceInSelected(instance)
@@ -97,9 +97,7 @@
 				transition:slide
 				animate:flip={{ duration: 250, delay: 50 }}
 			>
-				{#if mode === 'my'}
-					<Indicator color={css.colors.num2color(course.course_id)} />
-				{/if}
+				<Indicator color={getColor(instance)} />
 				<div class="instance-details">
 					<span>{instance.type}</span>
 					<span>של</span>
@@ -222,6 +220,7 @@
 			margin: 4px;
 			border-radius: 8px;
 			padding: 8px;
+			padding-right: 12px;
 			box-shadow: 5px 5px 5px var(--shadow);
 			p {
 				margin: 4px;
@@ -237,6 +236,7 @@
 			border: var(--border) 1px solid;
 			cursor: pointer;
 			transition: all 0.25s;
+
 			&:hover {
 				background: var(--instance-background-hover);
 			}
