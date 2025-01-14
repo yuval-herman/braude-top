@@ -1,4 +1,5 @@
 <script lang="ts">
+	import parseColor from 'color-parse';
 	import {
 		addSelectedCourse,
 		hoveredInstance,
@@ -50,6 +51,16 @@
 		}
 		return hover ? css.colors.lighten(color) : color;
 	}
+
+	const background = '#000';
+	console.log(
+		parseColor(background),
+		css.a11y.getContrast({
+			background,
+			light: 'var(--text-light)',
+			dark: 'var(--text-dark)',
+		})
+	);
 </script>
 
 <div class="container" class:warn>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getDay, getHour, hoursList } from '$lib/utils';
+	import { css, getDay, getHour, hoursList } from '$lib/utils';
 	import Indicator from './Indicator.svelte';
 	import MenuButton from './MenuButton.svelte';
 
@@ -19,6 +19,7 @@
 </script>
 
 {#snippet Item(item: Item, index: number)}
+	{@const background = (item.overlapping?.overlapIndex ?? 0) < 2 ? item.bgColor : 'red'}
 	<div
 		class="item"
 		class:preview={item.is_preview}
@@ -26,7 +27,12 @@
 		style:--overlap-index={(item.overlapping?.overlapIndex ?? 0) < 2
 			? item.overlapping?.overlapIndex
 			: undefined}
-		style:--item-bg={(item.overlapping?.overlapIndex ?? 0) < 2 ? item.bgColor : 'red'}
+		style:--item-bg={background}
+		style:color={css.a11y.getContrast({
+			background,
+			light: 'var(--text-light)',
+			dark: 'var(--text-dark)',
+		})}
 		style:top="calc({item.start - 1} * (100% + 1px))"
 		style:height="calc({item.end - item.start} * (100% + 1px))"
 		style:z-index={index}

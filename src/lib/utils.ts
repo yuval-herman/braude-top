@@ -1,3 +1,5 @@
+import parseColor from 'color-parse';
+
 export const hoursList = [
 	{ hour: 8, min: 30 },
 	{ hour: 9, min: 30 },
@@ -161,29 +163,16 @@ const colors = {
 		return color;
 	},
 	num2color(num: number) {
-		return '#' + Math.trunc(hashNumber(num) * 16 ** 6).toString(16);
-	},
-	parseColor(input: string) {
-		if (input.startsWith('#')) {
-			let collen = (input.length - 1) / 3;
-			let fact = [17, 1, 0.062272][collen - 1];
-			return [
-				Math.round(parseInt(input.slice(1, collen), 16) * fact),
-				Math.round(parseInt(input.slice(1 + collen, collen), 16) * fact),
-				Math.round(parseInt(input.slice(1 + 2 * collen, collen), 16) * fact),
-			];
-		} else
-			return input
-				.split('(')[1]
-				.split(')')[0]
-				.split(',')
-				.map((x) => +x);
+		const min = 16 ** 5,
+			max = 16 ** 6;
+
+		return '#' + Math.trunc(hashNumber(num) * (max - min) + min).toString(16);
 	},
 };
 
 const a11y = {
 	getContrast({ background, dark, light }: { background: string; light: string; dark: string }) {
-		const rgb = colors.parseColor(background);
+		const rgb = parseColor(background).values;
 		// http://www.w3.org/TR/AERT#color-contrast
 		const brightness = Math.round((rgb[0] * 299 + rgb[1] * 587 + rgb[2] * 114) / 1000);
 		return brightness > 125 ? dark : light;
