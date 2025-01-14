@@ -1,5 +1,8 @@
 # WIP
 
+- show walk time between buildings
+- change indicator to show type and whole card to show course
+
 # Planned
 
 - add site info panel (visits, last course update etc...)
@@ -19,7 +22,6 @@
 - export timetable
 
 - show empty time between sessions
-- show walk time between buildings
 
 - show empty rooms to study in (suggest user add to timetable in empty sessions?)
 
