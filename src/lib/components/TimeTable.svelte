@@ -55,9 +55,10 @@
 		style:z-index={index}
 	>
 		<Indicator color={item.indicatorColor} />
-		{item.value.name}
-		{item.value.instructor}
-		{item.value.room}
+		<span>{item.type}</span>
+		<span>{item.value.name}</span>
+		<span>{item.value.instructor}</span>
+		<span>{item.value.room}</span>
 	</div>
 	{#if item.walk && !item.overlapping}
 		<div

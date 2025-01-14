@@ -7,6 +7,7 @@ interface Item {
 		room: string;
 		instructor: string;
 		name: string;
+		type: string;
 	}; // Value to show in cell
 	bgColor: string;
 	indicatorColor: string;

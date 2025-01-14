@@ -131,7 +131,7 @@ export function itemizeCourse({ name, instances, course_id }: FullCourse): Item[
 				end,
 				start,
 				type,
-				value: { name, room, instructor },
+				value: { name, room, instructor, type },
 				indicatorColor: instanceColors.get(type) ?? (instanceColors.get('default') as string),
 				bgColor: colors.num2color(course_id),
 			};
