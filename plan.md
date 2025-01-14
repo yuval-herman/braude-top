@@ -1,7 +1,6 @@
 # WIP
 
 - show walk time between buildings
-- change indicator to show type and whole card to show course
 
 # Planned
 
