@@ -49,9 +49,11 @@
 		) {
 			background = css.colors.lighten(background, -15);
 		}
+		const indicator =
+			instanceColors.get(instance.type) ?? (instanceColors.get('default') as string);
 		return {
-			hover: css.colors.lighten(background),
-			Indicator: instanceColors.get(instance.type) ?? (instanceColors.get('default') as string),
+			hover: indicator,
+			indicator,
 			background,
 		};
 	}
@@ -108,7 +110,7 @@
 				transition:slide
 				animate:flip={{ duration: 250, delay: 50 }}
 			>
-				<Indicator color={c.Indicator} />
+				<Indicator color={c.indicator} />
 				<div class="instance-details">
 					<span>{instance.type}</span>
 					<span>של</span>
