@@ -1,5 +1,7 @@
 # WIP
 
+- export timetable
+
 # Planned
 
 - rewrite tests, make them deterministic using mock db
@@ -9,9 +11,10 @@
 - add instructor pages
 
 - add settings (remove walk times, colors, etc)
-- export timetable
 
 - show empty rooms to study in (suggest user add to timetable in empty sessions?)
+
+- lunch and 12:20 are the same thing, merge em'
 
 # Considering
 
