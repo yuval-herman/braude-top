@@ -9,6 +9,7 @@
 	--text-light: white;
 	--text-dark: black;
 	--text: light-dark(var(--text-dark), var(--text-light));
+	--text-invert: light-dark(var(--text-light), var(--text-dark));
 	--text-secondary: light-dark(#444, #bbb);
 
 	--primary: light-dark(#8d9db6, #22447a);
