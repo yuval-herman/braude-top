@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterNavigate, goto, onNavigate } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
@@ -8,7 +8,6 @@
 	import { hoveredInstance, redoStack, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
 	import { debounce, itemizeCourseList } from '$lib/utils.js';
-	import type { Action } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
@@ -132,10 +131,13 @@
 							}
 						}}>מחק הכל</button
 					>
+					{@const withInstances = selectedCourses.filter(({ instances }) =>
+						instances.some((i) => i.selected)
+					)}
 					<div transition:slide class="small-info">
-						<span>נ"ז {selectedCourses.reduce((p, c) => p + c.credit, 0)}</span><span
-							>שעות לימוד {selectedCourses.reduce(
-								(p, c) => p + c.instances.reduce((p, c) => p + c.hours, 0),
+						<span>נ"ז {withInstances.reduce((p, c) => p + c.credit, 0)}</span><span
+							>שעות לימוד {withInstances.reduce(
+								(p, c) => p + c.instances.reduce((p, c) => p + (c.selected ? c.hours : 0), 0),
 								0
 							)}</span
 						>

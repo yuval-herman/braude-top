@@ -5,6 +5,7 @@
 		hoveredInstance,
 		removeSelectedCourse,
 		selectedCourses,
+		toggleInstance,
 	} from '$lib/state.svelte';
 	import { css, instanceColors, itemizeCourse, listFormatter } from '$lib/utils';
 	import { flip } from 'svelte/animate';
@@ -33,20 +34,19 @@
 		);
 	}
 
+	function courseInSelected(course: Course) {
+		return selectedCourses.some((c) => c.course_id === course.course_id);
+	}
+
 	function instanceInSelected(instance: CourseInstance) {
 		return selectedCourses.some((c) =>
-			c.instances.some((i) => i.course_instance_id === instance.course_instance_id)
+			c.instances.some((i) => i.course_instance_id === instance.course_instance_id && i.selected)
 		);
 	}
 
 	function getColor(instance: CourseInstance) {
 		let background = css.colors.num2color(course.course_id);
-		if (
-			mode === 'all' &&
-			selectedCourses.find((c) =>
-				c.instances.find((i) => i.course_instance_id === instance.course_instance_id)
-			)
-		) {
+		if (instanceInSelected(instance)) {
 			background = css.colors.lighten(background, -15);
 		}
 		const indicator =
@@ -75,7 +75,19 @@
 			></a
 		>
 	</header>
-
+	{#if courseInSelected(course)}
+		<button
+			class="remove-button"
+			onclick={() => removeSelectedCourse(course, page.data.year, page.data.semester)}
+			>מחק קורס מהרשימה</button
+		>
+	{:else}
+		<button
+			class="add-button"
+			onclick={() => addSelectedCourse(course, page.data.year, page.data.semester)}
+			>הוסף קורס לרשימה</button
+		>
+	{/if}
 	<div class="instances">
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
 		{#each course.instances as instance, i (instance.course_instance_id)}
@@ -91,22 +103,23 @@
 					light: 'var(--text-light)',
 					dark: 'var(--text-dark)',
 				})}
-				onclick={() =>
-					instanceInSelected(instance)
-						? removeSelectedCourse(
-								{ ...course, instances: [instance] },
-								page.data.year,
-								page.data.semester
-							)
-						: addSelectedCourse(
-								{ ...course, instances: [instance] },
-								page.data.year,
-								page.data.semester
-							)}
-				onmouseenter={mode === 'all'
-					? () => (hoveredInstance.items = itemizeCourse({ ...course, instances: [instance] }))
-					: undefined}
-				onmouseleave={mode === 'all' ? () => (hoveredInstance.items.length = 0) : undefined}
+				onclick={() => {
+					const s = courseInSelected(course);
+					s
+						? toggleInstance(instance.course_instance_id, page.data.year, page.data.semester)
+						: ((instance.selected = true),
+							addSelectedCourse(course, page.data.year, page.data.semester));
+				}}
+				onmouseenter={() => {
+					hoveredInstance.items = itemizeCourse(
+						{
+							...course,
+							instances: [{ ...instance, selected: true }],
+						},
+						true
+					);
+				}}
+				onmouseleave={() => (hoveredInstance.items.length = 0)}
 				transition:slide
 				animate:flip={{ duration: 250, delay: 50 }}
 			>
@@ -138,33 +151,36 @@
 			</div>
 		{/each}
 		{#if mode === 'my' && course.instances.some((i) => i.exams.length > 0)}
-			<div class="exams">
-				{#each course.instances as { exams, course_instance_id } (course_instance_id)}
-					{#each exams as exam (exam.date)}
-						<p transition:slide|global>
-							{#if exam.exam_type === 'ללא בחינה - עבודה, פרוייקט,דוח'}
-								<span>{exam.exam_type} להגשה</span>
-							{:else}
-								<span
-									>מועד {exam.exam_round === 1
-										? 'ראשון'
-										: exam.exam_round === 2
-											? 'שני'
-											: exam.exam_round},</span
-								>
-								{#if !exam.exam_type}
-									<span>בחינה,</span>
-								{:else if ['בחינה רגילה', 'בחינה במעבדה', 'בחינה מפוצלת', 'מבחן בית'].includes(exam.exam_type)}
-									<span>{exam.exam_type},</span>
-								{:else if exam.exam_type === 'ללא השגחה'}
-									<span>בחינה ללא השגחה</span>
+			{@const selectedInstances = course.instances.filter((i) => i.selected)}
+			{#if selectedInstances.length && selectedInstances.some((i) => i.exams.length)}
+				<div class="exams">
+					{#each selectedInstances as { exams, course_instance_id } (course_instance_id)}
+						{#each exams as exam (exam.date)}
+							<p transition:slide|global>
+								{#if exam.exam_type === 'ללא בחינה - עבודה, פרוייקט,דוח'}
+									<span>{exam.exam_type} להגשה</span>
+								{:else}
+									<span
+										>מועד {exam.exam_round === 1
+											? 'ראשון'
+											: exam.exam_round === 2
+												? 'שני'
+												: exam.exam_round},</span
+									>
+									{#if !exam.exam_type}
+										<span>בחינה,</span>
+									{:else if ['בחינה רגילה', 'בחינה במעבדה', 'בחינה מפוצלת', 'מבחן בית'].includes(exam.exam_type)}
+										<span>{exam.exam_type},</span>
+									{:else if exam.exam_type === 'ללא השגחה'}
+										<span>בחינה ללא השגחה</span>
+									{/if}
 								{/if}
-							{/if}
-							<span>בתאריך {exam.date}</span>
-						</p>
+								<span>בתאריך {exam.date}</span>
+							</p>
+						{/each}
 					{/each}
-				{/each}
-			</div>
+				</div>
+			{/if}
 		{/if}
 	</div>
 	{#if warn}
@@ -199,10 +215,11 @@
 		border-radius: 8px;
 		padding: 12px;
 		background: var(--bg);
+		display: flex;
+		flex-direction: column;
 	}
 	header {
 		display: flex;
-		align-items: center;
 		justify-content: space-between;
 		margin-bottom: 12px;
 		h3 {
@@ -212,6 +229,20 @@
 			outline: none;
 			color: var(--text-secondary);
 		}
+	}
+	.add-button,
+	.remove-button {
+		margin: 0 4px;
+		border-radius: 4px;
+		border: none;
+	}
+	.add-button {
+		background: var(--success);
+		color: var(--text-light);
+	}
+	.remove-button {
+		background: var(--primary);
+		color: var(--text-light);
 	}
 	.instances {
 		display: grid;

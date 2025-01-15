@@ -7,6 +7,22 @@ export const undoStack: FullCourse[][] = [];
 export const redoStack: FullCourse[][] = [];
 export const selectedCourses = $state<FullCourse[]>([]);
 
+export function toggleInstance(instance_id: number, year: number, semester: string) {
+	undoStack.push($state.snapshot(selectedCourses));
+	redoStack.length = 0;
+
+	for (const course of selectedCourses) {
+		for (const instance of course.instances) {
+			if (instance.course_instance_id === instance_id) {
+				instance.selected = !instance.selected;
+				break;
+			}
+		}
+	}
+
+	browser && setCurrentSelected(selectedCourses, year, semester);
+}
+
 export function addSelectedCourse(course: FullCourse, year: number, semester: string) {
 	undoStack.push($state.snapshot(selectedCourses));
 	redoStack.length = 0;

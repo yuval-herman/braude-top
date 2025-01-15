@@ -14,16 +14,15 @@
 - add instructor pages
 
 - search instructors, and other fields
-- course searching filters
 - export timetable
 
 - show empty time between sessions
-- change the "my" list to have all selected courses, then from this the usre may select whatever session he wants
 
 - show empty rooms to study in (suggest user add to timetable in empty sessions?)
 
 # Considering
 
+- course searching filters
 - animation when opening side panel
 - automatically try to register to courses using user credentials
 - full fuzzy search

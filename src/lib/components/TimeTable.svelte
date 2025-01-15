@@ -1,12 +1,28 @@
 <script lang="ts">
-	import { buildings, css, getDay, getHour, hoursList, walkTimes } from '$lib/utils';
+	import { buildings, css, getDay, getHour, hoursList, sameObject, walkTimes } from '$lib/utils';
 	import Indicator from './Indicator.svelte';
 	import MenuButton from './MenuButton.svelte';
 
 	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
-	const itemsByDay = $derived(
-		splitToDays(items.concat(previewItems.map((p) => ({ ...p, is_preview: true }))))
-	);
+
+	const processed = $derived.by(() => {
+		const processed: Item[] = [];
+		const ignore: number[] = [];
+		for (const i of items) {
+			const index = previewItems.findIndex((p) => sameObject(i.value, p.value));
+			ignore.push(index);
+			if (index !== -1) {
+				processed.push({ ...i, highlight: true });
+			} else {
+				processed.push(i);
+			}
+		}
+
+		return processed.concat(
+			previewItems.filter((_, i) => !ignore.includes(i)).map((i) => ({ ...i }))
+		);
+	});
+	const itemsByDay = $derived(splitToDays(processed));
 
 	function splitToDays(items: Item[]) {
 		items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
@@ -37,6 +53,7 @@
 	{@const background = (item.overlapping?.overlapIndex ?? 0) < 2 ? item.bgColor : 'red'}
 	<div
 		class="item"
+		class:highlight={item.highlight}
 		class:preview={item.is_preview}
 		class:overlap={item.overlapping && item.overlapping.overlapIndex < 2}
 		style:--overlap-index={(item.overlapping?.overlapIndex ?? 0) < 2
@@ -184,8 +201,11 @@
 	.lunch ~ td {
 		background: var(--shadow);
 	}
-
+	.highlight {
+		box-shadow: 0 0 15px yellow !important;
+	}
 	.item {
+		transition: box-shadow 0.5s;
 		display: grid;
 		place-items: center;
 

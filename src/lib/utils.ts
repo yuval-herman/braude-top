@@ -111,36 +111,42 @@ export function time2Index(timestring: string): number | undefined {
 	return index === -1 ? undefined : index + 1;
 }
 
-export function itemizeCourse({ name, instances, course_id }: FullCourse): Item[] {
+export function itemizeCourse(
+	{ name, instances, course_id }: FullCourse,
+	is_preview = false
+): Item[] {
 	const first_day = 1488;
-	return instances.flatMap(({ sessions, instructor, type }) =>
-		sessions.map(({ week_day, start_time, end_time, room }): Item => {
-			const day = week_day.charCodeAt(0) - first_day;
-			if (day < 0 || day > 5) {
-				throw new Error('day is not recognized');
-			}
+	return instances
+		.filter((i) => i.selected)
+		.flatMap(({ sessions, instructor, type }) =>
+			sessions.map(({ week_day, start_time, end_time, room }): Item => {
+				const day = week_day.charCodeAt(0) - first_day;
+				if (day < 0 || day > 5) {
+					throw new Error('day is not recognized');
+				}
 
-			const start = time2Index(start_time);
-			const end = time2Index(end_time);
+				const start = time2Index(start_time);
+				const end = time2Index(end_time);
 
-			if (!start || !end) {
-				throw new Error('start or end time were not found in hourList');
-			}
-			return {
-				day,
-				end,
-				start,
-				type,
-				value: { name, room, instructor, type },
-				indicatorColor: instanceColors.get(type) ?? (instanceColors.get('default') as string),
-				bgColor: colors.num2color(course_id),
-			};
-		})
-	);
+				if (!start || !end) {
+					throw new Error('start or end time were not found in hourList');
+				}
+				return {
+					day,
+					end,
+					start,
+					type,
+					is_preview,
+					value: { name, room, instructor, type },
+					indicatorColor: instanceColors.get(type) ?? (instanceColors.get('default') as string),
+					bgColor: colors.num2color(course_id),
+				};
+			})
+		);
 }
 
 export function itemizeCourseList(courses: FullCourse[]): Item[] {
-	const items = courses.flatMap(itemizeCourse);
+	const items = courses.flatMap((c) => itemizeCourse(c));
 	items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
 	for (let i = 0; i < items.length - 1; i++) {
 		const curr = items[i];
@@ -199,6 +205,13 @@ export function getHour(hour: number, min: number) {
 
 export function randomNumber(min: number, max: number) {
 	return Math.random() * (max - min) + min;
+}
+
+export function sameObject(obj1: Record<string, any>, obj2: Record<string, any>) {
+	const obj1Keys = Object.keys(obj1);
+	const obj2Keys = Object.keys(obj2);
+
+	return obj1Keys.length === obj2Keys.length && obj1Keys.every((key) => obj1[key] === obj2[key]);
 }
 
 /**

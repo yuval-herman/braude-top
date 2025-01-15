@@ -12,6 +12,7 @@ interface Item {
 	bgColor: string;
 	indicatorColor: string;
 	is_preview?: boolean;
+	highlight?: boolean;
 	overlapping?: { overlapIndex: number };
 	walk?: {
 		dist: number;
