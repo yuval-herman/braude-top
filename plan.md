@@ -8,9 +8,8 @@
 - add users comments on course page (ratings, comments)
 - add instructor pages
 
+- add settings (remove walk times, colors, etc)
 - export timetable
-
-- show empty time between sessions
 
 - show empty rooms to study in (suggest user add to timetable in empty sessions?)
 

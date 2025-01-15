@@ -17,6 +17,6 @@ interface Item {
 	walk?: {
 		dist: number;
 		time: number;
-		freeTime: number; // Time the student has to walk
 	};
+	freeTime?: number; // Time the student has to walk
 }
