@@ -8,6 +8,7 @@
 	import { hoveredInstance, redoStack, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
 	import { debounce, itemizeCourseList } from '$lib/utils.js';
+	import type { Action } from '@sveltejs/kit';
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
@@ -63,6 +64,10 @@
 		return { duration, easing, delay, x: tab === 'all' ? x : -x };
 	}
 
+	function initialInput(node: HTMLInputElement) {
+		node.value = page.url.searchParams.get('query') ?? '';
+	}
+
 	export const snapshot = {
 		capture: () => tab,
 		restore: (value) => (tab = value),
@@ -90,7 +95,7 @@
 					id="course-query"
 					type="text"
 					placeholder="חפש כאן..."
-					value={page.url.searchParams.get('query')}
+					use:initialInput
 					oninput={debounce((ev) => {
 						if (!(ev.target instanceof HTMLInputElement)) return;
 						const { value } = ev.target;
