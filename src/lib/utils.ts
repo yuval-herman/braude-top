@@ -137,7 +137,7 @@ export function itemizeCourse(
 					start,
 					type,
 					is_preview,
-					value: { name, room, instructor, type },
+					value: { name, room, instructor },
 					indicatorColor: instanceColors.get(type) ?? (instanceColors.get('default') as string),
 					bgColor: colors.num2color(course_id),
 				};
