@@ -5,7 +5,9 @@
 	import { goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { showHelp } from '$lib/help.js';
-	import { theme } from '$lib/state.svelte';
+	import { selectedCourses, theme } from '$lib/state.svelte';
+	import { exportTable } from '$lib/tableExport.js';
+	import { itemizeCourseList } from '$lib/utils.js';
 
 	let { children, data } = $props();
 
@@ -37,6 +39,10 @@
 		<ul>
 			<li><a href="/">ראשי</a></li>
 			<li><a href="/contact">יצירת קשר</a></li>
+			<li>
+				<a href="#top" onclick={() => exportTable(itemizeCourseList(selectedCourses))}>ייצא מערכת</a
+				>
+			</li>
 		</ul>
 		<label
 			>סמסטר
