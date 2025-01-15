@@ -34,16 +34,17 @@ export const queryNonEmptyCourses = (() => {
 	};
 
 	const stmt = coursesDB.prepare<Args, Course>(
-		'SELECT distinct c.* from courses c\
-		 join course_instances using (course_id)\
-		 join sessions USING (course_instance_id)\
-		 WHERE c.year = :year AND semester = :semester AND name LIKE :query\
-		 LIMIT 5'
+		"SELECT distinct c.* from courses c\
+		join course_instances using (course_id)\
+		join sessions USING (course_instance_id)\
+		JOIN fts_table(:query || '*') as s on s.ROWID = c.ROWID\
+		WHERE c.year = :year AND semester = :semester\
+		order by rank\
+		LIMIT 5"
 	);
-	return (args: Args) => {
-		args.query = `%${args.query}%`;
-		return stmt.all(args);
-	};
+
+	// SELECT name from fts_table where fts_table match ? || '*' order by rank
+	return (args: Args) => stmt.all(args);
 })();
 
 /** Retrieves all the course instances for a given course id */
