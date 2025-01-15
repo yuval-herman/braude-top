@@ -1,7 +1,5 @@
 # WIP
 
-- fuzzy search
-
 # Planned
 
 - remove search params from goatcounter
@@ -16,6 +14,7 @@
 - add users comments on course page (ratings, comments)
 - add instructor pages
 
+- search instructors, and other fields
 - course searching filters
 - export timetable
 
@@ -28,6 +27,7 @@
 
 - animation when opening side panel
 - automatically try to register to courses using user credentials
+- full fuzzy search
 
 # Archive (might come back)
 

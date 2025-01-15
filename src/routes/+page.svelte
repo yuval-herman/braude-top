@@ -79,6 +79,7 @@
 					id="course-query"
 					type="text"
 					placeholder="חפש כאן..."
+					value={page.url.searchParams.get('query')}
 					oninput={debounce((ev) => {
 						if (!(ev.target instanceof HTMLInputElement)) return;
 						const { value } = ev.target;
