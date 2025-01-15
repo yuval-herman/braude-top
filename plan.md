@@ -1,5 +1,7 @@
 # WIP
 
+- add ctrl-y to redo
+
 # Planned
 
 - remove search params from goatcounter
@@ -10,7 +12,6 @@
 - rewrite tests, make them deterministic using mock db
 - make simple admin panel to show and delete contact messages
 
-- add ctrl-y to redo
 - add users comments on course page (ratings, comments)
 - add instructor pages
 
