@@ -1,7 +1,5 @@
 # WIP
 
-- remove search params from goatcounter
-
 # Planned
 
 - rewrite tests, make them deterministic using mock db

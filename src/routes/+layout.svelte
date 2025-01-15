@@ -18,7 +18,7 @@
 	onNavigate(({ to, type }) => {
 		if (!to || type !== 'link') return;
 		window.goatcounter.count({
-			path: to.url.pathname + to.url.search + to.url.hash,
+			path: to.url.pathname,
 		});
 	});
 
@@ -28,6 +28,7 @@
 </script>
 
 <svelte:head>
+	<link rel="canonical" href={page.url.origin + page.url.pathname} />
 	<meta name="color-scheme" content={theme.theme === 'auto' ? 'light dark' : theme.theme} />
 </svelte:head>
 
