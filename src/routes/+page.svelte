@@ -5,7 +5,7 @@
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { showHelp } from '$lib/help.js';
-	import { hoveredInstance, selectedCourses, undoStack } from '$lib/state.svelte.js';
+	import { hoveredInstance, redoStack, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
 	import { debounce, itemizeCourseList } from '$lib/utils.js';
 	import { onMount } from 'svelte';
@@ -29,18 +29,29 @@
 	});
 
 	const onkeydown: KeyboardEventHandler<Window> = (e) => {
+		function undo() {
+			const courseList = undoStack.pop();
+			if (!courseList) return;
+			redoStack.push($state.snapshot(selectedCourses));
+			selectedCourses.length = 0;
+			selectedCourses.push(...courseList);
+			setCurrentSelected(selectedCourses, data.year, data.semester);
+		}
+
+		function redo() {
+			const courseList = redoStack.pop();
+			if (!courseList) return;
+			undoStack.push($state.snapshot(selectedCourses));
+			selectedCourses.length = 0;
+			selectedCourses.push(...courseList);
+			setCurrentSelected(selectedCourses, data.year, data.semester);
+		}
+
 		if (e.metaKey || e.ctrlKey) {
 			if (e.code === 'KeyZ') {
-				if (e.shiftKey) {
-					// redoStack.pop()?.();
-					// TODO
-				} else {
-					undoStack.pop()?.();
-				}
-			} else if (e.code === 'KeyY') {
-				// redoStack.pop()?.();
-				// TODO
-			}
+				if (e.shiftKey) redo();
+				else undo();
+			} else if (e.code === 'KeyY') redo();
 		}
 	};
 
@@ -109,6 +120,8 @@
 						transition:slide
 						onclick={() => {
 							if (confirm('מערכת השעות הולכת להמחק, להמשיך?')) {
+								undoStack.push($state.snapshot(selectedCourses));
+								redoStack.length = 0;
 								selectedCourses.length = 0;
 								setCurrentSelected([], data.year, data.semester);
 							}

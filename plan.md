@@ -1,7 +1,5 @@
 # WIP
 
-- add ctrl-y to redo
-
 # Planned
 
 - remove search params from goatcounter
