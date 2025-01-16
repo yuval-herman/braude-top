@@ -18,7 +18,15 @@ function runCommands(commands) {
 const isoTime = new Date().toISOString();
 
 // Build app
-execSync('npm run build', { stdio: 'inherit' });
+execSync('npm run build' + (!prod ? ' -- --mode beta' : ''), { stdio: 'inherit' });
+
+// Compress build
+execSync('tar -zcf build.tar.gz build/ package.json package-lock.json');
+
+// Copy new files to server
+execSync(`scp -r build.tar.gz ${secrets.server}:/root/`, { stdio: 'inherit' });
+
+execSync('rm build.tar.gz');
 
 const backupFolder = `${prod ? 'prod' : 'beta'}-${isoTime}`;
 runCommands([
@@ -32,14 +40,6 @@ runCommands([
 	`mkdir -p ${servicename}/data`,
 	`cp -r ${backupFolder}/data ${servicename}`,
 ]);
-
-// Compress build
-execSync('tar -zcf build.tar.gz build/ package.json package-lock.json');
-
-// Copy new files to server
-execSync(`scp -r build.tar.gz ${secrets.server}:/root/`, { stdio: 'inherit' });
-
-execSync('rm build.tar.gz');
 
 runCommands([
 	`cd ${servicename}`,
