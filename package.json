@@ -45,6 +45,8 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
+		"@oslojs/crypto": "^1.0.1",
+		"@oslojs/encoding": "^1.1.0",
 		"better-sqlite3": "^11.7.0",
 		"color-parse": "^2.0.2",
 		"driver.js": "^1.3.1",

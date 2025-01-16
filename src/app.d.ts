@@ -3,7 +3,10 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
+		interface Locals {
+			user?: User;
+			session?: Session;
+		}
 		interface PageData {
 			availableTimeSpans: {
 				year: number;
