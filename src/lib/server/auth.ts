@@ -1,14 +1,14 @@
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, ORIGIN } from '$env/static/private';
 import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
-import { deleteSession, getSession, insertSession, updateSessionExpiration } from './usersDB';
-import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from '$env/static/private';
-import { Google } from 'arctic';
 import type { RequestEvent } from '@sveltejs/kit';
+import { Google } from 'arctic';
+import { deleteSession, getSession, insertSession, updateSessionExpiration } from './usersDB';
 
 export const google = new Google(
 	GOOGLE_CLIENT_ID,
 	GOOGLE_CLIENT_SECRET,
-	'http://localhost:5173/login/google/callback'
+	ORIGIN + 'login/google/callback'
 );
 
 export function generateSessionToken(): string {
