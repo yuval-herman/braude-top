@@ -1,19 +1,15 @@
 # WIP
 
-- export timetable
+- make simple admin panel to show and delete contact messages
+- make auth system
 
 # Planned
 
 - rewrite tests, make them deterministic using mock db
-- make simple admin panel to show and delete contact messages
-
 - add users comments on course page (ratings, comments)
 - add instructor pages
-
 - add settings (remove walk times, colors, etc)
-
 - show empty rooms to study in (suggest user add to timetable in empty sessions?)
-
 - lunch and 12:20 are the same thing, merge em'
 
 # Considering
