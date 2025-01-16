@@ -1,6 +1,7 @@
 CREATE TABLE
     if not exists user (
         id INTEGER PRIMARY KEY,
+        google_id TEXT,
         role TEXT,
         name TEXT not NULL
     );

@@ -47,14 +47,16 @@ export const getUser = (() => {
 	return (user_id: number): User | undefined => stmt.get(user_id);
 })();
 
-/** Insert user into db */
-export const insertUser = (() => {
-	const stmt = usersDB.prepare<User>(
-		'INSERT INTO user (id, role, name) VALUES (:id, :role, :name)'
-	);
-	return (user: User) => stmt.run(user);
+/** Retrieve a user by google id */
+export const getUserByGoogle = (() => {
+	const stmt = usersDB.prepare<number, User>('SELECT * FROM user WHERE google_id = ?');
+	return (user_id: number): User | undefined => stmt.get(user_id);
 })();
 
-if (dev) {
-	if (!getUser(0)) insertUser({ id: 0, role: 'admin', name: 'admin' });
-}
+/** Insert user into db */
+export const insertUser = (() => {
+	const stmt = usersDB.prepare<Omit<User, 'id'>>(
+		'INSERT INTO user (google_id, role, name) VALUES (:google_id, :role, :name)'
+	);
+	return (user: Omit<User, 'id'>) => stmt.run(user);
+})();

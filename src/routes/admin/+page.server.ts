@@ -43,7 +43,6 @@ export const load = async ({ cookies, locals }) => {
 export const actions = {
 	'delete-message': async ({ request }) => {
 		const message_id = Number((await request.formData()).get('id') ?? undefined);
-		console.log(typeof message_id);
 
 		if (isNaN(message_id)) {
 			return { success: false };
