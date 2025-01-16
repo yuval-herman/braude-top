@@ -1,7 +1,5 @@
 # WIP
 
-- make auth system using google
-
 # Planned
 
 - rewrite tests, make them deterministic using mock db

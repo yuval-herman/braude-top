@@ -6,6 +6,7 @@
 	import { page } from '$app/state';
 	import { showHelp } from '$lib/help.js';
 	import { theme } from '$lib/state.svelte';
+	import { enhance } from '$app/forms';
 
 	let { children, data } = $props();
 
@@ -37,9 +38,17 @@
 		<ul>
 			<li><a href="/">ראשי</a></li>
 			<li><a href="/contact">יצירת קשר</a></li>
-			<li><a href="/login/google">התחברות</a></li>
-			{#if data.user?.role === 'admin'}
-				<li><a href="/admin">ניהול אתר</a></li>
+			{#if data.user}
+				<li>
+					<form method="post" action="/login?/log-out" use:enhance>
+						<button>התנתק</button>
+					</form>
+				</li>
+				{#if data.user.role === 'admin'}
+					<li><a href="/admin">ניהול אתר</a></li>
+				{/if}
+			{:else}
+				<li><a href="/login/google">התחברות</a></li>
 			{/if}
 		</ul>
 		<label
@@ -65,6 +74,7 @@
 			</select>
 		</label>
 		<ul>
+			<li>{data.user?.name}</li>
 			<li>
 				<button aria-label="עזרה" class="help" id="help-button" onclick={() => showHelp(page)}
 					>?</button
@@ -101,7 +111,6 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		--nav-background: var(--neutral);
 
 		nav {
 			display: flex;
@@ -109,7 +118,7 @@
 			align-items: center;
 			border-bottom: 1px solid var(--border);
 			padding: 8px 16px;
-			background: var(--nav-background);
+			background: var(--neutral);
 
 			ul {
 				display: flex;
@@ -122,12 +131,17 @@
 					display: inline-block;
 					padding-left: 8px;
 				}
-				a {
+				a,
+				button {
 					text-decoration: none;
 					background: var(--bg);
 					padding: 4px 8px;
 					border-radius: 4px;
 					color: inherit;
+				}
+				button {
+					font-size: medium;
+					cursor: pointer;
 				}
 			}
 
@@ -154,7 +168,7 @@
 				}
 
 				.moon-bite {
-					fill: var(--nav-background);
+					fill: var(--bg);
 					transition: all 1s;
 				}
 			}
