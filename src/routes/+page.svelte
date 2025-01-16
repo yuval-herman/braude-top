@@ -7,6 +7,7 @@
 	import { showHelp } from '$lib/help.js';
 	import { hoveredInstance, redoStack, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
+	import { exportTable } from '$lib/tableExport.js';
 	import { debounce, itemizeCourseList } from '$lib/utils.js';
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
@@ -110,6 +111,8 @@
 				{/if}
 			</div>
 		{:else}
+			<button onclick={() => exportTable(itemizeCourseList(selectedCourses))}>ייצא מערכת</button>
+
 			<div
 				class="list-container"
 				in:fly={tabTransition('my', 'in')}
