@@ -1,7 +1,6 @@
 # WIP
 
-- make simple admin panel to show and delete contact messages
-- make auth system
+- make auth system using google
 
 # Planned
 

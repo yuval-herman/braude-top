@@ -1,5 +1,6 @@
 import Database from 'better-sqlite3';
 import schema from './sql/prepare.users.sql?raw';
+import { dev } from '$app/environment';
 
 const usersDB = new Database('data/users.db');
 
@@ -45,3 +46,15 @@ export const getUser = (() => {
 	const stmt = usersDB.prepare<number, User>('SELECT * FROM user WHERE id = ?');
 	return (user_id: number): User | undefined => stmt.get(user_id);
 })();
+
+/** Insert user into db */
+export const insertUser = (() => {
+	const stmt = usersDB.prepare<User>(
+		'INSERT INTO user (id, role, name) VALUES (:id, :role, :name)'
+	);
+	return (user: User) => stmt.run(user);
+})();
+
+if (dev) {
+	if (!getUser(0)) insertUser({ id: 0, role: 'admin', name: 'admin' });
+}

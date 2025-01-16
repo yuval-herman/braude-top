@@ -1,9 +1,13 @@
 CREATE TABLE
-    if not exists user (id INTEGER NOT NULL PRIMARY KEY);
+    if not exists user (
+        id INTEGER PRIMARY KEY,
+        role TEXT,
+        name TEXT not NULL
+    );
 
 CREATE TABLE
     if not exists session (
-        id TEXT NOT NULL PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES user (id),
+        id TEXT PRIMARY KEY,
+        user_id INTEGER REFERENCES user (id),
         expires_at INTEGER NOT NULL
     );

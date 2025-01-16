@@ -1,18 +1,24 @@
+import { dev } from '$app/environment';
 import { createSession, generateSessionToken } from '$lib/server/auth';
+import { deleteContactMessage, getContactMessages } from '$lib/server/contactDB.js';
 import { getUser } from '$lib/server/usersDB.js';
+import { error } from '@sveltejs/kit';
 
 export const load = async ({ cookies, locals }) => {
-	if (!locals.user) {
-		// try to log in
+	let session = locals.session,
+		user = locals.user,
+		signedBy = 'cookie';
+	if (!user && dev) {
+		// redirect to log in
 		const userId = 0;
-		const user = getUser(userId);
+		user = getUser(userId);
 		if (!user) {
-			return;
+			error(404);
 		}
 
 		// after signed in
 		const token = generateSessionToken();
-		const session = createSession(token, userId);
+		session = createSession(token, userId);
 
 		cookies.set('session', token, {
 			httpOnly: true,
@@ -20,8 +26,29 @@ export const load = async ({ cookies, locals }) => {
 			expires: session.expires_at,
 			path: '/',
 		});
-
-		return { session, user, signedBy: 'credentials' };
+		signedBy = 'credentials';
 	}
-	return { session: locals.session, user: locals.user, signedBy: 'cookie' };
+	if (!user || user.role !== 'admin') {
+		error(404);
+	} else {
+		return {
+			session,
+			user,
+			signedBy,
+			messages: getContactMessages(),
+		};
+	}
+};
+
+export const actions = {
+	'delete-message': async ({ request }) => {
+		const message_id = Number((await request.formData()).get('id') ?? undefined);
+		console.log(typeof message_id);
+
+		if (isNaN(message_id)) {
+			return { success: false };
+		}
+		deleteContactMessage(message_id);
+		return { success: true };
+	},
 };

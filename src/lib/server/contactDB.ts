@@ -12,3 +12,15 @@ export const setContactMessage = (() => {
 	);
 	return (message: ContactMessage) => stmt.run(message);
 })();
+
+/** Store a contact message */
+export const deleteContactMessage = (() => {
+	const stmt = contactDB.prepare<number>('DELETE FROM messages WHERE id = ?');
+	return (message_id: number) => stmt.run(message_id);
+})();
+
+/** Retrieve all messages */
+export const getContactMessages = (() => {
+	const stmt = contactDB.prepare<[], ContactMessage>('SELECT * FROM messages');
+	return () => stmt.all();
+})();
