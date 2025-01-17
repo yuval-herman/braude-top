@@ -1,13 +1,15 @@
 # WIP
 
+- show empty rooms to study in (suggest user add to timetable in empty sessions?)
+
 # Planned
 
 - rewrite tests, make them deterministic using mock db
 - add users comments on course page (ratings, comments)
 - add instructor pages
 - add settings (remove walk times, colors, etc)
-- show empty rooms to study in (suggest user add to timetable in empty sessions?)
 - lunch and 12:20 are the same thing, merge em'
+- make general button look better
 
 # Considering
 
