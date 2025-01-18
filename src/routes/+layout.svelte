@@ -116,12 +116,20 @@
 		flex-direction: column;
 
 		nav {
+			flex-shrink: 0;
 			display: flex;
 			justify-content: space-between;
 			align-items: center;
 			border-bottom: 1px solid var(--border);
 			padding: 8px 16px;
 			background: var(--neutral);
+			overflow-x: auto;
+			& * {
+				width: max-content;
+			}
+			label {
+				margin: 0 16px;
+			}
 
 			ul {
 				display: flex;

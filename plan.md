@@ -8,7 +8,6 @@
 - add settings (remove walk times, colors, etc)
 - lunch and 12:20 are the same thing, merge em'
 - make general button look better
-- make navbar responsive for small phones
 - split utils to multiple files, tidy up
 
 # Considering
@@ -21,6 +20,7 @@
 - full fuzzy search
 - add custom events to timetable
 - suggest user add to timetable in empty sessions
+- improve mobile friendliness
 
 # Archive (might come back)
 
