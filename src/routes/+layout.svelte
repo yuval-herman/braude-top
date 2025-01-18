@@ -7,6 +7,7 @@
 	import { showHelp } from '$lib/help.js';
 	import { theme } from '$lib/state.svelte';
 	import { enhance } from '$app/forms';
+	import Cookies from 'js-cookie';
 
 	let { children, data } = $props();
 
@@ -37,6 +38,7 @@
 	<nav>
 		<ul>
 			<li><a href="/">ראשי</a></li>
+			<li><a href="/rooms">חדרים ריקים</a></li>
 			<li><a href="/contact">יצירת קשר</a></li>
 			{#if data.user}
 				<li>
@@ -86,10 +88,10 @@
 					onclick={() => {
 						if (theme.theme === 'dark') {
 							theme.theme = 'light';
-							document.cookie = 'theme=light; SameSite=None; Secure';
+							Cookies.set('theme', 'light', { expires: Infinity, sameSite: 'lax' });
 						} else {
 							theme.theme = 'dark';
-							document.cookie = 'theme=dark; SameSite=None; Secure';
+							Cookies.set('theme', 'dark', { expires: Infinity, sameSite: 'lax' });
 						}
 					}}
 				>
