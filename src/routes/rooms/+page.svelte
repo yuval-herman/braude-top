@@ -11,9 +11,21 @@
 	const arrow = $derived(sortOrder ? '🡓' : '🡑');
 
 	const rooms = $derived(
-		data.rooms.toSorted((a, b) =>
-			Number(sortOrder ? a[sortKey] > b[sortKey] : a[sortKey] < b[sortKey])
-		)
+		data.rooms.toSorted((a, b) => {
+			const ord = compare(a[sortKey], b[sortKey]);
+			if (sortKey === 'start_time') {
+				if (ord === 0) return compare(a.end_time, b.end_time);
+				return ord;
+			} else if (sortKey === 'end_time') {
+				if (ord === 0) return compare(a.start_time, b.start_time);
+				return ord;
+			} else {
+				if (ord !== 0) return ord;
+				const time = compare(a.start_time, b.start_time);
+				if (time === 0) return compare(a.end_time, b.end_time);
+				return time;
+			}
+		})
 	);
 
 	const columns = [
@@ -23,6 +35,11 @@
 	] as const;
 
 	const week_days = ['א', 'ב', 'ג', 'ד', 'ה', 'ו'] as const;
+
+	function compare<T extends unknown>(a: T, b: T) {
+		if (a === b) return 0;
+		return (sortOrder ? a < b : a > b) ? -1 : 1;
+	}
 </script>
 
 <div class="container">
