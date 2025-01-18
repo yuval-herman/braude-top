@@ -1,7 +1,5 @@
 # WIP
 
-- remake sun/moon light/drak theme button
-
 # Planned
 
 - rewrite tests, make them deterministic using mock db

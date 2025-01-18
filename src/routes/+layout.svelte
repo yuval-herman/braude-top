@@ -84,6 +84,7 @@
 			</li>
 			<li>
 				<button
+					class="theme"
 					aria-label="שינוי צבעים בהיר/כהה"
 					onclick={() => {
 						if (theme.theme === 'dark') {
@@ -96,8 +97,8 @@
 					}}
 				>
 					<svg class="sun-moon" viewBox="0 0 100 100">
-						<circle class="sun" cx="50" cy="50" r="30" />
-						<circle class="moon-bite" cx={theme.theme === 'light' ? 110 : 65} cy="45" r="30" />
+						<circle class="sun" cx="50" cy="50" r="40" />
+						<circle class="moon-bite" cx={theme.theme === 'light' ? 150 : 65} cy="45" r="30" />
 					</svg>
 				</button>
 			</li>
@@ -157,7 +158,10 @@
 			}
 			button {
 				border: none;
-				background: inherit;
+			}
+
+			.theme {
+				background: var(--neutral);
 
 				.sun-moon {
 					width: 28px;
@@ -166,11 +170,13 @@
 
 				.sun {
 					fill: #ffd700;
+					stroke: black;
+					stroke-width: 1;
 					transition: fill 2s ease-in-out;
 				}
 
 				.moon-bite {
-					fill: var(--bg);
+					fill: var(--neutral);
 					transition: all 1s;
 				}
 			}
