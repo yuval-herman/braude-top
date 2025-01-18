@@ -1,17 +1,16 @@
 # WIP
 
+- add users comments on course page (ratings, comments)
+
 # Planned
 
 - rewrite tests, make them deterministic using mock db
-- add users comments on course page (ratings, comments)
-- add instructor pages
-- add settings (remove walk times, colors, etc)
-- lunch and 12:20 are the same thing, merge em'
-- make general button look better
-- split utils to multiple files, tidy up
 
 # Considering
 
+- add settings (remove walk times, colors, etc)
+- make general button look better
+- lunch and 12:20 are the same thing, merge em'
 - add site info panel (visits, last course update etc...)
 - make sure user is aware if he is selecting multiple (unrequired) sessions (such as too many lectures)
 - course searching filters
@@ -24,4 +23,5 @@
 
 # Archive (might come back)
 
+- add instructor pages
 - improve analytics (add an Analytics component? use:action?)
