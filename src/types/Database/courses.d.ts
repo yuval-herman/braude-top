@@ -31,6 +31,15 @@ interface CourseSession {
 	room: string;
 }
 
+interface EmptyRoom {
+	year: number;
+	semester: string;
+	week_day: string;
+	start_time: TimeString;
+	end_time: TimeString;
+	room: string;
+}
+
 interface CourseExam {
 	course_instance_id: number;
 	exam_round: number;

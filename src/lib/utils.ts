@@ -1,4 +1,6 @@
+import { error } from '@sveltejs/kit';
 import parseColor from 'color-parse';
+import type { URL } from 'url';
 
 export const hoursList = [
 	{ hour: 8, min: 30 },
@@ -286,3 +288,31 @@ export const instanceColors = new Map(
 		default: 'var(--primary)',
 	})
 );
+
+export function getYearSemester(
+	url: URL,
+	available: {
+		year: number;
+		semesters: string[];
+	}[]
+) {
+	let year: number = Number(url.searchParams.get('year'));
+	let semester: string | undefined = url.searchParams.get('semester') ?? undefined;
+
+	if (!year || !semester) {
+		year ||= available[0].year;
+		semester ||= available.find((i) => i.year === year)?.semesters[0];
+	}
+
+	if (!semester) {
+		error(404, `לא נמצא סמסטר לשנת ${year}`);
+	} else if (!available.some((span) => span.year === year)) {
+		error(404, `שנת ${year} לא נמצאה`);
+	} else if (
+		!available.some((span) => span.year === year && span.semesters.some((s) => s === semester))
+	) {
+		error(404, `סמסטר ${semester} לא נמצא לשנת ${year}`);
+	}
+
+	return { year, semester };
+}

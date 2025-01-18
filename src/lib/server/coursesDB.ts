@@ -90,7 +90,7 @@ export const getYearsAvailable = (() => {
 	return () => stmt.all();
 })();
 
-/** Retrieves the actual years that exists on courses in the db */
+/** Retrieves the semesters that exists for a given year in the db */
 export const getSemestersAvailable = (() => {
 	const stmt = coursesDB
 		.prepare<number, string>(
@@ -101,6 +101,40 @@ export const getSemestersAvailable = (() => {
 		)
 		.pluck();
 	return (year: number) => stmt.all(year);
+})();
+
+/** Retrieves empty rooms by year, semester and week day */
+export const getEmptyRoomsByDay = (() => {
+	type Args = {
+		year: number;
+		semester: string;
+		week_day: string;
+	};
+
+	const stmt = coursesDB.prepare<Args, EmptyRoom>(
+		'SELECT * FROM empty_rooms\
+			 WHERE year = :year\
+			 AND semester = :semester\
+			 AND week_day = :week_day'
+	);
+	return (args: Args) => stmt.all(args);
+})();
+
+/** Retrieves room empty sessions by year and semester */
+export const getEmptyRoomsByRoom = (() => {
+	type Args = {
+		year: number;
+		semester: string;
+		room: string;
+	};
+
+	const stmt = coursesDB.prepare<Args, EmptyRoom>(
+		'SELECT * FROM empty_rooms\
+			 WHERE year = :year\
+			 AND semester = :semester\
+			 AND room = :room'
+	);
+	return (args: Args) => stmt.all(args);
 })();
 
 function transformCourseInstance(instance: CourseInstance): CourseInstance {

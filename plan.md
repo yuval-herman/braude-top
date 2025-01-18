@@ -1,6 +1,6 @@
 # WIP
 
-- show empty rooms to study in (suggest user add to timetable in empty sessions?)
+- remake sun/moon light/drak theme button
 
 # Planned
 
@@ -10,6 +10,8 @@
 - add settings (remove walk times, colors, etc)
 - lunch and 12:20 are the same thing, merge em'
 - make general button look better
+- make navbar responsive for small phones
+- split utils to multiple files, tidy up
 
 # Considering
 
@@ -19,6 +21,8 @@
 - animation when opening side panel
 - automatically try to register to courses using user credentials
 - full fuzzy search
+- add custom events to timetable
+- suggest user add to timetable in empty sessions
 
 # Archive (might come back)
 
