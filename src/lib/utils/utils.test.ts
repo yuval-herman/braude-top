@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { itemizeCourse, itemizeCourseList } from './utils';
+import { itemizeCourse, itemizeCourseList } from './item.utils';
 
 describe('Course transforming utilities', () => {
 	it('transforms a course with no instances into an empty array', () => {

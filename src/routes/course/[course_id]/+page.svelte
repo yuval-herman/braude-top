@@ -1,10 +1,27 @@
 <script lang="ts">
-	import { getPropertiesOfCourse, listFormatter } from '$lib/utils.js';
+	import { listFormatter } from '$lib/utils/formatter.utils.js';
 
 	const { data } = $props();
 	const { course } = data;
 
-	const properties = $derived(getPropertiesOfCourse(course));
+	const properties = $derived.by(() => {
+		const languages = new Set<string>();
+		const types = new Set<string>();
+		const notes: { id: number; note: string }[] = [];
+		let fullInstances = new Map<string, number>();
+
+		for (const instance of course.instances) {
+			if (instance.language) languages.add(instance.language);
+			if (instance.is_full)
+				fullInstances.set(instance.type, (fullInstances.get(instance.type) ?? 0) + 1);
+			if (instance.extra_notes)
+				notes.push({ note: instance.extra_notes, id: instance.course_instance_id });
+
+			types.add(instance.type);
+		}
+
+		return { languages, types, fullInstances, notes };
+	});
 
 	function joinSet(set: Set<string>) {
 		return listFormatter.format(set) + (set.size === 1 ? ' בלבד' : '');

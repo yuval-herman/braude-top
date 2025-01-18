@@ -4,8 +4,7 @@ import {
 	getNonEmptyCourseInstances,
 	queryNonEmptyCourses,
 } from '$lib/server/coursesDB';
-import { getYearSemester } from '$lib/utils.js';
-import { error } from '@sveltejs/kit';
+import { getYearSemester } from '$lib/utils/utils.js';
 
 export const load = async ({ url, parent }) => {
 	let query = url.searchParams.get('query');

@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import autoTable, { type RowInput } from 'jspdf-autotable';
-import { getDay, getHour, hoursList } from './utils';
+import { hoursList } from './utils/constants.utils';
+import { getDay, getHour } from './utils/formatter.utils';
 
 export function exportTable(items: Item[]) {
 	const doc = new jsPDF();

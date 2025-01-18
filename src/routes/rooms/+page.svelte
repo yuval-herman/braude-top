@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { dayFormatter } from '$lib/utils.js';
+	import { getDay } from '$lib/utils/formatter.utils.js';
 
 	const { data } = $props();
 
@@ -53,7 +53,7 @@
 		}}
 	>
 		{#each week_days as day, i}
-			<option value={day}>{dayFormatter.format((i + 3) * 86400000)}</option>
+			<option value={day}>{getDay(i)}</option>
 		{/each}
 	</select>
 	<table>

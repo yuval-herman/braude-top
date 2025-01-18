@@ -1,5 +1,5 @@
 <script lang="ts">
-	import parseColor from 'color-parse';
+	import { page } from '$app/state';
 	import {
 		addSelectedCourse,
 		hoveredInstance,
@@ -7,11 +7,13 @@
 		selectedCourses,
 		toggleInstance,
 	} from '$lib/state.svelte';
-	import { css, instanceColors, itemizeCourse, listFormatter } from '$lib/utils';
+	import { instanceColors } from '$lib/utils/constants.utils';
+	import { getContrast, lighten, num2color } from '$lib/utils/css.utils';
+	import { listFormatter } from '$lib/utils/formatter.utils';
+	import { itemizeCourse } from '$lib/utils/item.utils';
 	import { flip } from 'svelte/animate';
 	import { fade, slide } from 'svelte/transition';
 	import Indicator from './Indicator.svelte';
-	import { page } from '$app/state';
 
 	interface Props {
 		course: FullCourse;
@@ -45,9 +47,9 @@
 	}
 
 	function getColor(instance: CourseInstance) {
-		let background = css.colors.num2color(course.course_id);
+		let background = num2color(course.course_id);
 		if (instanceInSelected(instance)) {
-			background = css.colors.lighten(background, -15);
+			background = lighten(background, -15);
 		}
 		const indicator =
 			instanceColors.get(instance.type) ?? (instanceColors.get('default') as string);
@@ -98,7 +100,7 @@
 				style="z-index: {course.instances.length - i};"
 				style:--instance-background={c.background}
 				style:--instance-background-hover={c.hover}
-				style:color={css.a11y.getContrast({
+				style:color={getContrast({
 					background: c.background,
 					light: 'var(--text-light)',
 					dark: 'var(--text-dark)',

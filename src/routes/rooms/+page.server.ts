@@ -1,5 +1,5 @@
-import { getEmptyRoomsByDay, getEmptyRoomsByRoom } from '$lib/server/coursesDB.js';
-import { getYearSemester } from '$lib/utils.js';
+import { getEmptyRoomsByDay } from '$lib/server/coursesDB.js';
+import { getYearSemester } from '$lib/utils/utils.js';
 
 const week_days = ['א', 'ב', 'ג', 'ד', 'ה', 'ו'];
 

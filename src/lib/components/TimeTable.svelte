@@ -1,5 +1,8 @@
 <script lang="ts">
-	import { buildings, css, getDay, getHour, hoursList, sameObject, walkTimes } from '$lib/utils';
+	import { buildings, hoursList } from '$lib/utils/constants.utils';
+	import { getContrast } from '$lib/utils/css.utils';
+	import { getDay, getHour } from '$lib/utils/formatter.utils';
+	import { sameObject } from '$lib/utils/utils';
 	import Indicator from './Indicator.svelte';
 	import MenuButton from './MenuButton.svelte';
 
@@ -63,7 +66,7 @@
 			? item.overlapping?.overlapIndex
 			: undefined}
 		style:--item-bg={background}
-		style:color={css.a11y.getContrast({
+		style:color={getContrast({
 			background,
 			light: 'var(--text-light)',
 			dark: 'var(--text-dark)',

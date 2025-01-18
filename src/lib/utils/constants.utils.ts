@@ -1,0 +1,113 @@
+import { colorMix, lighten } from './css.utils';
+
+export const hoursList = [
+	{ hour: 8, min: 30 },
+	{ hour: 9, min: 30 },
+	{ hour: 10, min: 30 },
+	{ hour: 11, min: 30 },
+	{ hour: 12, min: 20 },
+	{ hour: 12, min: 50 },
+	{ hour: 13, min: 50 },
+	{ hour: 14, min: 50 },
+	{ hour: 15, min: 50 },
+	{ hour: 16, min: 50 },
+	{ hour: 17, min: 50 },
+	{ hour: 18, min: 50 },
+	{ hour: 19, min: 50 },
+	{ hour: 20, min: 50 },
+	{ hour: 21, min: 50 },
+	{ hour: 22, min: 50 },
+] as const;
+
+export const buildings = [
+	'D',
+	'EF',
+	'EM',
+	'L',
+	'M',
+	'P',
+	'אולם ספורט',
+	// 'fab lab',
+] as const;
+export const walkTimes = {
+	D: {
+		EF: { dist: 207, time: 4 },
+		EM: { dist: 478, time: 6 },
+		L: { dist: 329, time: 5 },
+		M: { dist: 220, time: 4 },
+		'אולם ספורט': { dist: 110, time: 2 },
+		P: { dist: 534, time: 7 },
+		// 'fab lab': undefined,
+	},
+	EF: {
+		D: { dist: 207, time: 4 },
+		EM: { dist: 123, time: 2 },
+		L: { dist: 173, time: 3 },
+		M: { dist: 81, time: 1 },
+		'אולם ספורט': { dist: 101, time: 1 },
+		P: { dist: 698, time: 12 },
+		// 'fab lab': undefined,
+	},
+	EM: {
+		D: { dist: 478, time: 6 },
+		EF: { dist: 123, time: 2 },
+		L: { dist: 268, time: 5 },
+		M: { dist: 242, time: 4 },
+		'אולם ספורט': { dist: 230, time: 4 },
+		P: { dist: 636, time: 11 },
+		// 'fab lab': undefined,
+	},
+	L: {
+		D: { dist: 329, time: 5 },
+		EF: { dist: 173, time: 3 },
+		EM: { dist: 268, time: 5 },
+		M: { dist: 29, time: 1 },
+		'אולם ספורט': { dist: 249, time: 3 },
+		P: { dist: 732, time: 12 },
+		// 'fab lab': undefined,
+	},
+	M: {
+		D: { dist: 220, time: 4 },
+		EF: { dist: 81, time: 1 },
+		EM: { dist: 242, time: 4 },
+		L: { dist: 29, time: 1 },
+		'אולם ספורט': { dist: 164, time: 2 },
+		P: { dist: 772, time: 12 },
+		// 'fab lab': undefined,
+	},
+	'אולם ספורט': {
+		D: { dist: 110, time: 2 },
+		EF: { dist: 101, time: 1 },
+		EM: { dist: 230, time: 4 },
+		L: { dist: 249, time: 3 },
+		M: { dist: 164, time: 2 },
+		P: { dist: 596, time: 11 },
+		// 'fab lab': undefined,
+	},
+	P: {
+		D: { dist: 534, time: 7 },
+		EF: { dist: 698, time: 12 },
+		EM: { dist: 636, time: 11 },
+		L: { dist: 732, time: 12 },
+		M: { dist: 772, time: 12 },
+		'אולם ספורט': { dist: 596, time: 11 },
+		// 'fab lab': undefined,
+	},
+	// 'fab lab': {
+	// 	D: undefined,
+	// 	EF: undefined,
+	// 	EM: undefined,
+	// 	L: undefined,
+	// 	M: undefined,
+	// 	P: undefined,
+	// 	'אולם ספורט': undefined,
+	// },
+} as const;
+export const instanceColors = new Map(
+	Object.entries({
+		הרצאה: lighten('var(--primary)'),
+		תרגיל: colorMix('var(--primary)', 'PaleGreen', 50),
+		מעבדה: colorMix('var(--primary)', 'Aquamarine', 50),
+		default: 'var(--primary)',
+	})
+);

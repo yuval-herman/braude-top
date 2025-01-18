@@ -8,7 +8,8 @@
 	import { hoveredInstance, redoStack, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
 	import { exportTable } from '$lib/tableExport.js';
-	import { debounce, itemizeCourseList } from '$lib/utils.js';
+	import { itemizeCourseList } from '$lib/utils/item.utils.js';
+	import { debounce } from '$lib/utils/utils.js';
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';

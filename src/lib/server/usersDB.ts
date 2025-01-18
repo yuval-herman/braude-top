@@ -43,8 +43,8 @@ export const updateSessionExpiration = (() => {
 
 /** Retrieve a user */
 export const getUser = (() => {
-	const stmt = usersDB.prepare<number, User>('SELECT * FROM user WHERE id = ?');
-	return (user_id: number): User | undefined => stmt.get(user_id);
+	const stmt = usersDB.prepare<[number|bigint], User>('SELECT * FROM user WHERE id = ?');
+	return (user_id: number|bigint): User | undefined => stmt.get(user_id);
 })();
 
 /** Retrieve a user by google id */
