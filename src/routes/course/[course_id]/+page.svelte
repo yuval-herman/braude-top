@@ -81,27 +81,6 @@
 						</table>
 					</li>
 				{/if}
-				{#if properties.notes.length > 0}
-					<li>
-						<details id="notes">
-							<summary
-								>ישנן הערות על חלק מהקבוצות בקורס, מומלץ לקרוא את ההערות על מנת לוודא שאתם באמת
-								יכולים להירשם לקורס.
-								<i class="info">כדי לוודא ניתן להיכנס לדף הקורס בתחנת המידע מהקישור למעלה</i>
-							</summary>
-							<ul>
-								{#each properties.notes as note}
-									<li>
-										<span class="info">מספר זיהוי {note.id}</span>
-										<p>
-											{note.note}
-										</p>
-									</li>
-								{/each}
-							</ul>
-						</details>
-					</li>
-				{/if}
 			</ul>
 		</div>
 		<div class="description" id="description">
@@ -109,7 +88,7 @@
 				<p>{paragraph}</p>
 			{/each}
 		</div>
-		<div class="tension">כאן יופיעו תגובות ודירוגים של סטודנטים, ממוצעי מבחנים ועוד!</div>
+		<div class="comments"></div>
 	</main>
 </div>
 
@@ -128,17 +107,7 @@
 			background: hsl(from var(--light) h s calc(l + 5));
 		}
 	}
-	details summary {
-		cursor: pointer;
-	}
-	.info {
-		color: var(--text-secondary);
-	}
-	.tension {
-		margin: auto;
-		padding: 40px;
-		color: var(--info);
-	}
+
 	.container {
 		flex-grow: 1;
 		border-radius: 12px;
@@ -149,18 +118,17 @@
 			padding: 1rem;
 			display: grid;
 			gap: 8px;
+
+			& > div {
+				background: var(--neutral);
+				padding: 12px;
+				border-radius: 8px;
+			}
 		}
 		.flex-info {
 			display: flex;
 			align-items: center;
 			gap: 1em;
-		}
-		.flex-info,
-		.list-info,
-		.description {
-			background: var(--neutral);
-			padding: 12px;
-			border-radius: 8px;
 		}
 		p {
 			margin: 4px;
