@@ -10,16 +10,20 @@ export const getCourses = (() => {
 
 /** Retrieves full course by id */
 export const getFullCourse = (() => {
-	const courseStmt = coursesDB.prepare<number, Course>('SELECT * from courses WHERE course_id = ?');
-	return (id: number | string): FullCourse | undefined => {
-		const course = courseStmt.get(id as number);
+	const courseStmt = coursesDB.prepare<[number, number], Course>(
+		'SELECT * from courses WHERE course_id = ? and year = ?'
+	);
+	return (id: number | string, year: number): FullCourse | undefined => {
+		const course = courseStmt.get(id as number, year);
 		if (course === undefined) return;
 
-		const instances: FullCourseInstance[] = getCourseInstances(id as number).map((instance) => {
-			const sessions = getInstancesSession(instance.course_instance_id);
-			const exams = getInstancesExams(instance.course_instance_id);
-			return { ...instance, sessions, exams };
-		});
+		const instances: FullCourseInstance[] = getCourseInstances(id as number, year).map(
+			(instance) => {
+				const sessions = getInstancesSession(instance.course_instance_id);
+				const exams = getInstancesExams(instance.course_instance_id);
+				return { ...instance, sessions, exams };
+			}
+		);
 
 		return { ...course, instances };
 	};
@@ -49,10 +53,11 @@ export const queryNonEmptyCourses = (() => {
 
 /** Retrieves all the course instances for a given course id */
 export const getCourseInstances = (() => {
-	const stmt = coursesDB.prepare<number, CourseInstance>(
-		'SELECT * FROM course_instances WHERE course_id = ?'
+	const stmt = coursesDB.prepare<[number, number], CourseInstance>(
+		'SELECT * FROM course_instances WHERE course_id = ? and year = ?'
 	);
-	return (id: number | string) => stmt.all(id as number).map(transformCourseInstance);
+	return (id: number | string, year: number) =>
+		stmt.all(id as number, year).map(transformCourseInstance);
 })();
 
 /** Retrieves all the course instances for a given course id that have sessions*/
