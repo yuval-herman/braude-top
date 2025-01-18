@@ -1,6 +1,6 @@
 # WIP
 
-- add users comments on course page (ratings, comments)
+- add users comments on course page
 
 # Planned
 
@@ -8,6 +8,8 @@
 
 # Considering
 
+- in course info page, show all years info, show changes between years
+- add ratings for courses
 - add settings (remove walk times, colors, etc)
 - make general button look better
 - lunch and 12:20 are the same thing, merge em'
