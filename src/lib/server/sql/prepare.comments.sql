@@ -10,3 +10,5 @@ CREATE TABLE
         is_anon boolean not null,
         is_flagged boolean default 0 -- Moderation flag, default is not flagged
     );
+
+CREATE INDEX if not exists comments_year_course_id_user_id ON comments (course_id, course_year, user_id);

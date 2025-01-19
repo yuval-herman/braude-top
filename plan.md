@@ -1,10 +1,8 @@
 # WIP
 
-- add indices for all table where appropriate
+- rewrite tests, make them deterministic using mock db
 
 # Planned
-
-- rewrite tests, make them deterministic using mock db
 
 # Considering
 
