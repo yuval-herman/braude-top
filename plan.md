@@ -1,6 +1,5 @@
 # WIP
 
-- add users comments on course page
 - fix sqlite fts weird shit (can't use ", maybe other characters too)
 
 # Planned
