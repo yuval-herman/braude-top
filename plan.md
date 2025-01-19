@@ -1,11 +1,10 @@
 # WIP
 
-- fix sqlite fts weird shit (can't use ", maybe other characters too)
+- add indices for all table where appropriate
 
 # Planned
 
 - rewrite tests, make them deterministic using mock db
-- add indices for all table where appropriate
 
 # Considering
 

@@ -49,13 +49,11 @@ export const queryNonEmptyCourses = (() => {
 		"SELECT distinct c.* from courses c\
 		join course_instances using (course_id)\
 		join sessions USING (course_instance_id)\
-		JOIN fts_table(:query || '*') as s on s.ROWID = c.ROWID\
 		WHERE c.year = :year AND semester = :semester\
-		order by rank\
+		AND c.name like '%' || :query || '%'\
 		LIMIT 5"
 	);
 
-	// SELECT name from fts_table where fts_table match ? || '*' order by rank
 	return (args: Args) => stmt.all(args);
 })();
 
