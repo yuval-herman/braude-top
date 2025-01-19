@@ -1,8 +1,10 @@
 # WIP
 
-- rewrite tests, make them deterministic using mock db
+- update helpers
 
 # Planned
+
+- rewrite tests, make them deterministic using mock db
 
 # Considering
 
