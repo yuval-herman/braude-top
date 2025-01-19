@@ -1,6 +1,6 @@
 # WIP
 
-- update helpers
+- fix course selections issues
 
 # Planned
 

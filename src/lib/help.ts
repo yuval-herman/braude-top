@@ -35,21 +35,18 @@ function mainPage() {
 		});
 		driverObj.drive();
 	} else {
+		(document.querySelector('#all-courses') as HTMLButtonElement).click();
 		const hiddenListMode = !document.querySelector('.list-container')?.checkVisibility();
 		const showListBtn = document.querySelector(
 			'th > [aria-label="רשימת קורסים"]'
 		) as HTMLButtonElement;
 		const showMyCourseBtn = document.getElementById('my-courses') as HTMLButtonElement;
-		const courseQueryInput = document.getElementById('course-query') as HTMLInputElement;
 
 		let steps: DriveStep[] = [
 			{
 				popover: {
 					title: 'דף ראשי',
 					description: 'זהו הדף הראשי של האתר, פה תבלו את רוב זמנכם בתכנון המערכת.',
-					onPopoverRender: () => {
-						(document.querySelector('#all-courses') as HTMLButtonElement).click();
-					},
 				},
 			},
 			{
@@ -59,6 +56,8 @@ function mainPage() {
 					description: 'כאן ניתן לבחור את הסמסטר שאתם מעוניינים לעבוד איתו.',
 					onNextClick: () => {
 						if (!hiddenListMode) {
+							const courseQueryInput = document.getElementById('course-query') as HTMLInputElement;
+
 							courseQueryInput.value = 'נתונים';
 							courseQueryInput.dispatchEvent(new Event('input', { bubbles: true }));
 						}
@@ -76,6 +75,7 @@ function mainPage() {
 					description: 'כדי לראות את רשימת הקורסים, ניתן ללחוץ על הכפתור הזה.',
 					onNextClick: () => {
 						showListBtn.click();
+						const courseQueryInput = document.getElementById('course-query') as HTMLInputElement;
 						courseQueryInput.value = 'נתונים';
 						courseQueryInput.dispatchEvent(new Event('input', { bubbles: true }));
 						driverObj.moveNext();
@@ -106,7 +106,14 @@ function mainPage() {
 					description:
 						"לכל קורס ישנן כמה 'קבוצות'.<br>\
 						קבוצות כשמן כן הן, חלוקה של סטודנטים לקבוצות בתוך הקורס. לכל קבוצה יהיה מרצה משלה ושעות למידה שונות.<br>\
-						הצבעים השונים לקבוצות עוזרים להבדיל בין הרצאות, תרגולים וכו'",
+						לכל קורס יהיה צבע משלו (לדוגמא, צהוב) ובנוסף פס צבע קטן בצד שיעזור לנו לזהות ברפרוף אם הקבוצה היא מסוג תרגיל, מעבדה וכו'",
+				},
+			},
+			{
+				element: '[aria-label="מידע נוסף"]',
+				popover: {
+					title: 'מידע נוסף',
+					description: 'ניתן לראות מידע נוסף על הקורס בלחיצה כאן.',
 				},
 			},
 			{
@@ -115,17 +122,18 @@ function mainPage() {
 					title: 'תיבת קבוצה',
 					description:
 						'ניתן לרחף עם העכבר מעל קבוצה בקורס כדי לראות איפה היא תופיע במערכת שעות. כדי לבחור קבוצה, פשוט נלחץ עליה והיא תופיע מיידית במערכת השעות.',
-					onNextClick: () => {
-						(document.querySelector('.instance') as HTMLDivElement).click();
-						driverObj.moveNext();
-					},
 				},
 			},
 			{
-				element: '[aria-label="מידע נוסף"]',
+				element: '.add-button',
 				popover: {
-					title: 'מידע נוסף',
-					description: 'ניתן לראות מידע נוסף על הקורס בלחיצה כאן.',
+					title: 'בחירת קורסים',
+					description:
+						"כאמור, ניתן לבחור קבוצה מיידית, אבל דרך יותר נוחה היא לבחור 'קורס' שלם בלחיצה על כפתור 'הוסף לרשימה'. קורסים שנוספו לרשימה יופיע ברשימת 'הקורסים שלי'. רשימה זו נפרדת לכל סמסטר.",
+					onNextClick: () => {
+						(document.querySelector('.add-button') as HTMLDivElement).click();
+						driverObj.moveNext();
+					},
 				},
 			},
 			{
@@ -188,7 +196,7 @@ function contactPage() {
 				popover: {
 					title: 'מילוי פרטים',
 					description:
-						'את הפרטים יש למלא כאן, את השם והמייל שלך ניתן למלא אם אתם רוצים שאחזור אליכם לגבי ההודעה במייל.',
+						'את הפרטים יש למלא כאן, את השם והמייל שלכם ניתן למלא אם אתם רוצים שאחזור אליכם לגבי ההודעה במייל.',
 					side: 'top',
 				},
 			},
@@ -197,6 +205,7 @@ function contactPage() {
 
 	driverObj.drive();
 }
+
 function coursePage() {
 	const driverObj = driver({
 		...baseDriverConfig,
@@ -204,7 +213,7 @@ function coursePage() {
 			{
 				popover: {
 					title: 'מידע על הקורס',
-					description: 'בדף הזה ניתן לראות כל מיני פריטי מידע על הקורס כגון:',
+					description: 'בדף הזה ניתן לראות כל מיני פריטי מידע על הקורס.',
 				},
 			},
 			{
@@ -214,31 +223,69 @@ function coursePage() {
 				},
 			},
 			{
-				element: '#description',
+				element: '#syllabus',
 				popover: {
-					description: 'תיאור הקורס ועוד...',
+					description: 'סילבוס הקורס',
 				},
 			},
 			{
-				element: '#syllabus',
+				element: '#description',
 				popover: {
-					title: 'קישור לידיעון',
-					description: 'בנוסף מופיעים קישורים שימושיים לידיעון, כגון סילבוס הקורס',
+					description: "תיאור הקורס וכו'",
 				},
 			},
 			{
 				element: '#yedion',
 				popover: {
 					title: 'קישור לידיעון',
-					description: 'או קישור לאתר הידיעון עצמו',
+					description: 'בנוסף מופיע קישור לאתר הידיעון עצמו לנוחיותכם.',
 				},
 			},
 			{
-				element: '#notes',
+				element: '.comments',
+				popover: {
+					title: 'תגובות',
+					description: 'כאן מופיעות תגובות של סטודנטים על הקורס. כדי להגיב על קורס חובה להתחבר!',
+				},
+			},
+			{
 				popover: {
 					title: 'הערות',
 					description:
-						"לבסוף וכנראה הכי חשוב, מופיעות ההערות שמפרסמת המכללה לכל קורס. כאן יהיה רשום למי מותר להירשם לקורס (תכנה, מכונות, חשמל וכו') מומלץ לוודא שנרשמת רק לקורסים מותרים כאן או ישירות באתר הידיעון.",
+						'כל המידע שמופיע כאן נאסף מאתר הידיעון עצמו ומתעדכן כל שלושה ימים. עם זאת מומלץ לוודא פרטים חיוניים באתר המכללה דרך הקישור לידיעון.',
+				},
+			},
+		],
+	});
+
+	driverObj.drive();
+}
+
+function roomsPage() {
+	const driverObj = driver({
+		...baseDriverConfig,
+		steps: [
+			{
+				popover: {
+					title: 'חדרים ריקים',
+					description:
+						'כאן מופיע רשימה של חדרים ריקים שניתן לשבת ללמוד בהם. הרשימה מחושבת בעזרת חיסור הזמנים שבהם החדר תפוס מרשימת השעות האפשרית.\
+						לפיכך יתכנו טעויות, אם אתם בונים על החדר למשהו מאוד חשוב מומלץ לשריין אותו דרך משרד המכללה.',
+				},
+			},
+			{
+				element: '#day',
+				popover: {
+					title: 'בחירת יום',
+					description: 'כאן ניתן לבחור איזה יום מוצג ברשימה.',
+				},
+			},
+			{
+				element: 'thead > tr',
+				popover: {
+					title: 'מיון הרשימה',
+					description:
+						'ניתן למיין את רשימת החדרים על פי חדר, זמן התחלה או זמן סוף. כל אחת מהכותרות לחיצה.',
 				},
 			},
 		],
@@ -251,6 +298,7 @@ const pageFunctions = new Map<string, (page: Page) => void>([
 	['/', mainPage],
 	['/contact', contactPage],
 	['/course/[course_id]', coursePage],
+	['/rooms', roomsPage],
 ]);
 
 export function showHelp(page: Page) {
