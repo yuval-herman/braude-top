@@ -56,8 +56,6 @@
 			return buildings.find((b) => prevItem.value.room.includes(b));
 		}
 	}
-
-	$inspect(itemsByDay);
 </script>
 
 {#snippet Item(item: Item, index: number)}
