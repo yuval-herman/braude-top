@@ -1,10 +1,12 @@
 # WIP
 
 - add users comments on course page
+- fix sqlite fts weird shit (can't use ", maybe other characters too)
 
 # Planned
 
 - rewrite tests, make them deterministic using mock db
+- add indices for all table where appropriate
 
 # Considering
 

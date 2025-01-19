@@ -1,6 +1,5 @@
 import Database from 'better-sqlite3';
 import schema from './sql/prepare.users.sql?raw';
-import { dev } from '$app/environment';
 
 const usersDB = new Database('data/users.db');
 
@@ -43,8 +42,8 @@ export const updateSessionExpiration = (() => {
 
 /** Retrieve a user */
 export const getUser = (() => {
-	const stmt = usersDB.prepare<[number|bigint], User>('SELECT * FROM user WHERE id = ?');
-	return (user_id: number|bigint): User | undefined => stmt.get(user_id);
+	const stmt = usersDB.prepare<[number | bigint], User>('SELECT * FROM user WHERE id = ?');
+	return (user_id: number | bigint): User | undefined => stmt.get(user_id);
 })();
 
 /** Retrieve a user by google id */

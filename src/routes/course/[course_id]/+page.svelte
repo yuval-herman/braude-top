@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { applyAction, enhance } from '$app/forms';
 	import { listFormatter } from '$lib/utils/formatter.utils.js';
 
-	const { data } = $props();
-	const { course } = data;
+	const { data, form } = $props();
+	const { course, comments, user, user_has_comment } = data;
+
+	let anonymous = $state(true);
 
 	const properties = $derived.by(() => {
 		const languages = new Set<string>();
@@ -26,10 +29,16 @@
 	function joinSet(set: Set<string>) {
 		return listFormatter.format(set) + (set.size === 1 ? ' בלבד' : '');
 	}
+
+	function dateToString(date: Date) {
+		date.setHours(date.getHours() + 2);
+		return date.toLocaleString();
+	}
 </script>
 
 {#snippet YedionButton(course_id: number)}
 	<form
+		style="display: inline;"
 		id="yedion"
 		action="https://info.braude.ac.il/yedion/fireflyweb.aspx"
 		method="POST"
@@ -42,7 +51,7 @@
 {/snippet}
 
 <div class="container">
-	<header>
+	<header class="course-header">
 		<h1>
 			{course.name}
 		</h1>
@@ -88,14 +97,44 @@
 				<p>{paragraph}</p>
 			{/each}
 		</div>
-		<div class="comments"></div>
+		<div class="comments">
+			<h3>תגובות</h3>
+			{#if user && !user_has_comment}
+				<form action="?/add-comment" method="post">
+					<label>
+						{anonymous ? 'הישאר אנונימי' : 'מגיב כ-' + user.name}
+						<input type="checkbox" name="anonymous" id="anonymous" bind:checked={anonymous} />
+					</label>
+					<label
+						>תגובה:
+						<textarea name="content" rows="3" placeholder="תגובתך כאן..." required></textarea>
+					</label>
+					<button type="submit">שלח תגובה</button>
+				</form>
+			{/if}
+			{#if comments.length}
+				<ol>
+					{#each comments as comment (comment.id)}
+						<li>
+							<article>
+								<header>
+									<span>{dateToString(new Date(comment.created_at))}</span>
+									{#if comment.updated_at}<span>{comment.updated_at}</span>{/if}
+									<span>{comment.poster_name ?? 'אנונימי'}</span>
+								</header>
+								<p>{comment.content}</p>
+							</article>
+						</li>
+					{/each}
+				</ol>
+			{:else}
+				<span>אין תגובות...</span>
+			{/if}
+		</div>
 	</main>
 </div>
 
 <style>
-	form {
-		display: inline;
-	}
 	button {
 		border: none;
 		background: var(--light);
@@ -114,6 +153,14 @@
 		margin: 1rem;
 		background: var(--bg);
 
+		.course-header {
+			background: var(--primary);
+			border-radius: 12px;
+			padding: 0 16px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
 		main {
 			padding: 1rem;
 			display: grid;
@@ -125,6 +172,38 @@
 				border-radius: 8px;
 			}
 		}
+		.comments {
+			h3 {
+				margin: 0;
+				margin-bottom: 1rem;
+			}
+			form {
+				textarea {
+					width: 100%;
+					padding: 12px 20px;
+					font-family: inherit;
+					border: 1px solid var(--border);
+					border-radius: 4px;
+					resize: none;
+				}
+
+				button[type='submit'] {
+					background-color: var(--success);
+					color: white;
+					padding: 14px 20px;
+					margin: 8px 0;
+					border: none;
+					border-radius: 4px;
+					cursor: pointer;
+				}
+			}
+			article {
+				background: var(--info);
+				border-radius: 4px;
+				padding: 4px;
+				margin: 4px;
+			}
+		}
 		.flex-info {
 			display: flex;
 			align-items: center;
@@ -132,14 +211,6 @@
 		}
 		p {
 			margin: 4px;
-		}
-		header {
-			background: var(--primary);
-			border-radius: 12px;
-			padding: 0 16px;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
 		}
 	}
 </style>

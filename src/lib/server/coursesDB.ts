@@ -8,6 +8,14 @@ export const getCourses = (() => {
 	return () => stmt.all();
 })();
 
+/** Check if a course exists in the db */
+export const checkCourse = (() => {
+	const stmt = coursesDB.prepare<[number, number], boolean>(
+		'SELECT EXISTS(SELECT 1 FROM courses WHERE course_id = ? and year = ?)'
+	);
+	return (id: number | string, year: number) => Boolean(stmt.get(id as number, year));
+})();
+
 /** Retrieves full course by id */
 export const getFullCourse = (() => {
 	const courseStmt = coursesDB.prepare<[number, number], Course>(

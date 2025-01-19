@@ -3,7 +3,7 @@ CREATE TABLE
         id INTEGER PRIMARY KEY,
         name text,
         email text,
-        type text,
-        message text,
-        date text
+        type text not NULL,
+        message text not NULL,
+        date text not NULL
     );
