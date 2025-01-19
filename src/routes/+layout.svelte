@@ -19,9 +19,10 @@
 
 	onNavigate(({ to, type }) => {
 		if (!to || type !== 'link') return;
-		window.goatcounter.count({
-			path: to.url.pathname,
-		});
+		window.goatcounter &&
+			window.goatcounter.count({
+				path: to.url.pathname,
+			});
 	});
 
 	function validateTheme(themeStr?: string): themeStr is 'auto' | 'light' | 'dark' {
@@ -36,7 +37,7 @@
 
 <div class="container">
 	<nav>
-		<ul>
+		<ul id="page-links">
 			<li><a href="/">ראשי</a></li>
 			<li><a href="/rooms">חדרים ריקים</a></li>
 			<li><a href="/contact">יצירת קשר</a></li>
