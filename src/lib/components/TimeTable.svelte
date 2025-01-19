@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { buildings, hoursList } from '$lib/utils/constants.utils';
+	import { buildings, hoursList, walkTimes } from '$lib/utils/constants.utils';
 	import { getContrast } from '$lib/utils/css.utils';
 	import { getDay, getHour } from '$lib/utils/formatter.utils';
 	import { sameObject } from '$lib/utils/utils';
@@ -12,9 +12,9 @@
 		const processed: Item[] = [];
 		const ignore: number[] = [];
 		for (const i of items) {
-			const index = previewItems.findIndex((p) => sameObject(i.value, p.value));
-			ignore.push(index);
+			const index = previewItems.findIndex((p) => p && sameObject(i.value, p.value));
 			if (index !== -1) {
+				ignore.push(index);
 				processed.push({ ...i, highlight: true });
 			} else {
 				processed.push(i);
@@ -44,6 +44,10 @@
 					prevItem.walk = walk;
 				}
 			}
+			// set this to undefined on current item since if they were set previously and
+			// the next item then got removed this will stay incorrectly
+			items[i].walk = undefined;
+			items[i].freeTime = undefined;
 			daysArr[items[i].day].push(items[i]);
 		}
 		return daysArr;
@@ -52,6 +56,8 @@
 			return buildings.find((b) => prevItem.value.room.includes(b));
 		}
 	}
+
+	$inspect(itemsByDay);
 </script>
 
 {#snippet Item(item: Item, index: number)}

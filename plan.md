@@ -1,7 +1,5 @@
 # WIP
 
-- fix course selections issues
-
 # Planned
 
 - rewrite tests, make them deterministic using mock db
