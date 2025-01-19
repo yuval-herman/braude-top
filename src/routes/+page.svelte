@@ -102,7 +102,7 @@
 						const { value } = ev.target;
 						const url = new URL(page.url);
 						url.searchParams.set('query', value.toLowerCase());
-						goto(url, { replaceState: false, state: page.state, keepFocus: true });
+						goto(url, { replaceState: true, state: page.state, keepFocus: true });
 					}, 300)}
 				/>
 				{#if data.full_courses?.length}

@@ -49,7 +49,7 @@
 		onchange={({ currentTarget: { value } }) => {
 			const url = new URL(page.url);
 			url.searchParams.set('day', value);
-			goto(url, { replaceState: false, state: page.state });
+			goto(url, { replaceState: true, state: page.state });
 		}}
 	>
 		{#each week_days as day, i}
