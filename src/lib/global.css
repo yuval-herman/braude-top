@@ -35,3 +35,8 @@ body {
 	transition: inherit;
 	box-sizing: border-box;
 }
+button {
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	transition: background 250ms;
+}
