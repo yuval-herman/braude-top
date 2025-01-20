@@ -31,7 +31,9 @@
 			(i) =>
 				!i.co_requirements ||
 				(JSON.parse(i.co_requirements) as number[]).some((req) =>
-					selectedCourses.find((c) => c.instances.find((i) => i.course_instance_id === req))
+					selectedCourses.find((c) =>
+						c.instances.find((i) => i.selected && i.course_instance_id === req)
+					)
 				)
 		);
 	}
