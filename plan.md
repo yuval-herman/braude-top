@@ -24,6 +24,7 @@
 - suggest user add to timetable in empty sessions
 - improve mobile friendliness
 - add filters to show only courses meant for e.g. תוכנה, חשמל...
+- show not only required exercise also lab
 
 # Archive (might come back)
 
