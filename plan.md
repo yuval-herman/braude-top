@@ -23,6 +23,7 @@
 - add custom events to timetable
 - suggest user add to timetable in empty sessions
 - improve mobile friendliness
+- add filters to show only courses meant for e.g. תוכנה, חשמל...
 
 # Archive (might come back)
 
