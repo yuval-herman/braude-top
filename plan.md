@@ -3,10 +3,13 @@
 # Planned
 
 - rewrite tests, make them deterministic using mock db
-- make dynamic sitemap
 
 # Considering
 
+- add if lab mandatory
+- add course avg score
+- add recommendation (1-5 start)
+- people qa
 - in course info page, show all years info, show changes between years
 - add ratings for courses
 - add settings (remove walk times, colors, etc)
