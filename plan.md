@@ -3,6 +3,7 @@
 # Planned
 
 - rewrite tests, make them deterministic using mock db
+- make dynamic sitemap
 
 # Considering
 
