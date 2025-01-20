@@ -198,6 +198,8 @@
 		height: 100%;
 		width: 100%;
 		border-radius: 12px;
+
+		--item-margin: 3%;
 	}
 
 	th,
@@ -241,8 +243,9 @@
 		place-items: center;
 
 		position: absolute;
-		width: 100%;
-		left: 0;
+		left: var(--item-margin);
+		right: var(--item-margin);
+
 		padding: 6px;
 		padding-right: 10px;
 
@@ -265,7 +268,8 @@
 		display: grid;
 		place-content: center;
 		position: absolute;
-		width: 100%;
+		left: var(--item-margin);
+		right: var(--item-margin);
 		text-align: center;
 		padding: 4px;
 		font-size: smaller;
