@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { applyAction, enhance } from '$app/forms';
 	import { listFormatter } from '$lib/utils/formatter.utils.js';
 
-	const { data, form } = $props();
+	const { data } = $props();
 	const { course, comments, user, user_has_comment } = data;
 
 	let anonymous = $state(true);
@@ -35,6 +34,13 @@
 		return date.toLocaleString();
 	}
 </script>
+
+<svelte:head>
+	<meta
+		name="description"
+		content="מידע על קורס {course.name} במכללת בראודה. ניתן לצפות בנקודות הזכות של הקורס, שפות בהן הוא מועבר ותיאור כללי."
+	/>
+</svelte:head>
 
 {#snippet YedionButton(course_id: number)}
 	<form

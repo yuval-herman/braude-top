@@ -42,6 +42,10 @@
 	}
 </script>
 
+<svelte:head>
+	<meta name="description" content="מציאת חדרים ריקים ללמידה במכללת בראודה." />
+</svelte:head>
+
 <div class="container">
 	<select
 		name="day"

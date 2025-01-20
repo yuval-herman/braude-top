@@ -5,6 +5,13 @@
 	const { form } = $props();
 </script>
 
+<svelte:head>
+	<meta
+		name="description"
+		content="יצירת קשר עם מפתח האתר. ניתן להשאיר מייל על מנת שנוכל לחזור אליך."
+	/>
+</svelte:head>
+
 <div class="container">
 	<header>
 		<h1>דיווח ובקשות</h1>

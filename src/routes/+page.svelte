@@ -75,6 +75,13 @@
 	};
 </script>
 
+<svelte:head>
+	<meta
+		name="description"
+		content="תכנון מערכת שעות מעולם לא היה קל יותר! בראודה טופ מציע מגוון כלים שיסייעו לך לארגן את השבוע ולשלב לימודים ומנוחה בצורה מאוזנת."
+	/>
+</svelte:head>
+
 <svelte:window {onkeydown} />
 <main>
 	<div class="selector" class:hidden={!page.state.sidebarOpen}>
