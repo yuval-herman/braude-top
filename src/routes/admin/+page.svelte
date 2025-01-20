@@ -22,7 +22,7 @@
 			<div class="message">
 				<div class="message-header">
 					<span>{message.date}</span> | <span>{message.type}</span> |
-					<span>{message.name || 'שם לא צויין'}</span>
+					<span>{message.email || 'ללא מייל'}</span> | <span>{message.name || 'שם לא צויין'}</span>
 				</div>
 				<div class="message-body">
 					<p>{message.message}</p>
