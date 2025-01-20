@@ -2,8 +2,6 @@
 
 # Planned
 
-- rewrite tests, make them deterministic using mock db
-
 # Considering
 
 - add if lab mandatory

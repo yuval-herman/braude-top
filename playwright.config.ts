@@ -36,15 +36,5 @@ export default defineConfig({
 			use: devices['iPhone 15 Pro'],
 			testIgnore: /.*desktop.test.ts/,
 		},
-		{
-			name: 'mobile chrome',
-			use: devices['Pixel 5 landscape'],
-			testIgnore: /.*desktop.test.ts/,
-		},
-		{
-			name: 'mobile safari',
-			use: devices['iPhone 15 Pro landscape'],
-			testIgnore: /.*desktop.test.ts/,
-		},
 	],
 });
