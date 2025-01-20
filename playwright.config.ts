@@ -3,7 +3,8 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
 	use: { trace: 'on' },
 	webServer: {
-		command: 'npm run build && npm run preview',
+		command: 'npm run build &&  npm run preview',
+		// command: 'npm run preview',
 		port: 4173,
 	},
 	testDir: 'e2e',
@@ -21,7 +22,7 @@ export default defineConfig({
 		},
 		{
 			name: 'safari',
-			use: devices['Desktop Safari'],
+			use: { ...devices['Desktop Safari'], headless: false }, // safari consistently fails all actionability tests in headless mode as well as some other assertions.
 			testIgnore: /.*mobile.test.ts/,
 		},
 		/* Test against mobile viewports. */
