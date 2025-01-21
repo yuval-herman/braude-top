@@ -1,7 +1,6 @@
 # WIP
 
-- add settings (remove walk times, colors, etc)
-- save timetable on server
+- save timetable, settings on the server
 
 # Planned
 
