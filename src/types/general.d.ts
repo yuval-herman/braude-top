@@ -19,3 +19,10 @@ interface Item {
 	};
 	freeTime?: number; // Time the student has to walk
 }
+
+interface Settings {
+	show_walk_times?: boolean;
+	columns_margins?: boolean;
+	show_lunch?: boolean;
+	anonymous_comment?: boolean;
+}

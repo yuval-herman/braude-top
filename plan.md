@@ -30,6 +30,8 @@
 
 # Considering
 
+- convert selected courses list to store
+
 # Archive (might come back)
 
 - improve mobile friendliness

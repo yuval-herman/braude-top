@@ -6,6 +6,7 @@ interface StorageItems {
 	[key: `selected-${number}-${string}`]: FullCourse[];
 	version: string; // semver, can be compared with normal comparison operators
 	onboarded: boolean; // whether the user has been onboraded
+	settings: Settings;
 }
 
 export class TypedLocalStorage {
