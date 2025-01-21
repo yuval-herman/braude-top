@@ -1,6 +1,6 @@
 # WIP
 
-- save timetable, settings on the server
+- save timetable and settings on the server
 
 # Planned
 
