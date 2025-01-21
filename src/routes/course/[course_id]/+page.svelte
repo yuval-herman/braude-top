@@ -117,6 +117,8 @@
 					</label>
 					<button type="submit">שלח תגובה</button>
 				</form>
+			{:else}
+				<p class="info">כדי להגיב חובה להתחבר</p>
 			{/if}
 			{#if comments.length}
 				<ol>
@@ -151,6 +153,11 @@
 		&:hover {
 			background: hsl(from var(--light) h s calc(l + 5));
 		}
+	}
+
+	.info {
+		color: var(--text-secondary);
+		font-style: italic;
 	}
 
 	.container {
