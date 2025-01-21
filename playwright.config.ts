@@ -33,7 +33,7 @@ export default defineConfig({
 		},
 		{
 			name: 'mobile safari',
-			use: devices['iPhone 15 Pro'],
+			use: { ...devices['iPhone 15 Pro'], headless: false },
 			testIgnore: /.*desktop.test.ts/,
 		},
 	],
