@@ -46,7 +46,10 @@
 	<meta name="description" content="מציאת חדרים ריקים ללמידה במכללת בראודה." />
 </svelte:head>
 
-<div class="container">
+<header>
+	<h1>חדרים ריקים</h1>
+</header>
+<main>
 	<select
 		name="day"
 		id="day"
@@ -90,16 +93,19 @@
 			{/each}
 		</tbody>
 	</table>
-</div>
+</main>
 
 <style>
-	.container {
-		margin: 1rem auto;
+	main {
 		padding: 1.5rem;
-		border-radius: 12px;
-		background: var(--bg);
 	}
-
+	header {
+		width: 100%;
+		display: inline-block;
+		background: var(--primary);
+		border-radius: 12px;
+		padding: 0 16px;
+	}
 	select {
 		width: 100%;
 		padding: 0.5rem;

@@ -6,9 +6,10 @@
 	const { user, messages } = data;
 </script>
 
-<div class="container">
+<header>
 	<h1>שלום, {user.name}!</h1>
-
+</header>
+<main>
 	{#if form}
 		{#if form?.success}
 			<span transition:slide class="success">הודעה נמחקה!</span>
@@ -36,9 +37,19 @@
 	{:else}
 		<p>אין הודעות להצגה.</p>
 	{/if}
-</div>
+</main>
 
 <style>
+	header {
+		width: 100%;
+		display: inline-block;
+		background: var(--primary);
+		border-radius: 12px;
+		padding: 0 16px;
+	}
+	main {
+		padding: 1.5rem;
+	}
 	.success,
 	.failure {
 		padding: 8px;
@@ -49,11 +60,6 @@
 	}
 	.success {
 		background: var(--success);
-	}
-	.container {
-		padding: 1rem;
-		background: var(--bg);
-		color: var(--text);
 	}
 
 	.message {
