@@ -28,13 +28,23 @@
 		<form
 			action="?/contact"
 			method="post"
-			use:enhance
-			onsubmit={() =>
+			use:enhance={({ formData, cancel }) => {
+				if (
+					!formData.get('email') &&
+					!confirm(
+						'אתה עומד לשלוח לי הודעה אנונימית לחלוטין.\n' +
+							"זה בסדר ואני מכבד את הפרטיות של כולם, אבל המשמעות היא שאני לא אוכל ליצור איתך קשר אם לא הבנתי מה אתה מבקש או כדי להודיע לך שהכנתי את הפיצ'ר שביקשת וכו'...\n\n" +
+							'להמשיך בשליחת ההודעה האנונימית?'
+					)
+				)
+					cancel();
+
 				window.goatcounter.count({
 					event: true,
 					path: 'sent-contact-message',
 					title: 'User sent a message',
-				})}
+				});
+			}}
 		>
 			<label
 				>שם (לא חובה):
