@@ -1,8 +1,9 @@
 # WIP
 
-# Planned
+- add settings (remove walk times, colors, etc)
+- save timetable on server
 
-# Considering
+# Planned
 
 ### db stuff
 
@@ -10,12 +11,10 @@
 - add recommendation (1-5 start)
 - people qa
 - add ratings for courses
-- save timetable on server
 
 ### ui stuff
 
 - in course info page, show all years info, show changes between years
-- add settings (remove walk times, colors, etc)
 - add site info panel (visits, last course update etc...)
 - make sure user is aware if he is selecting multiple (unrequired) sessions (such as too many lectures)
 - course searching filters
@@ -27,8 +26,9 @@
 ### scraper or data gathering stuff
 
 - add if lab mandatory
-
 - show not only required exercise also lab
+
+# Considering
 
 # Archive (might come back)
 
