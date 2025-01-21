@@ -77,7 +77,7 @@
 			</select>
 		</label>
 		<ul>
-{#if data.user}			<li>{data.user?.name}</li>{/if}
+			{#if data.user}<li>{data.user?.name}</li>{/if}
 			<li>
 				<a href="/settings" aria-label="הגדרות" id="settings"
 					><svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +86,7 @@
 						/></svg
 					></a
 				>
-</li>
+			</li>
 			<li>
 				<button aria-label="עזרה" class="help" id="help-button" onclick={() => showHelp(page)}
 					>?</button
@@ -134,9 +134,6 @@
 			padding: 8px 16px;
 			background: var(--neutral);
 			overflow-x: auto;
-			& * {
-				width: max-content;
-			}
 			label {
 				margin: 0 16px;
 			}
@@ -147,18 +144,25 @@
 				list-style-type: none;
 				margin: 0;
 				padding: 0;
-				gap: 4px;
+				gap: 12px;
 				li {
 					display: inline-block;
-					padding-left: 8px;
 				}
 				a,
 				button {
+					display: block;
 					text-decoration: none;
 					background: var(--bg);
 					padding: 4px 8px;
 					border-radius: 4px;
 					color: inherit;
+					& > * {
+						vertical-align: middle;
+					}
+				}
+				#settings {
+					fill: var(--text);
+					background: none;
 				}
 				button {
 					font-size: medium;
