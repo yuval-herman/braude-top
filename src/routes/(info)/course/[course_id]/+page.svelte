@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { settings } from '$lib/settings.svelte.js';
 	import { listFormatter } from '$lib/utils/formatter.utils.js';
 
 	const { data } = $props();
 	const { course, comments, user, user_has_comment } = data;
 
-	let anonymous = $state(true);
+	let anonymous = $state($settings.anonymous_comment);
 
 	const properties = $derived.by(() => {
 		const languages = new Set<string>();

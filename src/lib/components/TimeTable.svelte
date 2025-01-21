@@ -33,7 +33,7 @@
 		const daysArr: Item[][] = Array(6);
 		for (let i = 0; i < items.length; i++) {
 			if (!daysArr[items[i].day]) daysArr[items[i].day] = [];
-			else {
+			else if ($settings.show_walk_times) {
 				const prevItem = items[i - 1];
 				prevItem.freeTime = items[i].start - prevItem.end;
 
