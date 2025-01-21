@@ -1,5 +1,6 @@
 :root {
 	--bg: light-dark(#e0e6eb, #383c3f);
+	--back-bg: light-dark(#ffffff, #2a2b2c);
 
 	--contrast: #f1e3dd;
 	--light: light-dark(hsl(217, 50%, 80%), hsl(217, 40%, 65%));
@@ -24,6 +25,7 @@
 }
 
 body {
+	background: var(--back-bg);
 	direction: rtl;
 	margin: 0;
 	height: 100vh;
@@ -34,6 +36,10 @@ body {
 * {
 	transition: inherit;
 	box-sizing: border-box;
+}
+input,
+textarea {
+	background: var(--back-bg);
 }
 button {
 	border: 1px solid var(--border);
