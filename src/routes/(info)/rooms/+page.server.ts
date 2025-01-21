@@ -13,5 +13,6 @@ export const load = async ({ url, parent }) => {
 			semester,
 			week_day,
 		}),
+		week_day,
 	};
 };

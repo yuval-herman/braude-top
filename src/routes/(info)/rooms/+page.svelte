@@ -47,7 +47,7 @@
 </svelte:head>
 
 <header>
-	<h1>חדרים ריקים</h1>
+	<h1>חדרים פנויים</h1>
 </header>
 <main>
 	<select
@@ -60,7 +60,7 @@
 		}}
 	>
 		{#each week_days as day, i}
-			<option value={day}>{getDay(i)}</option>
+			<option value={day} selected={day === data.week_day}>{getDay(i)}</option>
 		{/each}
 	</select>
 	<table>
