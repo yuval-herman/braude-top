@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { settings } from '$lib/settings.svelte';
 	import { buildings, hoursList, walkTimes } from '$lib/utils/constants.utils';
 	import { getContrast } from '$lib/utils/css.utils';
 	import { getDay, getHour } from '$lib/utils/formatter.utils';
@@ -149,7 +150,7 @@
 	{/if}
 {/snippet}
 
-<table>
+<table style:--item-margin={$settings.columns_margins ? '5%' : '0'}>
 	<thead>
 		<tr>
 			<th><MenuButton /></th>
@@ -176,7 +177,7 @@
 					{/each}
 				{/if}
 			</tr>
-			{#if row === 4}
+			{#if row === 4 && $settings.show_lunch}
 				<tr>
 					<th class="hour lunch">הפסקת צהריים</th>
 
@@ -237,6 +238,11 @@
 	.highlight {
 		box-shadow: 0 0 15px yellow !important;
 	}
+	.overlap {
+		width: calc(50% - var(--item-margin) * 2);
+		left: calc(50% * var(--overlap-index) + var(--item-margin)) !important;
+		right: unset !important;
+	}
 	.item {
 		transition: box-shadow 0.5s;
 		display: grid;
@@ -283,11 +289,6 @@
 			gap: 8px;
 			align-items: center;
 		}
-	}
-
-	.overlap {
-		width: 50%;
-		left: calc(50% * var(--overlap-index));
 	}
 
 	@media (max-width: 480px) {

@@ -5,6 +5,7 @@
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { showHelp } from '$lib/help.js';
+	import { settings } from '$lib/settings.svelte.js';
 	import { hoveredInstance, redoStack, selectedCourses, undoStack } from '$lib/state.svelte.js';
 	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
 	import { exportTable } from '$lib/tableExport.js';
@@ -119,7 +120,9 @@
 				{/if}
 			</div>
 		{:else}
-			<button onclick={() => exportTable(itemizeCourseList(selectedCourses))}>ייצא מערכת</button>
+			<button onclick={() => exportTable(itemizeCourseList(selectedCourses, false))}
+				>ייצא מערכת</button
+			>
 
 			<div
 				class="list-container"
@@ -159,7 +162,10 @@
 		{/if}
 	</div>
 	<div class="table-container" class:hidden={page.state.sidebarOpen}>
-		<TimeTable items={itemizeCourseList(selectedCourses)} preview={hoveredInstance.items} />
+		<TimeTable
+			items={itemizeCourseList(selectedCourses, !!$settings.show_lunch)}
+			preview={hoveredInstance.items}
+		/>
 	</div>
 </main>
 

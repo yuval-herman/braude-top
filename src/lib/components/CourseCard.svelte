@@ -14,6 +14,7 @@
 	import { flip } from 'svelte/animate';
 	import { fade, slide } from 'svelte/transition';
 	import Indicator from './Indicator.svelte';
+	import { settings } from '$lib/settings.svelte';
 
 	interface Props {
 		course: FullCourse;
@@ -120,6 +121,7 @@
 							...course,
 							instances: [{ ...instance, selected: true }],
 						},
+						!!$settings.show_lunch,
 						true
 					);
 				}}

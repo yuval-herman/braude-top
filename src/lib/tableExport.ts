@@ -20,7 +20,7 @@ export function exportTable(items: Item[]) {
 
 	const body: RowInput[] = hoursList.map((hour) => {
 		const row = [{ content: getHour(hour.hour, hour.min) }];
-		const hourIndex = hoursList.findIndex((h) => h.hour === hour.hour && h.min === hour.min);
+		const hourIndex = hoursList.findIndex((h) => h.hour === hour.hour && h.min === hour.min) + 1;
 		const itemsInRow = items.filter(
 			(item) => item.start < hourIndex && hourIndex < item.end
 		).length;
