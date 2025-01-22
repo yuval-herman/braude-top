@@ -63,7 +63,7 @@ export const insertUser = (() => {
 	return (user: Omit<User, 'id'>) => stmt.run(user);
 })();
 
-/** Insert or update user settings into db */
+/** Insert or update user settings */
 export const upsertSettings = (() => {
 	interface Args {
 		user_id: User['id'];
@@ -88,5 +88,41 @@ export const getUserSettings = (() => {
 	return (user_id: User['id']) => {
 		const ret = stmt.get(user_id);
 		if (ret) return JSON.parse(ret) as Settings;
+	};
+})();
+
+/** Insert or replace user saved timetable */
+export const upsertSavedTimetable = (() => {
+	interface Args {
+		user_id: User['id'];
+		year: number;
+		semester: string;
+		saved_timetable: FullCourse[];
+	}
+	const stmt = usersDB.prepare<Omit<Args, 'saved_timetable'> & { saved_timetable: string }>(
+		'INSERT or replace INTO saved_timetables(user_id,year,semester,saved_timetable)\
+		 VALUES(:user_id,:year,:semester,:saved_timetable)'
+	);
+
+	return (args: Args) =>
+		stmt.run({ ...args, saved_timetable: JSON.stringify(args.saved_timetable) });
+})();
+
+/** Retrieve user saved timetables from db */
+export const getUserSavedTimetables = (() => {
+	interface Args {
+		user_id: User['id'];
+		year: number;
+		semester: string;
+	}
+	const stmt = usersDB
+		.prepare<Args, string>(
+			'SELECT saved_timetable FROM saved_timetables\
+			 WHERE user_id = :user_id AND year = :year AND semester = :semester'
+		)
+		.pluck();
+	return (args: Args) => {
+		const ret = stmt.get(args);
+		if (ret) return JSON.parse(ret) as FullCourse[];
 	};
 })();

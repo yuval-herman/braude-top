@@ -18,6 +18,14 @@ CREATE TABLE
 CREATE TABLE
     if not exists user_data (
         user_id INTEGER PRIMARY KEY REFERENCES user (id),
-        saved_timetables TEXT, -- json array of all made timetables
         settings TEXT -- json object of settings
+    );
+
+CREATE TABLE
+    if not exists saved_timetables (
+        user_id INTEGER REFERENCES user (id),
+        year INTEGER,
+        semester TEXT,
+        saved_timetable TEXT, -- json object of settingsת
+        PRIMARY KEY (user_id, year, semester)
     );

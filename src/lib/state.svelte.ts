@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { page } from '$app/state';
 import { setCurrentSelected } from './storage';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
@@ -20,7 +21,15 @@ export function toggleInstance(instance_id: number, year: number, semester: stri
 		}
 	}
 
-	browser && setCurrentSelected(selectedCourses, year, semester);
+	if (browser) {
+		if (page.data.user)
+			navigator.sendBeacon(
+				'/user/data/update/timetable',
+				JSON.stringify({ year, semester, timetable: $state.snapshot(selectedCourses) })
+			);
+
+		setCurrentSelected(selectedCourses, year, semester);
+	}
 }
 
 export function addSelectedCourse(course: FullCourse, year: number, semester: string) {
@@ -38,7 +47,15 @@ export function addSelectedCourse(course: FullCourse, year: number, semester: st
 	} else {
 		selectedCourses.push(structuredClone(course));
 	}
-	browser && setCurrentSelected(selectedCourses, year, semester);
+	if (browser) {
+		if (page.data.user)
+			navigator.sendBeacon(
+				'/user/data/update/timetable',
+				JSON.stringify({ year, semester, timetable: $state.snapshot(selectedCourses) })
+			);
+
+		setCurrentSelected(selectedCourses, year, semester);
+	}
 }
 
 export function removeSelectedCourse(course: FullCourse, year: number, semester: string) {
@@ -58,5 +75,13 @@ export function removeSelectedCourse(course: FullCourse, year: number, semester:
 	} else {
 		exitingCourse.instances = instances;
 	}
-	browser && setCurrentSelected(selectedCourses, year, semester);
+	if (browser) {
+		if (page.data.user)
+			navigator.sendBeacon(
+				'/user/data/update/timetable',
+				JSON.stringify({ year, semester, timetable: $state.snapshot(selectedCourses) })
+			);
+
+		setCurrentSelected(selectedCourses, year, semester);
+	}
 }

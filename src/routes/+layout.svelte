@@ -23,6 +23,10 @@
 		if (data.settings) settings.set(data.settings);
 	});
 
+	$effect(() => {
+		if (data.savedTimetable) console.log(data.savedTimetable);
+	});
+
 	onNavigate(({ to, type }) => {
 		if (!to || type !== 'link') return;
 		window.goatcounter &&
