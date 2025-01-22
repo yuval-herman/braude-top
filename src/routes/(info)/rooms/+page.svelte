@@ -74,7 +74,6 @@
 								sortOrder = true;
 								sortKey = key;
 							}
-							console.log(sortOrder, sortKey);
 						}}
 					>
 						{label}
