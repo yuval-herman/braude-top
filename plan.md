@@ -1,6 +1,5 @@
 # WIP
 
-- save timetable on the server
 - rooms arrow icons
 
 # Planned
