@@ -13,6 +13,7 @@
 
 ### ui stuff
 
+- move year, semester into layout load function to be available everywhere
 - in course info page, show all years info, show changes between years
 - add site info panel (visits, last course update etc...)
 - make sure user is aware if he is selecting multiple (unrequired) sessions (such as too many lectures)
@@ -29,6 +30,7 @@
 
 # Considering
 
+- instead of saving the whole course for the timetable, save the id and year as well as selected instances id and fetch needed data from the server (this will keep the data up to date)
 - convert selected courses list to store
 
 # Archive (might come back)

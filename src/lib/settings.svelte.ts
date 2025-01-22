@@ -1,6 +1,8 @@
 import { browser } from '$app/environment';
 import { writable } from 'svelte/store';
 import { TypedLocalStorage } from './storage';
+import { debounce } from './utils/utils';
+import { page } from '$app/state';
 
 export const settings = writable<Settings>(
 	(browser && TypedLocalStorage.getItem('settings')) || {
@@ -11,6 +13,13 @@ export const settings = writable<Settings>(
 	}
 );
 
+const sendToServer = debounce((settingsObj: Settings) => {
+	if (!browser) return;
+	navigator.sendBeacon('/user/data/update/settings', JSON.stringify(settingsObj));
+}, 5000);
+
 settings.subscribe((v) => {
-	if (browser) TypedLocalStorage.setItem('settings', v);
+	if (!browser) return;
+	TypedLocalStorage.setItem('settings', v);
+	if (page.data.user) sendToServer(v);
 });

@@ -14,6 +14,7 @@ declare global {
 			}[];
 			year: number;
 			semester: string;
+			user?: User;
 		}
 		interface PageState {
 			sidebarOpen: boolean;

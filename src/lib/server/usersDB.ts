@@ -62,3 +62,20 @@ export const insertUser = (() => {
 	);
 	return (user: Omit<User, 'id'>) => stmt.run(user);
 })();
+
+/** Insert or update user settings into db */
+export const upsertSettings = (() => {
+	interface Args {
+		user_id: User['id'];
+		settings: Settings;
+	}
+	const stmt = usersDB.prepare<Omit<Args, 'settings'> & { settings: string }>(
+		'INSERT INTO user_data(user_id,settings)\
+		 VALUES(:user_id,:settings)\
+		 ON CONFLICT(user_id)\
+		 DO UPDATE SET settings = :settings\
+		 WHERE user_id = :user_id;'
+	);
+
+	return (args: Args) => stmt.run({ ...args, settings: JSON.stringify(args.settings) });
+})();
