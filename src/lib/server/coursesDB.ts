@@ -123,10 +123,11 @@ export const getEmptyRoomsByDay = (() => {
 	};
 
 	const stmt = coursesDB.prepare<Args, EmptyRoom>(
-		'SELECT * FROM empty_rooms\
+		"SELECT * FROM empty_rooms\
 			 WHERE year = :year\
 			 AND semester = :semester\
-			 AND week_day = :week_day'
+			 AND week_day = :week_day\
+			 AND room != ''"
 	);
 	return (args: Args) => stmt.all(args);
 })();

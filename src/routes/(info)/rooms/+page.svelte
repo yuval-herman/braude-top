@@ -8,7 +8,6 @@
 	type SortKey = (typeof columns)[number]['key'];
 	let sortKey = $state<SortKey>('room');
 	let sortOrder = $state(true);
-	const arrow = $derived(sortOrder ? '🡓' : '🡑');
 
 	const rooms = $derived(
 		data.rooms.toSorted((a, b) => {
@@ -77,7 +76,18 @@
 						}}
 					>
 						{label}
-						<span>{sortKey === key ? arrow : '🡙'}</span>
+						<svg height="1rem" viewBox="0 0 100 100" fill="var(--text-secondary)">
+							{#if sortKey === key}
+								{#if sortOrder}
+									<polygon points="0,60 50,100 100,60" />
+								{:else}
+									<polygon points="0,40 50,0 100,40" />
+								{/if}
+							{:else}
+								<polygon points="0,40 50,0 100,40" />
+								<polygon points="0,60 50,100 100,60" />
+							{/if}
+						</svg>
 					</th>
 				{/each}
 			</tr>
