@@ -1,7 +1,5 @@
 # WIP
 
-- rooms arrow icons
-
 # Planned
 
 ### db stuff
