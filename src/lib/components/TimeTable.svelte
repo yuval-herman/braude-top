@@ -62,6 +62,8 @@
 {#snippet Item(item: Item, index: number)}
 	{@const background = (item.overlapping?.overlapIndex ?? 0) < 2 ? item.bgColor : 'red'}
 	{@const offset = item.walk && item.freeTime === 0 ? '- 2em' : ''}
+	{@const start = item.start + Number($settings.show_lunch && item.start > 4)}
+	{@const end = item.end + Number($settings.show_lunch && item.end > 4)}
 	<div
 		class="item"
 		class:highlight={item.highlight}
@@ -76,8 +78,8 @@
 			light: 'var(--text-light)',
 			dark: 'var(--text-dark)',
 		})}
-		style:top="calc({item.start - 1} * (100% + 1px))"
-		style:height="calc({item.end - item.start} * (100% + 1px) {offset})"
+		style:top="calc({start} * (100% + 1px))"
+		style:height="calc({end - start} * (100% + 1px) {offset})"
 		style:z-index={index}
 	>
 		<Indicator color={item.indicatorColor} />
@@ -85,13 +87,12 @@
 		<span>{item.value.name}</span>
 		<span>{item.value.instructor}</span>
 		<span>{item.value.room}</span>
-		<span>{item.freeTime}</span>
 	</div>
 	{#if (item.walk || item.freeTime) && !item.overlapping}
 		<div
 			class="walk-free"
 			class:preview={item.is_preview}
-			style:top="calc({item.start - 1} * (100% + 1px) + {item.end - item.start} * (100% + 1px) {offset})"
+			style:top="calc({start} * (100% + 1px) + {end - start} * (100% + 1px) {offset})"
 		>
 			{#if item.walk}
 				<div class="data">
@@ -130,7 +131,7 @@
 
 			{#if item.freeTime}
 				<div class="data">
-					<span>{item.freeTime - 1} ש'</span>
+					<span>{item.freeTime} ש'</span>
 					<svg
 						width="1.5em"
 						viewBox="0 0 24 24"
