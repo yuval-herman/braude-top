@@ -14,3 +14,10 @@ CREATE TABLE
         user_id INTEGER REFERENCES user (id),
         expires_at INTEGER NOT NULL
     );
+
+CREATE TABLE
+    if not exists user_data (
+        user_id INTEGER PRIMARY KEY REFERENCES user (id),
+        saved_timetables TEXT, -- json array of all made timetables
+        settings TEXT -- json object of settings
+    );
