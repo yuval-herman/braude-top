@@ -5,18 +5,17 @@
 	import { goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { showHelp } from '$lib/help.js';
-	import { theme } from '$lib/state.svelte';
+	import { selectedCourses, theme } from '$lib/state.svelte';
 	import { enhance } from '$app/forms';
 	import Cookies from 'js-cookie';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { settings } from '$lib/settings.svelte.js';
+	import { setCurrentSelected } from '$lib/storage.js';
 
 	let { children, data } = $props();
 
-	const { themeCookie } = data;
-
-	if (validateTheme(themeCookie) && theme.theme !== themeCookie) {
-		theme.theme = themeCookie;
+	if (validateTheme(data.themeCookie) && theme.theme !== data.themeCookie) {
+		theme.theme = data.themeCookie;
 	}
 
 	onMount(() => {
@@ -24,7 +23,13 @@
 	});
 
 	$effect(() => {
-		if (data.savedTimetable) console.log(data.savedTimetable);
+		if (!data.savedTimetable) return;
+
+		untrack(() => {
+			selectedCourses.length = 0;
+			selectedCourses.push(...data.savedTimetable!);
+		});
+		setCurrentSelected(data.savedTimetable, data.year, data.semester);
 	});
 
 	onNavigate(({ to, type }) => {

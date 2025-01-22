@@ -17,7 +17,16 @@ export const load = async ({ cookies, locals, url }) => {
 		settings = getUserSettings(locals.user.id);
 		savedTimetable = getUserSavedTimetables({ user_id: locals.user.id, year, semester });
 	}
-	return { themeCookie, availableTimeSpans, user: locals.user, settings, savedTimetable };
+
+	return {
+		themeCookie,
+		availableTimeSpans,
+		user: locals.user,
+		settings,
+		savedTimetable,
+		year,
+		semester,
+	};
 };
 
 export const ssr = true;
