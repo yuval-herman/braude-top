@@ -1,7 +1,10 @@
 import Database from 'better-sqlite3';
 import schema from './sql/prepare.comments.sql?raw';
+import { setVersion } from '$lib/utils/db.utils';
 
 const commentsDB = new Database('data/comments.db');
+
+setVersion(commentsDB, 1);
 
 commentsDB.exec(schema);
 

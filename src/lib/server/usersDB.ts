@@ -1,7 +1,10 @@
 import Database from 'better-sqlite3';
 import schema from './sql/prepare.users.sql?raw';
+import { setVersion } from '$lib/utils/db.utils';
 
 const usersDB = new Database('data/users.db');
+
+setVersion(usersDB, 1);
 
 usersDB.exec(schema);
 
