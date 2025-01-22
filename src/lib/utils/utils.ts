@@ -17,7 +17,13 @@ export function sameObject(obj1: Record<string, any>, obj2: Record<string, any>)
 	const obj1Keys = Object.keys(obj1);
 	const obj2Keys = Object.keys(obj2);
 
-	return obj1Keys.length === obj2Keys.length && obj1Keys.every((key) => obj1[key] === obj2[key]);
+	if (obj1Keys.length !== obj2Keys.length) return false;
+	return obj1Keys.every((key): boolean => {
+		const t = typeof obj1[key];
+		if (t !== typeof obj2[key]) return false;
+		else if (t === 'object') return sameObject(obj1[key], obj2[key]);
+		return obj1[key] === obj2[key];
+	});
 }
 
 export function hashNumber(num: number) {

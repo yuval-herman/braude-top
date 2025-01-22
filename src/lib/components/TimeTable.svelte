@@ -13,12 +13,12 @@
 		const processed: Item[] = [];
 		const ignore: number[] = [];
 		for (const i of items) {
-			const index = previewItems.findIndex((p) => p && sameObject(i.value, p.value));
+			const index = previewItems.findIndex((p) => p && sameObject(p, { ...i, is_preview: true }));
 			if (index !== -1) {
 				ignore.push(index);
 				processed.push({ ...i, highlight: true });
 			} else {
-				processed.push(i);
+				processed.push({ ...i });
 			}
 		}
 
