@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { settings } from '$lib/settings.svelte';
 	import {
 		addSelectedCourse,
 		hoveredInstance,
@@ -11,10 +12,8 @@
 	import { getContrast, lighten, num2color } from '$lib/utils/css.utils';
 	import { listFormatter } from '$lib/utils/formatter.utils';
 	import { itemizeCourse } from '$lib/utils/item.utils';
-	import { flip } from 'svelte/animate';
 	import { fade, slide } from 'svelte/transition';
 	import Indicator from './Indicator.svelte';
-	import { settings } from '$lib/settings.svelte';
 
 	interface Props {
 		course: FullCourse;
@@ -126,8 +125,6 @@
 					);
 				}}
 				onmouseleave={() => (hoveredInstance.items.length = 0)}
-				transition:slide
-				animate:flip={{ duration: 250, delay: 50 }}
 			>
 				<Indicator color={c.indicator} />
 				<div class="instance-details">
