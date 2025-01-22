@@ -79,3 +79,14 @@ export const upsertSettings = (() => {
 
 	return (args: Args) => stmt.run({ ...args, settings: JSON.stringify(args.settings) });
 })();
+
+/** Retrieve user settings from db */
+export const getUserSettings = (() => {
+	const stmt = usersDB
+		.prepare<[User['id']], string>('SELECT settings FROM user_data WHERE user_id = ?')
+		.pluck();
+	return (user_id: User['id']) => {
+		const ret = stmt.get(user_id);
+		if (ret) return JSON.parse(ret) as Settings;
+	};
+})();

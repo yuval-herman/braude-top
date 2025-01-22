@@ -8,6 +8,8 @@
 	import { theme } from '$lib/state.svelte';
 	import { enhance } from '$app/forms';
 	import Cookies from 'js-cookie';
+	import { onMount } from 'svelte';
+	import { settings } from '$lib/settings.svelte.js';
 
 	let { children, data } = $props();
 
@@ -16,6 +18,10 @@
 	if (validateTheme(themeCookie) && theme.theme !== themeCookie) {
 		theme.theme = themeCookie;
 	}
+
+	onMount(() => {
+		if (data.settings) settings.set(data.settings);
+	});
 
 	onNavigate(({ to, type }) => {
 		if (!to || type !== 'link') return;
