@@ -1,9 +1,5 @@
 # WIP
 
-- add recommendation (1-5 start)
-- add ratings for courses
-- people qa
-
 # Planned
 
 ### db stuff
@@ -20,6 +16,7 @@
 - suggest to add empty sessions to timetable
 - profile slowdowns and memory spikes
 - fix table export
+- people qa
 
 # Considering
 

@@ -51,11 +51,14 @@ export const getUserCommentsByCourse = (() => {
 
 /** Updates a comment's content */
 export const updateComment = (() => {
-	const stmt = commentsDB.prepare<{
-		id: number;
-		content: string;
-	}>(`UPDATE comments SET content = :content, updated_at = datetime('now') WHERE id = :id`);
-	return (id: number, content: string) => stmt.run({ id, content });
+	type UpdateComment = Omit<
+		UserComment,
+		'created_at' | 'updated_at' | 'is_flagged' | 'course_id' | 'course_year' | 'user_id'
+	>;
+	const stmt = commentsDB.prepare<Omit<UpdateComment, 'is_anon'> & { is_anon: number }>(
+		`UPDATE comments SET content = :content, rating = :rating, is_anon = :is_anon, updated_at = datetime('now') WHERE id = :id`
+	);
+	return (args: UpdateComment) => stmt.run({ ...args, is_anon: Number(args.is_anon) });
 })();
 
 /** Deletes a comment by ID */

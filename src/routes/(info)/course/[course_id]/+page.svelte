@@ -3,9 +3,9 @@
 	import { listFormatter } from '$lib/utils/formatter.utils.js';
 
 	const { data } = $props();
-	const { course, comments, user, user_has_comment } = data;
+	const { course, comments, user, user_previous_comment } = data;
 
-	let anonymous = $state($settings.anonymous_comment);
+	let anonymous = $state(user_previous_comment?.is_anon ?? $settings.anonymous_comment);
 
 	const properties = $derived.by(() => {
 		const languages = new Set<string>();
@@ -111,7 +111,13 @@
 					<span>דירוג:</span>
 					<div class="stars">
 						{#each { length: 5 }, i}
-							<input type="radio" id="star{5 - i}" name="stars" value={5 - i} />
+							<input
+								type="radio"
+								id="star{5 - i}"
+								name="stars"
+								value={5 - i}
+								checked={user_previous_comment?.rating === 5 - i}
+							/>
 							<label for="star{5 - i}" class="icon-star"></label>
 						{/each}
 					</div>
@@ -122,9 +128,13 @@
 				</label>
 				<label
 					>תגובה:
-					<textarea name="content" rows="3" placeholder="תגובתך כאן..." required></textarea>
+					<textarea name="content" rows="3" placeholder="תגובתך כאן..." required
+						>{user_previous_comment?.content}</textarea
+					>
 				</label>
-				<button type="submit">שלח תגובה</button>
+				<button type="submit"
+					>{#if user_previous_comment}עדכן תגובה{:else}שלח תגובה{/if}</button
+				>
 			</form>
 		{:else}
 			<p class="info">כדי להגיב או לדרג חובה להתחבר</p>
@@ -135,8 +145,10 @@
 					<li>
 						<article>
 							<header>
-								<span>{dateToString(new Date(comment.created_at))}</span>
-								{#if comment.updated_at}<span>{comment.updated_at}</span>{/if}
+								<span>תאריך: {dateToString(new Date(comment.created_at))}</span>
+								{#if comment.updated_at}<span
+										>עודכן בתאריך: {dateToString(new Date(comment.updated_at))}</span
+									>{/if}
 								{#if comment.rating}<span>דירוג: {comment.rating}</span>{/if}
 								<span>מגיב: {comment.poster_name ?? 'אנונימי'}</span>
 							</header>

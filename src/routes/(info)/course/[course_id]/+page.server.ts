@@ -2,6 +2,7 @@ import {
 	getCommentsByCourse,
 	getUserCommentsByCourse,
 	insertComment,
+	updateComment,
 } from '$lib/server/commentsDB.js';
 import {
 	checkCourse,
@@ -26,7 +27,7 @@ export const load = async ({ params, setHeaders, parent, locals }) => {
 	setHeaders({ 'cache-control': 'max-age=3600' });
 	return {
 		course,
-		user_has_comment: locals.user && comments.some((c) => c.user_id === locals.user!.id),
+		user_previous_comment: locals.user && comments.find((c) => c.user_id === locals.user!.id),
 		comments: comments.map(({ content, created_at, id, is_anon, updated_at, user_id, rating }) => {
 			return {
 				content,
@@ -52,14 +53,6 @@ export const actions = {
 		if (!checkCourse(params.course_id, year)) error(400, 'לא ניתן להגיב על קורס שאינו קיים');
 		const { user } = locals;
 		if (!user) error(401, 'כדי להגיב חובה להתחבר');
-		if (
-			getUserCommentsByCourse({
-				course_id: Number(params.course_id),
-				course_year: year,
-				user_id: user.id,
-			}).length
-		)
-			error(400, 'ניתן לשלוח תגובה אחת בלבד לכל קורס');
 
 		const formData = await request.formData();
 		const content = formData.get('content');
@@ -70,14 +63,25 @@ export const actions = {
 		if (isNaN(stars)) error(400, 'דירוג חייב להיות מספר');
 		else if (stars > 5 || stars < 0) error(400, 'דירוג חייב להיות מספר בין 0 ל-5');
 
-		insertComment({
-			content,
-			rating: stars || undefined, // set to null if 0
-			is_anon,
+		const rating = stars || undefined; // set to null if 0
+		const comment_id: number | undefined = getUserCommentsByCourse({
 			course_id: Number(params.course_id),
 			course_year: year,
 			user_id: user.id,
-		});
+		})[0]?.id;
+
+		if (comment_id) {
+			updateComment({ id: comment_id, content, is_anon, rating });
+		} else {
+			insertComment({
+				content,
+				rating,
+				is_anon,
+				course_id: Number(params.course_id),
+				course_year: year,
+				user_id: user.id,
+			});
+		}
 		return { success: true };
 	},
 };
