@@ -5,6 +5,7 @@ CREATE TABLE
         course_year integer not null,
         user_id integer not null,
         content text not null,
+        rating integer,
         created_at text not null default current_timestamp,
         updated_at text,
         is_anon boolean not null,

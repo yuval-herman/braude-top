@@ -27,12 +27,13 @@ export const load = async ({ params, setHeaders, parent, locals }) => {
 	return {
 		course,
 		user_has_comment: locals.user && comments.some((c) => c.user_id === locals.user!.id),
-		comments: comments.map(({ content, created_at, id, is_anon, updated_at, user_id }) => {
+		comments: comments.map(({ content, created_at, id, is_anon, updated_at, user_id, rating }) => {
 			return {
 				content,
 				created_at,
 				updated_at,
 				id,
+				rating,
 				poster_name: is_anon ? undefined : (getUser(user_id)?.name ?? 'משתמש נמחק מהמערכת'),
 			};
 		}),
@@ -65,9 +66,13 @@ export const actions = {
 		if (!content) error(400, 'לא ניתן להוסיף תגובה ריקה');
 		else if (typeof content !== 'string') error(400, 'תגובה לא מורכבת מטקסט');
 		const is_anon = Boolean(formData.get('anonymous'));
+		const stars = Number(formData.get('stars'));
+		if (isNaN(stars)) error(400, 'דירוג חייב להיות מספר');
+		else if (stars > 5 || stars < 0) error(400, 'דירוג חייב להיות מספר בין 0 ל-5');
 
 		insertComment({
 			content,
+			rating: stars || undefined, // set to null if 0
 			is_anon,
 			course_id: Number(params.course_id),
 			course_year: year,

@@ -1,13 +1,14 @@
 # WIP
 
+- add recommendation (1-5 start)
+- add ratings for courses
+- people qa
+
 # Planned
 
 ### db stuff
 
 - add course avg score
-- add recommendation (1-5 start)
-- people qa
-- add ratings for courses
 
 ### ui stuff
 
@@ -18,6 +19,7 @@
 - add custom events to timetable
 - suggest to add empty sessions to timetable
 - profile slowdowns and memory spikes
+- fix table export
 
 # Considering
 

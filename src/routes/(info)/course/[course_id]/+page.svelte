@@ -105,8 +105,17 @@
 	</div>
 	<div class="comments">
 		<h3>תגובות</h3>
-		{#if user && !user_has_comment}
+		{#if user}
 			<form action="?/add-comment" method="post">
+				<div class="rating">
+					<span>דירוג:</span>
+					<div class="stars">
+						{#each { length: 5 }, i}
+							<input type="radio" id="star{5 - i}" name="stars" value={5 - i} />
+							<label for="star{5 - i}" class="icon-star"></label>
+						{/each}
+					</div>
+				</div>
 				<label>
 					{anonymous ? 'הישאר אנונימי' : 'מגיב כ-' + user.name}
 					<input type="checkbox" name="anonymous" id="anonymous" bind:checked={anonymous} />
@@ -118,7 +127,7 @@
 				<button type="submit">שלח תגובה</button>
 			</form>
 		{:else}
-			<p class="info">כדי להגיב חובה להתחבר</p>
+			<p class="info">כדי להגיב או לדרג חובה להתחבר</p>
 		{/if}
 		{#if comments.length}
 			<ol>
@@ -128,7 +137,8 @@
 							<header>
 								<span>{dateToString(new Date(comment.created_at))}</span>
 								{#if comment.updated_at}<span>{comment.updated_at}</span>{/if}
-								<span>{comment.poster_name ?? 'אנונימי'}</span>
+								{#if comment.rating}<span>דירוג: {comment.rating}</span>{/if}
+								<span>מגיב: {comment.poster_name ?? 'אנונימי'}</span>
 							</header>
 							<p>{comment.content}</p>
 						</article>
@@ -184,6 +194,23 @@
 			margin-bottom: 1rem;
 		}
 		form {
+			.rating {
+				label {
+					cursor: pointer;
+				}
+				.stars {
+					display: inline;
+					direction: ltr;
+					text-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+					input[type='radio'] {
+						display: none;
+						&:checked ~ label {
+							color: gold;
+						}
+					}
+				}
+			}
+
 			textarea {
 				width: 100%;
 				padding: 12px 20px;
@@ -201,6 +228,10 @@
 				border: none;
 				border-radius: 4px;
 				cursor: pointer;
+
+				@media (max-width: 450px) {
+					width: 100%;
+				}
 			}
 		}
 		article {
@@ -208,6 +239,9 @@
 			border-radius: 4px;
 			padding: 4px;
 			margin: 4px;
+			p {
+				padding-right: 8px;
+			}
 		}
 	}
 	.flex-info {

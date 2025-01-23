@@ -4,6 +4,7 @@ interface UserComment {
 	course_year: number;
 	user_id: number | bigint;
 	content: string;
+	rating?: number;
 	created_at: string;
 	updated_at?: string;
 	is_flagged: boolean;

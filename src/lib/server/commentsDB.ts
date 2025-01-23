@@ -12,8 +12,8 @@ commentsDB.exec(schema);
 export const insertComment = (() => {
 	type InsertedComment = Omit<UserComment, 'created_at' | 'updated_at' | 'is_flagged' | 'id'>;
 	const stmt = commentsDB.prepare<Omit<InsertedComment, 'is_anon'> & { is_anon: number }>(
-		`INSERT INTO comments (course_id, course_year, user_id, content, is_anon)
-         VALUES (:course_id, :course_year, :user_id, :content, :is_anon)`
+		`INSERT INTO comments (course_id, course_year, user_id, content, rating, is_anon)
+         VALUES (:course_id, :course_year, :user_id, :content, :rating, :is_anon)`
 	);
 	return (args: InsertedComment) => stmt.run({ ...args, is_anon: Number(args.is_anon) });
 })();
