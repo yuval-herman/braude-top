@@ -96,55 +96,15 @@
 		>
 			{#if item.walk}
 				<div class="data">
-					<span>{item.walk.time}</span>
-					{#if item.freeTime === 0 && item.walk.time > 7}
-						<svg
-							height="1.5em"
-							stroke="var(--text)"
-							viewBox="0 0 24 24"
-							fill="none"
-							xmlns="http://www.w3.org/2000/svg"
-							><path
-								d="M14 22v-5.039a2 2 0 0 0-.75-1.561L11.5 14m0 0L13 7.5M11.5 14 10 13m3-5.5L11 7m2 .5 2.043 3.268a2 2 0 0 0 1.303.901L18 12m-8 1 1-6m-1 6-.6 3.3a2 2 0 0 1-2.542 1.557L4 17m7-10L8.106 8.447A2 2 0 0 0 7 10.237V12m7.5-8.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/></svg
-						>
-					{:else}
-						<svg
-							height="1.5em"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="var(--text)"
-							xmlns="http://www.w3.org/2000/svg"
-							><path
-								d="M14 22v-5.039a2 2 0 0 0-.75-1.561L11.5 14m0 0L13 7.5M11.5 14 10 13m3-5.5L11 7m2 .5 2.043 3.268a2 2 0 0 0 1.303.901L18 12m-8 1 1-6m-1 6-2 9m3-15L8.106 8.447A2 2 0 0 0 7 10.237V12m7.5-8.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							/></svg
-						>
-					{/if}
+					<span class="icon-{item.freeTime === 0 && item.walk.time > 7 ? 'run' : 'walk'}"
+						>{item.walk.time}</span
+					>
 				</div>
 			{/if}
 
 			{#if item.freeTime}
 				<div class="data">
-					<span>{item.freeTime} ש'</span>
-					<svg
-						width="1.5em"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="var(--text)"
-						xmlns="http://www.w3.org/2000/svg"
-						><path
-							d="M12 9v4M10 2h4m3.657 5.343L19 6m-7 15a8 8 0 1 0 0-16 8 8 0 0 0 0 16"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/></svg
-					>
+					<span class="icon-clock">{item.freeTime} ש'</span>
 				</div>
 			{/if}
 		</div>

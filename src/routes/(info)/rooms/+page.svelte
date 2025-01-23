@@ -74,20 +74,9 @@
 								sortKey = key;
 							}
 						}}
+						class="icon-sort{sortKey === key ? (sortOrder ? '-down' : '-up') : ''}"
 					>
 						{label}
-						<svg height="1rem" viewBox="0 0 100 100" fill="var(--text-secondary)">
-							{#if sortKey === key}
-								{#if sortOrder}
-									<polygon points="0,60 50,100 100,60" />
-								{:else}
-									<polygon points="0,40 50,0 100,40" />
-								{/if}
-							{:else}
-								<polygon points="0,40 50,0 100,40" />
-								<polygon points="0,60 50,100 100,60" />
-							{/if}
-						</svg>
 					</th>
 				{/each}
 			</tr>
