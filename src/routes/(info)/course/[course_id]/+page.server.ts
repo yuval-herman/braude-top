@@ -13,8 +13,8 @@ import { getUser } from '$lib/server/usersDB.js';
 import { getYearSemester } from '$lib/utils/utils.js';
 import { error } from '@sveltejs/kit';
 
-export const load = async ({ params, setHeaders, url, parent, locals }) => {
-	const { year } = getYearSemester(url, (await parent()).availableTimeSpans);
+export const load = async ({ params, setHeaders, parent, locals }) => {
+	const { year } = await parent();
 	const course = getFullCourse(params.course_id, year);
 
 	if (course === undefined) {

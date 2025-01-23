@@ -4,12 +4,10 @@ import {
 	getNonEmptyCourseInstances,
 	queryNonEmptyCourses,
 } from '$lib/server/coursesDB';
-import { getYearSemester } from '$lib/utils/utils.js';
 
 export const load = async ({ url, parent }) => {
 	let query = url.searchParams.get('query');
-	const available = (await parent()).availableTimeSpans;
-	const { year, semester } = getYearSemester(url, available);
+	const { year, semester } = await parent();
 
 	const full_courses = query
 		? queryNonEmptyCourses({ year, semester, query }).map((course) => ({
@@ -22,5 +20,5 @@ export const load = async ({ url, parent }) => {
 			}))
 		: undefined;
 
-	return { full_courses, year, semester };
+	return { full_courses };
 };
