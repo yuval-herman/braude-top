@@ -120,10 +120,6 @@
 				{/if}
 			</div>
 		{:else}
-			<button onclick={() => exportTable(itemizeCourseList(selectedCourses, false))}
-				>ייצא מערכת</button
-			>
-
 			<div
 				class="list-container"
 				in:fly={tabTransition('my', 'in')}
@@ -162,10 +158,7 @@
 		{/if}
 	</div>
 	<div class="table-container" class:hidden={page.state.sidebarOpen}>
-		<TimeTable
-			items={itemizeCourseList(selectedCourses, !!$settings.show_lunch)}
-			preview={hoveredInstance.items}
-		/>
+		<TimeTable items={itemizeCourseList(selectedCourses)} preview={hoveredInstance.items} />
 	</div>
 </main>
 

@@ -1,7 +1,7 @@
 import { hoursList, instanceColors } from './constants.utils';
 import { num2color } from './css.utils';
 
-export function time2Index(timestring: string, lunch = true): number | undefined {
+export function time2Index(timestring: string): number | undefined {
 	const [chour, cmin] = timestring.split(':').map(Number);
 	let index = hoursList.findIndex(({ hour, min }) => hour === chour && min === cmin);
 	return index === -1 ? undefined : index;
@@ -9,7 +9,6 @@ export function time2Index(timestring: string, lunch = true): number | undefined
 
 export function itemizeCourse(
 	{ name, instances, course_id }: FullCourse,
-	lunch: boolean,
 	is_preview = false
 ): Item[] {
 	const first_day = 1488;
@@ -22,8 +21,8 @@ export function itemizeCourse(
 					throw new Error('day is not recognized');
 				}
 
-				const start = time2Index(start_time, lunch);
-				const end = time2Index(end_time, lunch);
+				const start = time2Index(start_time);
+				const end = time2Index(end_time);
 
 				if (start === undefined || end === undefined) {
 					throw new Error('start or end time were not found in hourList');
@@ -42,8 +41,8 @@ export function itemizeCourse(
 		);
 }
 
-export function itemizeCourseList(courses: FullCourse[], lunch: boolean): Item[] {
-	const items = courses.flatMap((c) => itemizeCourse(c, lunch));
+export function itemizeCourseList(courses: FullCourse[]): Item[] {
+	const items = courses.flatMap((c) => itemizeCourse(c));
 	items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
 	for (let i = 0; i < items.length - 1; i++) {
 		const curr = items[i];

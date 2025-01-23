@@ -112,7 +112,6 @@
 							...course,
 							instances: [{ ...instance, selected: true }],
 						},
-						!!$settings.show_lunch,
 						true
 					);
 				}}

@@ -3,14 +3,12 @@ import autoTable, { type RowInput } from 'jspdf-autotable';
 import { hoursList } from './utils/constants.utils';
 import { getDay, getHour } from './utils/formatter.utils';
 
-export function exportTable(items: Item[]) {
+export function exportTable(items: Item[], show_lunch = true) {
 	const doc = new jsPDF();
 
 	doc.addFont('/fonts/Rubik-VariableFont_wght.ttf', 'Rubik', 'normal');
-	doc.setFont('Rubik'); // set font
-	// doc.setR2L(true);
+	doc.setFont('Rubik');
 
-	// Or use javascript directly:
 	const head: RowInput[] = [
 		[...Array(6)]
 			.map((_, i) => getDay(i))
@@ -20,7 +18,8 @@ export function exportTable(items: Item[]) {
 
 	const body: RowInput[] = hoursList.map((hour) => {
 		const row = [{ content: getHour(hour.hour, hour.min) }];
-		const hourIndex = hoursList.findIndex((h) => h.hour === hour.hour && h.min === hour.min) + 1;
+		const hourIndex = hoursList.findIndex((h) => h.hour === hour.hour && h.min === hour.min);
+
 		const itemsInRow = items.filter(
 			(item) => item.start < hourIndex && hourIndex < item.end
 		).length;
