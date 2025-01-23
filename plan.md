@@ -24,7 +24,6 @@
 ### scraper or data gathering stuff
 
 - add if lab mandatory
-- show not only required exercise also lab
 
 # Considering
 

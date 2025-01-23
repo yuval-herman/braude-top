@@ -25,17 +25,20 @@
 	// warn when the course registration is incomplete
 	const warn = $derived(registrationIncomplete(mode, course));
 
-	function registrationIncomplete(mode: 'all' | 'my', course: FullCourse): boolean {
+	function registrationIncomplete(mode: 'all' | 'my', course: FullCourse): false | string {
 		if (mode === 'all') return false;
-		return !course.instances.every(
-			(i) =>
-				!i.co_requirements ||
-				(JSON.parse(i.co_requirements) as number[]).some((req) =>
-					selectedCourses.find((c) =>
-						c.instances.find((i) => i.selected && i.course_instance_id === req)
-					)
-				)
-		);
+		const selected = course.instances.filter((c) => c.selected);
+		inst_loop: for (const instance of selected) {
+			if (!instance.co_requirements) continue;
+			const co_requirements: number[] = JSON.parse(instance.co_requirements);
+			for (const req_id of co_requirements) {
+				if (selected.some((s) => s.course_instance_id === req_id)) continue inst_loop;
+			}
+			return (
+				course.instances.find((i) => i.course_instance_id === co_requirements[0])?.type || 'תרגיל'
+			);
+		}
+		return false;
 	}
 
 	function courseInSelected(course: Course) {
@@ -189,7 +192,7 @@
 	{#if warn}
 		<div class="info" transition:fade>
 			<h4 class="warn">הרישום לקורס אינו שלם!</h4>
-			<span>כדי להשלים את הרישום לקורס עליך להירשם גם לאחד מקורסי התרגול</span>
+			<span>כדי להשלים את הרישום לקורס עליך להירשם גם לאחד מקורסי ה{warn}</span>
 		</div>
 	{/if}
 </div>
