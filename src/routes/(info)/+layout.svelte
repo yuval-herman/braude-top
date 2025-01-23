@@ -13,4 +13,9 @@
 		background: var(--bg);
 		flex-grow: 1;
 	}
+	@media (max-width: 400px) {
+		.container {
+			margin: 0;
+		}
+	}
 </style>
