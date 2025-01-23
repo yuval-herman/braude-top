@@ -85,16 +85,18 @@
 	</div>
 	<div class="list-info">
 		<ul>
-			<li>
-				<div class="stars">
-					דירוג משתמשים (0-5): {overall_rating.toFixed(2)}
-					{#each { length: 5 }, i}
-						{@const diff = i + 1 - overall_rating}
-						<i class="icon-star{0 < diff && diff <= 0.5 ? '-half-alt' : diff <= 0 ? '' : '-empty'}"
-						></i>
-					{/each}
-				</div>
-			</li>
+			{#if !isNaN(overall_rating)}דירוג משתמשים (0-5): {overall_rating.toFixed(2)}
+				<li>
+					<div class="stars">
+						{#each { length: 5 }, i}
+							{@const diff = i + 1 - overall_rating}
+							<i
+								class="icon-star{0 < diff && diff <= 0.5 ? '-half-alt' : diff <= 0 ? '' : '-empty'}"
+							></i>
+						{/each}
+					</div>
+				</li>
+			{/if}
 			<li>
 				<span>לקורס שיעורים מסוג {joinSet(properties.types)} </span>
 			</li>
