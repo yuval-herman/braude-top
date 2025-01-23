@@ -26,6 +26,10 @@
 		return { languages, types, fullInstances, notes };
 	});
 
+	const overall_rating = $derived(
+		comments.reduce((p, c) => p + (c.rating ?? 0), 0) / comments.length
+	);
+
 	function joinSet(set: Set<string>) {
 		return listFormatter.format(set) + (set.size === 1 ? ' בלבד' : '');
 	}
@@ -81,6 +85,16 @@
 	</div>
 	<div class="list-info">
 		<ul>
+			<li>
+				<div class="stars">
+					דירוג משתמשים (0-5): {overall_rating.toFixed(2)}
+					{#each { length: 5 }, i}
+						{@const diff = i + 1 - overall_rating}
+						<i class="icon-star{0 < diff && diff <= 0.5 ? '-half-alt' : diff <= 0 ? '' : '-empty'}"
+						></i>
+					{/each}
+				</div>
+			</li>
 			<li>
 				<span>לקורס שיעורים מסוג {joinSet(properties.types)} </span>
 			</li>
@@ -164,6 +178,9 @@
 </main>
 
 <style>
+	.icon-star-half-alt::before {
+		scale: -1 1;
+	}
 	button {
 		border: none;
 		background: var(--light);

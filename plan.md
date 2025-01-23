@@ -1,7 +1,5 @@
 # WIP
 
-- show rating on the course
-
 # Planned
 
 ### db stuff
