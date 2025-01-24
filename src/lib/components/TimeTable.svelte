@@ -54,7 +54,7 @@
 		return daysArr;
 
 		function getBuilding(prevItem: Item) {
-			return buildings.find((b) => prevItem.value.room.includes(b));
+			return buildings.find((b) => 'room' in prevItem.value && prevItem.value.room.includes(b));
 		}
 	}
 </script>
@@ -85,8 +85,8 @@
 		<Indicator color={item.indicatorColor} />
 		<span>{item.type}</span>
 		<span>{item.value.name}</span>
-		<span>{item.value.instructor}</span>
-		<span>{item.value.room}</span>
+		{#if 'instructor' in item.value}<span>{item.value.instructor}</span>{/if}
+		{#if 'room' in item.value}<span>{item.value.room}</span>{/if}
 	</div>
 	{#if (item.walk || item.freeTime) && !item.overlapping}
 		<div
