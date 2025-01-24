@@ -1,6 +1,14 @@
 # WIP
 
+- profile slowdowns and memory spikes
+
 # Planned
+
+### testing
+
+- add e2e tests for the rest of the pages
+- unify desktop and mobile tests?
+- remake unit tests
 
 ### db stuff
 
@@ -14,7 +22,6 @@
   - filters for "my" list and "all" list
 - add custom events to timetable
 - suggest to add empty sessions to timetable
-- profile slowdowns and memory spikes
 - fix table export
 - people qa
 

@@ -144,34 +144,34 @@
 				</div>
 			</div>
 		{/each}
-		{#if mode === 'my' && course.instances.some((i) => i.exams.length > 0)}
-			{@const selectedInstances = course.instances.filter((i) => i.selected)}
-			{#if selectedInstances.length && selectedInstances.some((i) => i.exams.length)}
-				<div class="exams">
-					{#each selectedInstances as { exams, course_instance_id } (course_instance_id)}
-						{#each exams as exam (exam.date)}
-							<p transition:slide|global>
-								{#if exam.exam_type === 'ללא בחינה - עבודה, פרוייקט,דוח'}
-									<span>{exam.exam_type} להגשה</span>
-								{:else}
-									<span
-										>מועד {exam.exam_round === 1
-											? 'ראשון'
-											: exam.exam_round === 2
-												? 'שני'
-												: exam.exam_round},</span
-									>
-									{#if !exam.exam_type}
-										<span>בחינה,</span>
-									{:else if ['בחינה רגילה', 'בחינה במעבדה', 'בחינה מפוצלת', 'מבחן בית'].includes(exam.exam_type)}
-										<span>{exam.exam_type},</span>
-									{:else if exam.exam_type === 'ללא השגחה'}
-										<span>בחינה ללא השגחה</span>
-									{/if}
+		{#if mode === 'my'}
+			{@const exams = course.instances
+				.filter((i) => i.selected && i.exams.length)
+				.flatMap((i) => i.exams)}
+			{#if exams.length}
+				<div class="exams" transition:slide>
+					{#each exams as exam}
+						<p transition:slide>
+							{#if exam.exam_type === 'ללא בחינה - עבודה, פרוייקט,דוח'}
+								<span>{exam.exam_type} להגשה</span>
+							{:else}
+								<span
+									>מועד {exam.exam_round === 1
+										? 'ראשון'
+										: exam.exam_round === 2
+											? 'שני'
+											: exam.exam_round},</span
+								>
+								{#if !exam.exam_type}
+									<span>בחינה,</span>
+								{:else if ['בחינה רגילה', 'בחינה במעבדה', 'בחינה מפוצלת', 'מבחן בית'].includes(exam.exam_type)}
+									<span>{exam.exam_type},</span>
+								{:else if exam.exam_type === 'ללא השגחה'}
+									<span>בחינה ללא השגחה</span>
 								{/if}
-								<span>בתאריך {exam.date}</span>
-							</p>
-						{/each}
+							{/if}
+							<span>בתאריך {exam.date}</span>
+						</p>
 					{/each}
 				</div>
 			{/if}
