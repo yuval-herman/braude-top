@@ -1,6 +1,10 @@
 # WIP
 
+- allow removing items directly from timetable
+- allow adding empty rooms to timetable
+
 - add custom events to timetable
+- suggest to add empty rooms to timetable
 
 # Planned
 
@@ -20,7 +24,6 @@
 - course searching filters
   - add filters to show only courses meant for e.g. תוכנה, חשמל...
   - filters for "my" list and "all" list
-- suggest to add empty sessions to timetable
 - fix table export
 - people qa
 
