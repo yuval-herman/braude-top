@@ -1,6 +1,6 @@
 # WIP
 
-- profile slowdowns and memory spikes
+- add custom events to timetable
 
 # Planned
 
@@ -20,7 +20,6 @@
 - course searching filters
   - add filters to show only courses meant for e.g. תוכנה, חשמל...
   - filters for "my" list and "all" list
-- add custom events to timetable
 - suggest to add empty sessions to timetable
 - fix table export
 - people qa
