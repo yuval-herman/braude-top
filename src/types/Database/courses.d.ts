@@ -72,6 +72,7 @@ interface CourseInstance {
 	instructor: string;
 	co_requirements: string | null;
 	selected?: boolean;
+	hover?: boolean;
 }
 
 interface Course {

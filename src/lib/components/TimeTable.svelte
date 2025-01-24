@@ -13,7 +13,11 @@
 		const processed: Item[] = [];
 		const ignore: number[] = [];
 		for (const i of items) {
-			const index = previewItems.findIndex((p) => p && sameObject(p, { ...i, is_preview: true }));
+			const index = previewItems.findIndex(
+				(p) =>
+					p &&
+					sameObject(p, i, ['day', 'start', 'end', 'type', 'value', 'bgColor', 'indicatorColor'])
+			);
 			if (index !== -1) {
 				ignore.push(index);
 				processed.push({ ...i, highlight: true });
@@ -81,6 +85,8 @@
 		style:top="calc({start} * (100% + 1px))"
 		style:height="calc({end - start} * (100% + 1px) {offset})"
 		style:z-index={index}
+		onmouseenter={item.onhover}
+		onmouseleave={item.onstopHover}
 	>
 		<Indicator color={item.indicatorColor} />
 		<span>{item.type}</span>

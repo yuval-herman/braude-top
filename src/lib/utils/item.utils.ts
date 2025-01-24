@@ -1,3 +1,4 @@
+import { selectedCourses } from '$lib/state.svelte';
 import { hoursList, instanceColors } from './constants.utils';
 import { num2color } from './css.utils';
 
@@ -7,14 +8,32 @@ export function time2Index(timestring: string): number | undefined {
 	return index === -1 ? undefined : index;
 }
 
+function makeItemHandlers(
+	course_id: number,
+	year: number,
+	instance_id: number
+): { onclick?: () => void; onhover?: () => void; onstopHover?: () => void } {
+	for (const course of selectedCourses) {
+		if (course.course_id === course_id && course.year === year) {
+			const instance = course.instances.find((i) => i.course_instance_id === instance_id);
+			if (!instance) return {};
+			return {
+				onhover: () => (instance.hover = true),
+				onstopHover: () => (instance.hover = false),
+			};
+		}
+	}
+	return {};
+}
+
 export function itemizeCourse(
-	{ name, instances, course_id }: FullCourse,
+	{ name, instances, course_id, year }: FullCourse,
 	is_preview = false
 ): Item[] {
 	const first_day = 1488;
 	return instances
 		.filter((i) => i.selected)
-		.flatMap(({ sessions, instructor, type }) =>
+		.flatMap(({ sessions, instructor, type, course_instance_id }) =>
 			sessions.map(({ week_day, start_time, end_time, room }): Item => {
 				const day = week_day.charCodeAt(0) - first_day;
 				if (day < 0 || day > 5) {
@@ -27,7 +46,10 @@ export function itemizeCourse(
 				if (start === undefined || end === undefined) {
 					throw new Error('start or end time were not found in hourList');
 				}
+				const { onhover, onstopHover } = makeItemHandlers(course_id, year, course_instance_id);
 				return {
+					onhover,
+					onstopHover,
 					day,
 					end,
 					start,

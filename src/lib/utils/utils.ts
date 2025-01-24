@@ -13,9 +13,17 @@ export function randomNumber(min: number, max: number) {
 	return Math.random() * (max - min) + min;
 }
 
-export function sameObject(obj1: Record<string, any>, obj2: Record<string, any>) {
-	const obj1Keys = Object.keys(obj1);
-	const obj2Keys = Object.keys(obj2);
+export function sameObject(
+	obj1: Record<string, any>,
+	obj2: Record<string, any>,
+	fields?: string[]
+) {
+	const obj1Keys = fields
+		? Object.keys(obj1).filter((key) => fields.includes(key))
+		: Object.keys(obj1);
+	const obj2Keys = fields
+		? Object.keys(obj2).filter((key) => fields.includes(key))
+		: Object.keys(obj2);
 
 	if (obj1Keys.length !== obj2Keys.length) return false;
 	return obj1Keys.every((key): boolean => {

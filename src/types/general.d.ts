@@ -29,6 +29,9 @@ interface Item {
 		time: number;
 	}; // Time the student has to walk
 	freeTime?: number;
+	onclick?: () => void;
+	onhover?: () => void;
+	onstopHover?: () => void;
 }
 
 interface Settings {

@@ -91,6 +91,7 @@
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class="instance"
+				class:highlight={instance.hover}
 				style="z-index: {course.instances.length - i};"
 				style:--instance-background={c.background}
 				style:--instance-background-hover={c.hover}
@@ -239,6 +240,9 @@
 	.remove-button {
 		background: var(--primary);
 		color: var(--text-light);
+	}
+	.highlight {
+		box-shadow: 0 0 15px yellow !important;
 	}
 	.instances {
 		display: grid;
