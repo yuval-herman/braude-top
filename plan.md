@@ -1,6 +1,5 @@
 # WIP
 
-- allow removing items directly from timetable
 - allow adding empty rooms to timetable
 
 - add custom events to timetable

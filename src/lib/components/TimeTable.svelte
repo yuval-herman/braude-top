@@ -27,7 +27,7 @@
 		}
 
 		return processed.concat(
-			previewItems.filter((_, i) => !ignore.includes(i)).map((i) => ({ ...i }))
+			previewItems.filter((_, i) => !ignore.includes(i)).map((item) => ({ ...item }))
 		);
 	});
 	const itemsByDay = $derived(splitToDays(processed));
@@ -68,7 +68,10 @@
 	{@const offset = item.walk && item.freeTime === 0 ? '- 2em' : ''}
 	{@const start = item.start + Number($settings.show_lunch && item.start > 4)}
 	{@const end = item.end + Number($settings.show_lunch && item.end > 4)}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_interactive_supports_focus -->
 	<div
+		role="gridcell"
 		class="item"
 		class:highlight={item.highlight}
 		class:preview={item.is_preview}
@@ -85,8 +88,10 @@
 		style:top="calc({start} * (100% + 1px))"
 		style:height="calc({end - start} * (100% + 1px) {offset})"
 		style:z-index={index}
+		style:cursor={item.onclick && 'pointer'}
 		onmouseenter={item.onhover}
 		onmouseleave={item.onstopHover}
+		onclick={item.onclick}
 	>
 		<Indicator color={item.indicatorColor} />
 		<span>{item.type}</span>

@@ -158,7 +158,10 @@
 		{/if}
 	</div>
 	<div class="table-container" class:hidden={page.state.sidebarOpen}>
-		<TimeTable items={itemizeCourseList(selectedCourses)} preview={hoveredInstance.items} />
+		<TimeTable
+			items={itemizeCourseList(selectedCourses, data.semester)}
+			preview={hoveredInstance.items}
+		/>
 	</div>
 </main>
 

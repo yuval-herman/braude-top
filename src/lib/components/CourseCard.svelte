@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { settings } from '$lib/settings.svelte';
 	import {
 		addSelectedCourse,
 		hoveredInstance,
@@ -113,6 +112,7 @@
 							...course,
 							instances: [{ ...instance, selected: true }],
 						},
+						page.data.semester,
 						true
 					);
 				}}
