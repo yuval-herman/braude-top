@@ -132,7 +132,7 @@ test.describe('main page', () => {
 			await expect(
 				page.getByText('שו"ת מיומנויות יסוד הנדסיות ד"ר פישר שחור דנה 303 M')
 			).toBeVisible();
-			await expect(page.getByText("1 1 ש'")).toBeVisible();
+			await expect(page.getByText("1 2 ש'")).toBeVisible();
 		});
 	});
 
@@ -165,7 +165,7 @@ test.describe('main page', () => {
 			await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 706 L')).toBeVisible();
 			await expect(page.getByText('הרצאה חדו"א 1 ד"ר שוורצמן לודמילה 709 L')).toBeVisible();
 			await expect(
-				page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 202 EM', { exact: true })
+				page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 202 EM', { exact: true }).nth(1)
 			).toBeVisible();
 		});
 	});
