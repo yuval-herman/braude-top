@@ -5,10 +5,14 @@
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import { showHelp } from '$lib/help.js';
-	import { settings } from '$lib/settings.svelte.js';
-	import { hoveredInstance, redoStack, selectedCourses, undoStack } from '$lib/state.svelte.js';
+	import {
+		hoveredInstance,
+		redoStack,
+		selectedCourses,
+		selectedEmptyRooms,
+		undoStack,
+	} from '$lib/state.svelte.js';
 	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
-	import { exportTable } from '$lib/tableExport.js';
 	import { itemizeCourseList } from '$lib/utils/item.utils.js';
 	import { debounce } from '$lib/utils/utils.js';
 	import { onMount } from 'svelte';
@@ -159,7 +163,7 @@
 	</div>
 	<div class="table-container" class:hidden={page.state.sidebarOpen}>
 		<TimeTable
-			items={itemizeCourseList(selectedCourses, data.semester)}
+			items={itemizeCourseList(selectedCourses, data.semester).concat(selectedEmptyRooms)}
 			preview={hoveredInstance.items}
 		/>
 	</div>

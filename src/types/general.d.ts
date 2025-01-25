@@ -13,12 +13,12 @@ interface EmptyRoomItemValue extends BaseItemValue<'empty-room'> {
 
 type ItemValueTypes = SessionItemValue | CustomItemValue | EmptyRoomItemValue;
 
-interface Item {
+interface Item<TValue extends BaseItemValue = ItemValueTypes> {
 	day: number; // Day of the week 1-6
 	start: number; // Start hour as an integer (1=8:30, 2=9:30, etc...)
 	end: number; // End hour as an integer
 	type: string; // Session type
-	value: ItemValueTypes; // Value to show in cell
+	value: TValue; // Value to show in cell
 	bgColor: string;
 	indicatorColor: string;
 	is_preview?: boolean;

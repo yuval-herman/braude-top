@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import { selectedEmptyRooms } from '$lib/state.svelte.js';
 	import { getDay } from '$lib/utils/formatter.utils.js';
+	import { itemizeEmptyRoom } from '$lib/utils/item.utils.js';
+	import { sameObject } from '$lib/utils/utils.js';
 
 	const { data } = $props();
 
@@ -75,6 +78,7 @@
 							}
 						}}
 						class="icon-sort{sortKey === key ? (sortOrder ? '-down' : '-up') : ''}"
+						colspan={label === 'חדר' ? 2 : 1}
 					>
 						{label}
 					</th>
@@ -83,8 +87,20 @@
 		</thead>
 		<tbody>
 			{#each rooms as room}
+				{@const itemizedRoom = itemizeEmptyRoom(room)}
+				{@const roomIndex = selectedEmptyRooms.findIndex((r) => sameObject(r, itemizedRoom))}
 				<tr>
 					<td>{room.room}</td>
+					<td
+						class="add-button icon-{roomIndex === -1 ? 'plus' : 'minus'}-circled"
+						onclick={() => {
+							if (roomIndex === -1) {
+								selectedEmptyRooms.push(itemizeEmptyRoom(room));
+							} else {
+								selectedEmptyRooms.splice(roomIndex, 1);
+							}
+						}}
+					></td>
 					<td>{room.start_time}</td>
 					<td>{room.end_time}</td>
 				</tr>
@@ -117,29 +133,32 @@
 		width: 100%;
 		border-collapse: collapse;
 		margin-top: 1rem;
-	}
 
-	th,
-	td {
-		padding: 0.75rem;
-		text-align: center;
-		border: 1px solid var(--border);
-	}
+		.add-button {
+			cursor: pointer;
+		}
 
-	th {
-		cursor: pointer;
-		background: var(--neutral);
-		color: var(--text-header);
-		font-weight: bold;
-		position: sticky;
-		top: 0;
-	}
+		th,
+		td {
+			padding: 0.75rem;
+			text-align: center;
+			border: 1px solid var(--border);
+		}
 
-	td {
-		background: var(bg);
-	}
+		th {
+			cursor: pointer;
+			background: var(--neutral);
+			color: var(--text-header);
+			font-weight: bold;
+			position: sticky;
+			top: 0;
+		}
 
-	tr:nth-child(odd) td {
-		background: hsl(from var(--bg) h calc(s + 10) calc(l + 5));
+		tr {
+			background: var(bg);
+			&:nth-child(odd) {
+				background: hsl(from var(--bg) h calc(s + 10) calc(l + 5));
+			}
+		}
 	}
 </style>

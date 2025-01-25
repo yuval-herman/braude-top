@@ -7,6 +7,7 @@ export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto
 export const undoStack: FullCourse[][] = [];
 export const redoStack: FullCourse[][] = [];
 export const selectedCourses = $state<FullCourse[]>([]);
+export const selectedEmptyRooms = $state<Item<EmptyRoomItemValue>[]>([]);
 
 export function toggleInstance(instance_id: number, year: number, semester: string) {
 	undoStack.push($state.snapshot(selectedCourses));
