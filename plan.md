@@ -1,9 +1,10 @@
 # WIP
 
-- allow adding empty rooms to timetable
+- select proper color for empty rooms
+- save added empty rooms in db and local storage
+- suggest to add empty rooms to timetable
 
 - add custom events to timetable
-- suggest to add empty rooms to timetable
 
 # Planned
 
