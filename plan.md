@@ -11,6 +11,7 @@
 
 - add e2e tests for the rest of the pages
 - unify desktop and mobile tests?
+- add tests for Item interactivity (click, hover)
 - remake unit tests
 
 ### db stuff
@@ -18,6 +19,8 @@
 - add course avg score
 
 ### ui stuff
+
+- when hovering in timetable scroll to item location in paginated list (toggle in settings)
 
 - add site info panel (visits, last course update etc...)
 - course searching filters
