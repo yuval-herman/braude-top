@@ -1,4 +1,4 @@
-import { selectedCourses, toggleInstance } from '$lib/state.svelte';
+import { selectedCourses, toggleInstance, toggleRoom } from '$lib/state.svelte';
 import { hoursList, instanceColors } from './constants.utils';
 import { num2color } from './css.utils';
 
@@ -17,15 +17,10 @@ export function day2Index(day: string) {
 	return index;
 }
 
-export function itemizeEmptyRoom({
-	week_day,
-	start_time,
-	end_time,
-	room,
-}: EmptyRoom): Item<EmptyRoomItemValue> {
-	const day = day2Index(week_day);
-	const start = time2Index(start_time);
-	const end = time2Index(end_time);
+export function itemizeEmptyRoom(room: EmptyRoom): Item<EmptyRoomItemValue> {
+	const day = day2Index(room.week_day);
+	const start = time2Index(room.start_time);
+	const end = time2Index(room.end_time);
 
 	if (start === undefined || end === undefined) {
 		throw new Error('start or end time were not found in hourList');
@@ -37,7 +32,8 @@ export function itemizeEmptyRoom({
 		end,
 		bgColor: 'white',
 		indicatorColor: 'white',
-		value: { type: 'empty-room', name: 'חדר ריק', room },
+		onclick: () => toggleRoom(room, room.year, room.semester),
+		value: { type: 'empty-room', name: 'חדר ריק', room: room.room },
 	};
 }
 

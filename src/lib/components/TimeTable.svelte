@@ -87,7 +87,7 @@
 		})}
 		style:top="calc({start} * (100% + 1px))"
 		style:height="calc({end - start} * (100% + 1px) {offset})"
-		style:z-index={item.value.type === 'empty-room' ? 0 : index}
+		style:z-index={item.value.type === 'empty-room' ? 1 : index}
 		style:cursor={item.onclick && 'pointer'}
 		onmouseenter={item.onhover}
 		onmouseleave={item.onstopHover}
@@ -173,6 +173,8 @@
 		border-radius: 12px;
 
 		--item-margin: 3%;
+
+		z-index: 0;
 	}
 
 	th,
