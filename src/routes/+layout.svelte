@@ -104,6 +104,8 @@
 					const url = new URL(page.url);
 					url.searchParams.set('year', year);
 					url.searchParams.set('semester', semester);
+					Cookies.set('year', year);
+					Cookies.set('semester', semester);
 					goto(url, { replaceState: false, state: page.state });
 				}}
 			>

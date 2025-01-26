@@ -1,6 +1,6 @@
 import { getSemestersAvailable, getYearsAvailable } from '$lib/server/coursesDB';
 import { getUserSavedTimetableData, getUserSettings } from '$lib/server/usersDB.js';
-import { getYearSemester } from '$lib/utils/utils.js';
+import { resolveYearSemester } from '$lib/utils/utils.js';
 
 export const load = async ({ cookies, locals, url }) => {
 	let settings, savedTimetableData;
@@ -9,7 +9,11 @@ export const load = async ({ cookies, locals, url }) => {
 		semesters: getSemestersAvailable(y),
 	}));
 
-	const { year, semester } = getYearSemester(url, availableTimeSpans);
+	const { year, semester } = resolveYearSemester(
+		url,
+		{ year: cookies.get('year'), semester: cookies.get('semester') },
+		availableTimeSpans
+	);
 
 	let themeCookie = cookies.get('theme') ?? 'auto';
 

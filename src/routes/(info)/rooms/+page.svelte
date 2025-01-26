@@ -3,8 +3,6 @@
 	import { page } from '$app/state';
 	import { selectedEmptyRooms, toggleRoom } from '$lib/state.svelte.js';
 	import { getDay } from '$lib/utils/formatter.utils.js';
-	import { itemizeEmptyRoom } from '$lib/utils/item.utils.js';
-	import { sameObject } from '$lib/utils/utils.js';
 
 	const { data } = $props();
 

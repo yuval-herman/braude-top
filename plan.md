@@ -1,8 +1,5 @@
 # WIP
 
-- selected year and semester should be handled better:
-  - clicking 'ראשי' just resets to latest semester
-  - going back in history might reset it as well
 - suggest to add empty rooms to timetable
 
 # Planned

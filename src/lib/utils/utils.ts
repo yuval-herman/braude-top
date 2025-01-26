@@ -44,15 +44,20 @@ export function hashNumber(num: number) {
 	return ((t = t ^ (t >>> 15)) >>> 0) / 4294967296;
 }
 
-export function getYearSemester(
+/**
+ * Resolved the selected year and semester from url search params or cookies.
+ * Url search params has precedence over cookies.
+ */
+export function resolveYearSemester(
 	url: URL,
+	currentCookies: { year?: string; semester?: string },
 	available: {
 		year: number;
 		semesters: string[];
 	}[]
 ) {
-	let year: number = Number(url.searchParams.get('year'));
-	let semester: string | undefined = url.searchParams.get('semester') ?? undefined;
+	let year: number = Number(url.searchParams.get('year') ?? currentCookies.year);
+	let semester: string | undefined = url.searchParams.get('semester') ?? currentCookies.semester;
 
 	if (!year || !semester) {
 		year ||= available[0].year;
