@@ -8,9 +8,11 @@
 		toggleInstance,
 	} from '$lib/state.svelte';
 	import { instanceColors } from '$lib/utils/constants.utils';
-	import { getContrast, lighten, num2color } from '$lib/utils/css.utils';
+	import { getContrast, num2color } from '$lib/utils/css.utils';
 	import { listFormatter } from '$lib/utils/formatter.utils';
 	import { itemizeCourse } from '$lib/utils/item.utils';
+	import parseColor from 'color-parse';
+	import space from 'color-space';
 	import { fade, slide } from 'svelte/transition';
 	import Indicator from './Indicator.svelte';
 
@@ -53,7 +55,8 @@
 	function getColor(instance: CourseInstance) {
 		let background = num2color(course.course_id);
 		if (instanceInSelected(instance)) {
-			background = lighten(background, -15);
+			const [hue, sat, light] = space.rgb.hsl(parseColor(background).values);
+			background = `hsl(${hue}, ${sat - 15}%, ${light - 5}%)`;
 		}
 		const indicator =
 			instanceColors.get(instance.type) ?? (instanceColors.get('default') as string);
