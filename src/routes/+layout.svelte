@@ -110,7 +110,10 @@
 				{#each data.availableTimeSpans as { year, semesters }}
 					<optgroup label={year.toString()}>
 						{#each semesters as semester}
-							<option value={JSON.stringify({ year, semester })}>{semester}</option>
+							<option
+								value={JSON.stringify({ year, semester })}
+								selected={year === data.year && semester === data.semester}>{semester}</option
+							>
 						{/each}
 					</optgroup>
 				{/each}
