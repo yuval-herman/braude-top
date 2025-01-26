@@ -2,15 +2,15 @@
 	import '$lib/global.css';
 	import 'driver.js/dist/driver.css';
 
-	import { goto, onNavigate } from '$app/navigation';
+	import { afterNavigate, goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { showHelp } from '$lib/help.js';
-	import { selectedCourses, theme } from '$lib/state.svelte';
+	import { selectedCourses, selectedEmptyRooms, theme } from '$lib/state.svelte';
 	import { enhance } from '$app/forms';
 	import Cookies from 'js-cookie';
 	import { onMount, untrack } from 'svelte';
 	import { settings } from '$lib/settings.svelte.js';
-	import { setCurrentSelected } from '$lib/storage.js';
+	import { getCurrentCourses, getCurrentEmptyRooms, setCurrentCourses } from '$lib/storage.js';
 
 	let { children, data } = $props();
 
@@ -29,7 +29,15 @@
 			selectedCourses.length = 0;
 			selectedCourses.push(...data.savedTimetable!);
 		});
-		setCurrentSelected(data.savedTimetable, data.year, data.semester);
+		setCurrentCourses(data.savedTimetable, data.year, data.semester);
+	});
+
+	afterNavigate(() => {
+		selectedCourses.length = 0;
+		selectedCourses.push(...getCurrentCourses(data.year, data.semester));
+
+		selectedEmptyRooms.length = 0;
+		selectedEmptyRooms.push(...getCurrentEmptyRooms(data.year, data.semester));
 	});
 
 	onNavigate(({ to, type }) => {

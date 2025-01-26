@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { selectedEmptyRooms } from '$lib/state.svelte.js';
+	import { selectedEmptyRooms, toggleRoom } from '$lib/state.svelte.js';
 	import { getDay } from '$lib/utils/formatter.utils.js';
 	import { itemizeEmptyRoom } from '$lib/utils/item.utils.js';
 	import { sameObject } from '$lib/utils/utils.js';
@@ -87,18 +87,19 @@
 		</thead>
 		<tbody>
 			{#each rooms as room}
-				{@const itemizedRoom = itemizeEmptyRoom(room)}
-				{@const roomIndex = selectedEmptyRooms.findIndex((r) => sameObject(r, itemizedRoom))}
+				{@const roomIndex = selectedEmptyRooms.findIndex(
+					(r) =>
+						r.week_day === room.week_day &&
+						r.start_time === room.start_time &&
+						r.end_time === room.end_time &&
+						r.room === room.room
+				)}
 				<tr>
 					<td>{room.room}</td>
 					<td
 						class="add-button icon-{roomIndex === -1 ? 'plus' : 'minus'}-circled"
 						onclick={() => {
-							if (roomIndex === -1) {
-								selectedEmptyRooms.push(itemizeEmptyRoom(room));
-							} else {
-								selectedEmptyRooms.splice(roomIndex, 1);
-							}
+							toggleRoom(room, data.year, data.semester);
 						}}
 					></td>
 					<td>{room.start_time}</td>

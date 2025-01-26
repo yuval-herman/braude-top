@@ -1,13 +1,30 @@
 import { browser } from '$app/environment';
 import { page } from '$app/state';
-import { setCurrentSelected } from './storage';
+import { setCurrentCourses, setCurrentEmptyRooms } from './storage';
 
 export const hoveredInstance = $state<{ items: Item[] }>({ items: [] });
 export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
 export const undoStack: FullCourse[][] = [];
 export const redoStack: FullCourse[][] = [];
 export const selectedCourses = $state<FullCourse[]>([]);
-export const selectedEmptyRooms = $state<Item<EmptyRoomItemValue>[]>([]);
+export const selectedEmptyRooms = $state<EmptyRoom[]>([]);
+
+export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
+	const roomIndex = selectedEmptyRooms.findIndex(
+		(r) =>
+			r.week_day === room.week_day &&
+			r.start_time === room.start_time &&
+			r.end_time === room.end_time &&
+			r.room === room.room
+	);
+	if (roomIndex === -1) {
+		selectedEmptyRooms.push(room);
+	} else {
+		selectedEmptyRooms.splice(roomIndex, 1);
+	}
+
+	setCurrentEmptyRooms(selectedEmptyRooms, year, semester);
+}
 
 export function toggleInstance(instance_id: number, year: number, semester: string) {
 	undoStack.push($state.snapshot(selectedCourses));
@@ -29,7 +46,7 @@ export function toggleInstance(instance_id: number, year: number, semester: stri
 				JSON.stringify({ year, semester, timetable: $state.snapshot(selectedCourses) })
 			);
 
-		setCurrentSelected(selectedCourses, year, semester);
+		setCurrentCourses(selectedCourses, year, semester);
 	}
 }
 
@@ -55,7 +72,7 @@ export function addSelectedCourse(course: FullCourse, year: number, semester: st
 				JSON.stringify({ year, semester, timetable: $state.snapshot(selectedCourses) })
 			);
 
-		setCurrentSelected(selectedCourses, year, semester);
+		setCurrentCourses(selectedCourses, year, semester);
 	}
 }
 
@@ -83,6 +100,6 @@ export function removeSelectedCourse(course: FullCourse, year: number, semester:
 				JSON.stringify({ year, semester, timetable: $state.snapshot(selectedCourses) })
 			);
 
-		setCurrentSelected(selectedCourses, year, semester);
+		setCurrentCourses(selectedCourses, year, semester);
 	}
 }

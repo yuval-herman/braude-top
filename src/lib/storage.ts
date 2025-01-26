@@ -4,6 +4,7 @@ import semverMinor from 'semver/functions/minor';
 
 interface StorageItems {
 	[key: `selected-${number}-${string}`]: FullCourse[];
+	[key: `rooms-${number}-${string}`]: EmptyRoom[];
 	version: string; // semver, can be compared with normal comparison operators
 	onboarded: boolean; // whether the user has been onboraded
 	settings: Settings;
@@ -33,13 +34,22 @@ export class TypedLocalStorage {
 	}
 }
 
-export function getCurrentSelected(year: number, semester: string): FullCourse[] {
+export function getCurrentCourses(year: number, semester: string): FullCourse[] {
 	if (!browser) return [];
 	return TypedLocalStorage.getItem(`selected-${year}-${semester}`) ?? [];
 }
-export function setCurrentSelected(courses: FullCourse[], year: number, semester: string) {
+export function setCurrentCourses(courses: FullCourse[], year: number, semester: string) {
 	if (!browser) return;
 	return TypedLocalStorage.setItem(`selected-${year}-${semester}`, courses);
+}
+
+export function getCurrentEmptyRooms(year: number, semester: string): EmptyRoom[] {
+	if (!browser) return [];
+	return TypedLocalStorage.getItem(`rooms-${year}-${semester}`) ?? [];
+}
+export function setCurrentEmptyRooms(rooms: EmptyRoom[], year: number, semester: string) {
+	if (!browser) return;
+	return TypedLocalStorage.setItem(`rooms-${year}-${semester}`, rooms);
 }
 
 if (browser) {

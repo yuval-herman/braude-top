@@ -87,7 +87,7 @@
 		})}
 		style:top="calc({start} * (100% + 1px))"
 		style:height="calc({end - start} * (100% + 1px) {offset})"
-		style:z-index={index}
+		style:z-index={item.value.type === 'empty-room' ? 0 : index}
 		style:cursor={item.onclick && 'pointer'}
 		onmouseenter={item.onhover}
 		onmouseleave={item.onstopHover}

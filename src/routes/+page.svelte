@@ -12,8 +12,8 @@
 		selectedEmptyRooms,
 		undoStack,
 	} from '$lib/state.svelte.js';
-	import { getCurrentSelected, setCurrentSelected, TypedLocalStorage } from '$lib/storage.js';
-	import { itemizeCourseList } from '$lib/utils/item.utils.js';
+	import { getCurrentCourses, setCurrentCourses, TypedLocalStorage } from '$lib/storage.js';
+	import { itemizeCourseList, itemizeEmptyRoom } from '$lib/utils/item.utils.js';
 	import { debounce } from '$lib/utils/utils.js';
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
@@ -30,11 +30,6 @@
 		}
 	});
 
-	afterNavigate(() => {
-		selectedCourses.length = 0;
-		selectedCourses.push(...getCurrentSelected(data.year, data.semester));
-	});
-
 	const onkeydown: KeyboardEventHandler<Window> = (e) => {
 		function undo() {
 			const courseList = undoStack.pop();
@@ -42,7 +37,7 @@
 			redoStack.push($state.snapshot(selectedCourses));
 			selectedCourses.length = 0;
 			selectedCourses.push(...courseList);
-			setCurrentSelected(selectedCourses, data.year, data.semester);
+			setCurrentCourses(selectedCourses, data.year, data.semester);
 		}
 
 		function redo() {
@@ -51,7 +46,7 @@
 			undoStack.push($state.snapshot(selectedCourses));
 			selectedCourses.length = 0;
 			selectedCourses.push(...courseList);
-			setCurrentSelected(selectedCourses, data.year, data.semester);
+			setCurrentCourses(selectedCourses, data.year, data.semester);
 		}
 
 		if (e.metaKey || e.ctrlKey) {
@@ -141,7 +136,7 @@
 								undoStack.push($state.snapshot(selectedCourses));
 								redoStack.length = 0;
 								selectedCourses.length = 0;
-								setCurrentSelected([], data.year, data.semester);
+								setCurrentCourses([], data.year, data.semester);
 							}
 						}}>מחק הכל</button
 					>
@@ -163,7 +158,9 @@
 	</div>
 	<div class="table-container" class:hidden={page.state.sidebarOpen}>
 		<TimeTable
-			items={itemizeCourseList(selectedCourses, data.semester).concat(selectedEmptyRooms)}
+			items={itemizeCourseList(selectedCourses, data.semester).concat(
+				selectedEmptyRooms.map(itemizeEmptyRoom)
+			)}
 			preview={hoveredInstance.items}
 		/>
 	</div>
