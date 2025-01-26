@@ -1,5 +1,8 @@
 # WIP
 
+- selected year and semester should be handled better:
+  - clicking 'ראשי' just resets to latest semester
+  - going back in history might reset it as well
 - suggest to add empty rooms to timetable
 
 # Planned
@@ -17,9 +20,6 @@
 
 ### ui stuff
 
-- selected year and semester should be handled better:
-  - clicking 'ראשי' just resets to latest semester
-  - going back in history might reset it as well
 - add custom events to timetable
 - custom items in timetable should behave like normal items (remake timetable logic?)
 - when hovering in timetable scroll to item location in paginated list (toggle in settings)
