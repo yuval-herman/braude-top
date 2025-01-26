@@ -5,6 +5,7 @@ interface BaseItemValue<TType extends string> {
 interface SessionItemValue extends BaseItemValue<'session'> {
 	instructor: string;
 	room: string;
+	session_type: string; // Session type
 }
 interface CustomItemValue extends BaseItemValue<'custom'> {}
 interface EmptyRoomItemValue extends BaseItemValue<'empty-room'> {
@@ -17,10 +18,9 @@ interface Item<TValue extends BaseItemValue = ItemValueTypes> {
 	day: number; // Day of the week 1-6
 	start: number; // Start hour as an integer (1=8:30, 2=9:30, etc...)
 	end: number; // End hour as an integer
-	type: string; // Session type
 	value: TValue; // Value to show in cell
 	bgColor: string;
-	indicatorColor: string;
+	indicatorColor?: string;
 	is_preview?: boolean;
 	highlight?: boolean;
 	overlapping?: { overlapIndex: number };

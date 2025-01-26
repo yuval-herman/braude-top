@@ -37,7 +37,6 @@ export function itemizeEmptyRoom({
 		end,
 		bgColor: 'white',
 		indicatorColor: 'white',
-		type: 'זמן לימוד',
 		value: { type: 'empty-room', name: 'חדר ריק', room },
 	};
 }
@@ -97,9 +96,8 @@ export function itemizeCourse(
 					day,
 					end,
 					start,
-					type,
 					is_preview,
-					value: { type: 'session', name, room, instructor },
+					value: { type: 'session', session_type: type, name, room, instructor },
 					indicatorColor: instanceColors.get(type) ?? (instanceColors.get('default') as string),
 					bgColor: num2color(course_id),
 				};

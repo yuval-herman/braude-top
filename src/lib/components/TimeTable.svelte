@@ -93,8 +93,8 @@
 		onmouseleave={item.onstopHover}
 		onclick={item.onclick}
 	>
-		<Indicator color={item.indicatorColor} />
-		<span>{item.type}</span>
+		{#if item.indicatorColor}<Indicator color={item.indicatorColor} />{/if}
+		{#if 'session_type' in item.value}<span>{item.value.session_type}</span>{/if}
 		<span>{item.value.name}</span>
 		{#if 'instructor' in item.value}<span>{item.value.instructor}</span>{/if}
 		{#if 'room' in item.value}<span>{item.value.room}</span>{/if}
