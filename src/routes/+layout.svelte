@@ -2,15 +2,20 @@
 	import '$lib/global.css';
 	import 'driver.js/dist/driver.css';
 
+	import { enhance } from '$app/forms';
 	import { afterNavigate, goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
 	import { showHelp } from '$lib/help.js';
+	import { settings } from '$lib/settings.svelte.js';
 	import { selectedCourses, selectedEmptyRooms, theme } from '$lib/state.svelte';
-	import { enhance } from '$app/forms';
+	import {
+		getCurrentCourses,
+		getCurrentEmptyRooms,
+		setCurrentCourses,
+		setCurrentEmptyRooms,
+	} from '$lib/storage.js';
 	import Cookies from 'js-cookie';
 	import { onMount, untrack } from 'svelte';
-	import { settings } from '$lib/settings.svelte.js';
-	import { getCurrentCourses, getCurrentEmptyRooms, setCurrentCourses } from '$lib/storage.js';
 
 	let { children, data } = $props();
 
@@ -23,13 +28,25 @@
 	});
 
 	$effect(() => {
-		if (!data.savedTimetable) return;
+		if (!data.savedTimetableData?.length) return;
 
-		untrack(() => {
-			selectedCourses.length = 0;
-			selectedCourses.push(...data.savedTimetable!);
-		});
-		setCurrentCourses(data.savedTimetable, data.year, data.semester);
+		const courses = data.savedTimetableData.find((d) => d.data_type === 'courses');
+		if (courses) {
+			untrack(() => {
+				selectedCourses.length = 0;
+				selectedCourses.push(...courses.data);
+			});
+			setCurrentCourses(courses.data, data.year, data.semester);
+		}
+
+		const rooms = data.savedTimetableData.find((d) => d.data_type === 'rooms');
+		if (rooms) {
+			untrack(() => {
+				selectedEmptyRooms.length = 0;
+				selectedEmptyRooms.push(...rooms.data);
+			});
+			setCurrentEmptyRooms(rooms.data, data.year, data.semester);
+		}
 	});
 
 	afterNavigate(() => {

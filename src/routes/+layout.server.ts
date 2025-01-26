@@ -1,9 +1,9 @@
 import { getSemestersAvailable, getYearsAvailable } from '$lib/server/coursesDB';
-import { getUserSavedTimetables, getUserSettings } from '$lib/server/usersDB.js';
+import { getUserSavedTimetableData, getUserSettings } from '$lib/server/usersDB.js';
 import { getYearSemester } from '$lib/utils/utils.js';
 
 export const load = async ({ cookies, locals, url }) => {
-	let settings, savedTimetable;
+	let settings, savedTimetableData;
 	const availableTimeSpans = getYearsAvailable().map((y) => ({
 		year: y,
 		semesters: getSemestersAvailable(y),
@@ -15,7 +15,7 @@ export const load = async ({ cookies, locals, url }) => {
 
 	if (locals.user) {
 		settings = getUserSettings(locals.user.id);
-		savedTimetable = getUserSavedTimetables({ user_id: locals.user.id, year, semester });
+		savedTimetableData = getUserSavedTimetableData({ user_id: locals.user.id, year, semester });
 	}
 
 	return {
@@ -23,7 +23,7 @@ export const load = async ({ cookies, locals, url }) => {
 		availableTimeSpans,
 		user: locals.user,
 		settings,
-		savedTimetable,
+		savedTimetableData,
 		year,
 		semester,
 	};

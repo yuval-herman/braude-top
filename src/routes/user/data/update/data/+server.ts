@@ -1,22 +1,18 @@
-import { upsertSavedTimetable } from '$lib/server/usersDB.js';
+import { upsertSavedTimetableData } from '$lib/server/usersDB.js';
 import { error } from '@sveltejs/kit';
 
 export const POST = async ({ request, locals }) => {
 	if (!locals.user) return error(401, 'משתמש לא מחובר');
 	const data = await request.json();
 
-	if (
-		typeof data.year !== 'number' ||
-		typeof data.semester !== 'string' ||
-		!Array.isArray(data.timetable)
-	)
-		error(400);
+	if (typeof data.year !== 'number' || typeof data.semester !== 'string') error(400);
 
-	upsertSavedTimetable({
+	upsertSavedTimetableData({
 		user_id: locals.user.id,
 		year: data.year,
 		semester: data.semester,
-		saved_timetable: data.timetable,
+		data_type: data.data_type,
+		data: data.data,
 	});
 	return new Response();
 };

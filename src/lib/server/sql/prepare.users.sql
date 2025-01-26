@@ -22,10 +22,11 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    if not exists saved_timetables (
+    if not exists saved_timetable_data (
         user_id INTEGER REFERENCES user (id),
         year INTEGER,
         semester TEXT,
-        saved_timetable TEXT, -- json object of settingsת
-        PRIMARY KEY (user_id, year, semester)
+        data_type TEXT,
+        data TEXT,
+        PRIMARY KEY (user_id, year, semester, data_type)
     );
