@@ -33,4 +33,4 @@ export const load = async ({ cookies, locals, url }) => {
 	};
 };
 
-export const ssr = true;
+export const prerender = false;
