@@ -3,6 +3,7 @@
 	import { buildings, hoursList, walkTimes } from '$lib/utils/constants.utils';
 	import { getContrast } from '$lib/utils/css.utils';
 	import { getDay, getHour } from '$lib/utils/formatter.utils';
+	import { itemizeEmptyRoom } from '$lib/utils/item.utils';
 	import { sameObject } from '$lib/utils/utils';
 	import Indicator from './Indicator.svelte';
 	import MenuButton from './MenuButton.svelte';
@@ -31,18 +32,68 @@
 		);
 	});
 	const itemsByDay = $derived(splitToDays(processed));
+	const suggestedRooms: Item<EmptyRoomItemValue>[] = $state([]);
+
+	$effect(() => {
+		Promise.allSettled(
+			itemsByDay.flatMap((items) =>
+				items.map((item) => {
+					if (item.is_preview || !item.freeTime || item.freeTime <= 0) return;
+					const first_day = 1488;
+					const day = String.fromCharCode(first_day + item.day);
+					const time = hoursList[item.end];
+					return fetch(`/db/rooms/${day}/${time.hour}:${time.min}`).then((res) =>
+						res
+							.json()
+							.then(
+								(rooms) =>
+									item.value.type === 'session' && findBest(item as Item<SessionItemValue>, rooms)
+							)
+					);
+				})
+			)
+		).then((results) => {
+			suggestedRooms.length = 0;
+			for (const res of results)
+				if (res.status === 'fulfilled' && res.value)
+					suggestedRooms.push(itemizeEmptyRoom(res.value));
+		});
+	});
+
+	function findBest(prevItem: Item<SessionItemValue>, rooms: EmptyRoom[]) {
+		const prevBuilding = getBuilding(prevItem.value.room);
+		return rooms.sort((a, b) => {
+			if (!prevBuilding) return 0;
+			const aBuild = getBuilding(a.room);
+			const bBuild = getBuilding(b.room);
+			let buildV = aBuild === prevBuilding ? -1 : bBuild === prevBuilding ? 1 : 0;
+			if (buildV !== 0) return buildV;
+			if (!aBuild || !bBuild) return 0;
+			// @ts-expect-error
+			const aTime: { dist: number; time: number } = walkTimes[prevBuilding][aBuild];
+			// @ts-expect-error
+			const bTime: { dist: number; time: number } = walkTimes[prevBuilding][bBuild];
+			return aTime.time - bTime.time;
+		})[0];
+	}
 
 	function splitToDays(items: Item[]) {
 		items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
-		const daysArr: Item[][] = Array(6);
+		const daysArr: Item<ItemValueTypes>[][] = Array(6);
+
 		for (let i = 0; i < items.length; i++) {
 			if (!daysArr[items[i].day]) daysArr[items[i].day] = [];
-			else if ($settings.show_walk_times) {
-				const prevItem = items[i - 1];
-				prevItem.freeTime = items[i].start - prevItem.end;
+			else if (
+				$settings.show_walk_times &&
+				items[i].value.type === 'session' &&
+				items[i - 1].value.type === 'session'
+			) {
+				const prevItem: Item<SessionItemValue> = items[i - 1];
+				const currItem: Item<SessionItemValue> = items[i];
+				prevItem.freeTime = currItem.start - prevItem.end;
 
-				const prevBuilding = getBuilding(prevItem);
-				const building = getBuilding(items[i]);
+				const prevBuilding = getBuilding(prevItem.value.room);
+				const building = getBuilding(currItem.value.room);
 				if (prevBuilding && building && prevBuilding !== building) {
 					// @ts-expect-error
 					const walk: { dist: number; time: number } = walkTimes[prevBuilding][building];
@@ -56,11 +107,12 @@
 			daysArr[items[i].day].push(items[i]);
 		}
 		return daysArr;
-
-		function getBuilding(prevItem: Item) {
-			return buildings.find((b) => 'room' in prevItem.value && prevItem.value.room.includes(b));
-		}
 	}
+	function getBuilding(room: string) {
+		return buildings.find((b) => room.includes(b));
+	}
+
+	$inspect(suggestedRooms);
 </script>
 
 {#snippet Item(item: Item, index: number)}
@@ -138,7 +190,7 @@
 				{#if row === 0}
 					{#each itemsByDay as dayItems, i}
 						<td>
-							{#each dayItems as item}
+							{#each (dayItems ?? []).concat(suggestedRooms.filter((r) => r.day === i)) as item}
 								{@render Item(item, 10 * (6 - i) + item.start)}
 							{/each}
 						</td>
