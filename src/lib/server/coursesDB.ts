@@ -132,6 +132,26 @@ export const getEmptyRoomsByDay = (() => {
 	return (args: Args) => stmt.all(args);
 })();
 
+/** Retrieves empty rooms by year, semester, week day and start_time */
+export const getEmptyRoomsByStart = (() => {
+	type Args = {
+		year: number;
+		semester: string;
+		week_day: string;
+		start_time: string;
+	};
+
+	const stmt = coursesDB.prepare<Args, EmptyRoom>(
+		"SELECT * FROM empty_rooms\
+			 WHERE year = :year\
+			 AND semester = :semester\
+			 AND week_day = :week_day\
+			 AND start_time = :start_time\
+			 AND room != ''"
+	);
+	return (args: Args) => stmt.all(args);
+})();
+
 /** Retrieves room empty sessions by year and semester */
 export const getEmptyRoomsByRoom = (() => {
 	type Args = {
