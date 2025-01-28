@@ -1,6 +1,17 @@
 # WIP
 
-- suggest to add empty rooms to timetable
+- code refactoring
+  - abstract function
+    - components should not change data drastically, they should get it processed
+    - use dependency injection where appropriate
+  - improve data flow
+    - components shouldn't fetch more data
+    - pages also shouldn't fetch data, they should use load functions
+  - standardize error handling
+    - when there is an unexpected error, log as much data as possible for later debugging
+    - save errors somewhere for later debugging
+  - generalize functions and components where appropriate
+  - utilities that are just functions for one page or component should'nt be utilities, they should live next to their component (even if it's a separate file)
 
 # Planned
 
@@ -30,6 +41,7 @@
 
 # Considering
 
+- suggest to add empty rooms to timetable
 - in course info page, show all years info, show changes between years
 - instead of saving the whole course for the timetable, save the id and year as well as selected instances id and fetch needed data from the server (this will keep the data up to date)
 - convert selected courses list to store
