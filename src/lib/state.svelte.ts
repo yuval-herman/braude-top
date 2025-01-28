@@ -25,7 +25,7 @@ export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
 	if (browser) {
 		if (page.data.user)
 			navigator.sendBeacon(
-				'/user/data/update/data',
+				'/api/user/data/update/data',
 				JSON.stringify({
 					year,
 					semester,
@@ -53,7 +53,7 @@ export function toggleInstance(instance_id: number, year: number, semester: stri
 	if (browser) {
 		if (page.data.user)
 			navigator.sendBeacon(
-				'/user/data/update/data',
+				'/api/user/data/update/data',
 				JSON.stringify({
 					year,
 					semester,
@@ -84,7 +84,7 @@ export function addSelectedCourse(course: FullCourse, year: number, semester: st
 	if (browser) {
 		if (page.data.user)
 			navigator.sendBeacon(
-				'/user/data/update/data',
+				'/api/user/data/update/data',
 				JSON.stringify({
 					year,
 					semester,
@@ -117,7 +117,7 @@ export function removeSelectedCourse(course: FullCourse, year: number, semester:
 	if (browser) {
 		if (page.data.user)
 			navigator.sendBeacon(
-				'/user/data/update/data',
+				'/api/user/data/update/data',
 				JSON.stringify({
 					year,
 					semester,

@@ -1,6 +1,9 @@
 # WIP
 
 - code refactoring
+  - improve data flow
+    - components shouldn't fetch more data
+    - pages also shouldn't fetch data, they should use load functions
   - abstract function
     - components should not change data drastically, they should get it processed
     - use dependency injection where appropriate
