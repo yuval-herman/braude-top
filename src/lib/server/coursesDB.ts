@@ -68,13 +68,17 @@ export const getCourseInstances = (() => {
 
 /** Retrieves all the course instances for a given course id that have sessions*/
 export const getNonEmptyCourseInstances = (() => {
-	const stmt = coursesDB.prepare<[number, number], CourseInstance>(
+	type Args = {
+		course_id: number;
+		year: number;
+		semester: string;
+	};
+	const stmt = coursesDB.prepare<Args, CourseInstance>(
 		'SELECT distinct c.* from course_instances c\
 		 JOIN sessions USING (course_instance_id)\
-		 WHERE course_id = ? and year = ?'
+		 WHERE course_id = :course_id AND year = :year AND semester = :semester'
 	);
-	return (id: number | string, year: number) =>
-		stmt.all(id as number, year).map(transformCourseInstance);
+	return (args: Args) => stmt.all(args).map(transformCourseInstance);
 })();
 
 /** Retrieves all the instance session for a given course instance id */
