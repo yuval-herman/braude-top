@@ -70,7 +70,10 @@
 
 <div class="container" class:warn>
 	<header>
-		<h3>{course.name}</h3>
+		<div>
+			<h3>{course.name}</h3>
+			<span class="info">{course.course_id}</span>
+		</div>
 		<a aria-label="מידע נוסף" class="icon-info-circled" href="course/{course.course_id}"></a>
 	</header>
 	{#if courseInSelected(course)}
