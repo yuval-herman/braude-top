@@ -47,10 +47,10 @@ export const queryNonEmptyCourses = (() => {
 
 	const stmt = coursesDB.prepare<Args, Course>(
 		"SELECT distinct c.* from courses c\
-		join course_instances using (course_id)\
+		join course_instances using (course_id, year)\
 		join sessions USING (course_instance_id)\
-		WHERE c.year = :year AND semester = :semester\
-		AND c.name like '%' || :query || '%'\
+		WHERE year = :year AND semester = :semester\
+		AND name like '%' || :query || '%'\
 		LIMIT 5"
 	);
 
