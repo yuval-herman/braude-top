@@ -27,6 +27,7 @@ vite.config.ts.timestamp-*
 *.db
 *.db-shm
 *.db-wal
+!courses.db
 
 src/fullcourses.json
 secrets.json
