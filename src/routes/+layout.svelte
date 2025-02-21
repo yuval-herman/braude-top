@@ -94,33 +94,36 @@
 				<li><a href="/login/google">התחברות</a></li>
 			{/if}
 		</ul>
-		<label
-			>סמסטר
-			<select
-				name="year-semester"
-				id="year-semester"
-				onchange={({ currentTarget: { value } }) => {
-					const { year, semester } = JSON.parse(value);
-					const url = new URL(page.url);
-					url.searchParams.set('year', year);
-					url.searchParams.set('semester', semester);
-					Cookies.set('year', year);
-					Cookies.set('semester', semester);
-					goto(url, { replaceState: false, state: page.state });
-				}}
-			>
-				{#each data.availableTimeSpans as { year, semesters }}
-					<optgroup label={year.toString()}>
-						{#each semesters as semester}
-							<option
-								value={JSON.stringify({ year, semester })}
-								selected={year === data.year && semester === data.semester}>{semester}</option
-							>
-						{/each}
-					</optgroup>
-				{/each}
-			</select>
-		</label>
+		<div>
+			<span>שנת {data.year}</span>
+			<label
+				>סמסטר
+				<select
+					name="year-semester"
+					id="year-semester"
+					onchange={({ currentTarget: { value } }) => {
+						const { year, semester } = JSON.parse(value);
+						const url = new URL(page.url);
+						url.searchParams.set('year', year);
+						url.searchParams.set('semester', semester);
+						Cookies.set('year', year);
+						Cookies.set('semester', semester);
+						goto(url, { replaceState: false, state: page.state });
+					}}
+				>
+					{#each data.availableTimeSpans as { year, semesters }}
+						<optgroup label={year.toString()}>
+							{#each semesters as semester}
+								<option
+									value={JSON.stringify({ year, semester })}
+									selected={year === data.year && semester === data.semester}>{semester}</option
+								>
+							{/each}
+						</optgroup>
+					{/each}
+				</select>
+			</label>
+		</div>
 		<ul>
 			{#if data.user}<li>{data.user?.name}</li>{/if}
 			<li>
@@ -173,7 +176,7 @@
 			padding: 8px 16px;
 			background: var(--neutral);
 			overflow-x: auto;
-			label {
+			div {
 				margin: 0 16px;
 			}
 
