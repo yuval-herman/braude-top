@@ -30,7 +30,7 @@
 		"@storybook/test": "^8.4.7",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-node": "^5.2.11",
-		"@sveltejs/kit": "^2.9.0",
+		"@sveltejs/kit": "^2.17.2",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
 		"@types/better-sqlite3": "^7.6.12",
 		"@types/js-cookie": "^3.0.6",
@@ -42,8 +42,8 @@
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
-		"vite": "^6.0.0",
-		"vitest": "^2.0.4"
+		"vite": "^6.1.1",
+		"vitest": "^3.0.6"
 	},
 	"dependencies": {
 		"@oslojs/crypto": "^1.0.1",
