@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'icons';
-  src: url('../font/icons.eot?54296768');
-  src: url('../font/icons.eot?54296768#iefix') format('embedded-opentype'),
-       url('../font/icons.woff2?54296768') format('woff2'),
-       url('../font/icons.woff?54296768') format('woff'),
-       url('../font/icons.ttf?54296768') format('truetype'),
-       url('../font/icons.svg?54296768#icons') format('svg');
+  src: url('../font/icons.eot?43476866');
+  src: url('../font/icons.eot?43476866#iefix') format('embedded-opentype'),
+       url('../font/icons.woff2?43476866') format('woff2'),
+       url('../font/icons.woff?43476866') format('woff'),
+       url('../font/icons.ttf?43476866') format('truetype'),
+       url('../font/icons.svg?43476866#icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'icons';
-    src: url('../font/icons.svg?54296768#icons') format('svg');
+    src: url('../font/icons.svg?43476866#icons') format('svg');
   }
 }
 */
@@ -68,3 +68,4 @@
 .icon-sort-down:before { content: '\f0dd'; } /* '' */
 .icon-sort-up:before { content: '\f0de'; } /* '' */
 .icon-star-half-alt:before { content: '\f123'; } /* '' */
+.icon-whatsapp:before { content: '\f232'; } /* '' */

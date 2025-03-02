@@ -154,6 +154,14 @@
 					</svg>
 				</button>
 			</li>
+			<li>
+				<a
+					class="icon-whatsapp"
+					href="https://chat.whatsapp.com/C9xSvcmtHkSFNZeT7MUO4Y"
+					target="_blank"
+					aria-label="לינק לקבוצת וואסטפ"
+				></a>
+			</li>
 		</ul>
 	</nav>
 
@@ -186,7 +194,7 @@
 				list-style-type: none;
 				margin: 0;
 				padding: 0;
-				gap: 12px;
+				gap: 8px;
 				li {
 					display: inline-block;
 				}
@@ -224,9 +232,17 @@
 			button {
 				border: none;
 			}
+			.icon-whatsapp {
+				font-size: 28px;
+				color: greenyellow;
+				background: light-dark(var(--text-secondary), #0000);
+				border-radius: 25%;
+				padding: 0;
+			}
 
 			.theme {
 				background: var(--neutral);
+				padding: 0;
 
 				.sun-moon {
 					width: 28px;
