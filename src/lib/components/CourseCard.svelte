@@ -55,7 +55,9 @@
 	function getColor(instance: CourseInstance) {
 		let background = num2color(course.course_id);
 		if (instanceInSelected(instance)) {
-			const [hue, sat, light] = space.rgb.hsl(parseColor(background).values);
+			const rgb = parseColor(background).values;
+			rgb.length = 3; // truncate alpha if exists
+			const [hue, sat, light] = space.rgb.hsl(rgb as [number, number, number]);
 			background = `hsl(${hue}, ${sat - 15}%, ${light - 5}%)`;
 		}
 		const indicator =
