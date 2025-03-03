@@ -1,9 +1,9 @@
 import { browser, version } from '$app/environment';
-
 import semverMinor from 'semver/functions/minor';
 
 interface StorageItems {
 	[key: `selected-${number}-${string}`]: FullCourse[];
+	[key: `active-${number}-${string}`]: number[];
 	[key: `rooms-${number}-${string}`]: EmptyRoom[];
 	version: string; // semver, can be compared with normal comparison operators
 	onboarded: boolean; // whether the user has been onboraded
@@ -41,6 +41,12 @@ export function getCurrentCourses(year: number, semester: string): FullCourse[] 
 export function setCurrentCourses(courses: FullCourse[], year: number, semester: string) {
 	if (!browser) return;
 	return TypedLocalStorage.setItem(`selected-${year}-${semester}`, courses);
+}
+export function getCurrentActiveInstances(year: number, semester: string) {
+	return TypedLocalStorage.getItem(`active-${year}-${semester}`);
+}
+export function setCurrentActiveInstances(instance_ids: number[], year: number, semester: string) {
+	return TypedLocalStorage.setItem(`active-${year}-${semester}`, instance_ids);
 }
 
 export function getCurrentEmptyRooms(year: number, semester: string): EmptyRoom[] {

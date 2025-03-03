@@ -71,7 +71,6 @@ interface CourseInstance {
 	extra_notes: string | null;
 	instructor: string;
 	co_requirements: string | null;
-	selected?: boolean;
 	hover?: boolean;
 }
 

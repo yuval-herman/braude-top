@@ -1,6 +1,8 @@
 <script lang="ts">
 	import {
 		addCourse,
+		getActiveExams,
+		getActiveInstances,
 		hasCourse,
 		isInstanceActive,
 		removeCourse,
@@ -28,7 +30,7 @@
 
 	function registrationIncomplete(mode: 'all' | 'my', course: FullCourse): false | string {
 		if (mode === 'all') return false;
-		const selected = course.instances.filter((c) => c.selected);
+		const selected = getActiveInstances();
 		inst_loop: for (const instance of selected) {
 			if (!instance.co_requirements) continue;
 			const co_requirements: number[] = JSON.parse(instance.co_requirements);
@@ -129,9 +131,7 @@
 			</div>
 		{/each}
 		{#if mode === 'my'}
-			{@const exams = course.instances
-				.filter((i) => i.selected && i.exams.length)
-				.flatMap((i) => i.exams)}
+			{@const exams = getActiveExams()}
 			{#if exams.length}
 				<div class="exams" transition:slide>
 					{#each exams as exam}

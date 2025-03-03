@@ -19,6 +19,7 @@
 	} from '$lib/storage.js';
 	import Cookies from 'js-cookie';
 	import { onMount, untrack } from 'svelte';
+	import { loadCourses } from '$lib/courseManager.svelte.js';
 
 	let { children, data } = $props();
 
@@ -28,6 +29,7 @@
 
 	onMount(() => {
 		if (data.settings) settings.set(data.settings);
+		loadCourses();
 	});
 
 	// $effect(() => {

@@ -49,22 +49,52 @@ Then we will make Sets for selected courses, instances and so on, but they will 
 All the Sets will be saved internally, and to access them you will use functions the resolve the Sets to actual data.
 It sounds complicated but I think in practice this will be simpler then it sounds.
 
-Solution
+Solution:
+
 Internal structure includes:
 1. Map containing courses
 2. Map containing instances (sessions are included in instances)
 
+
+thoughts:
+
+Server sync
+I wrote about it earlier but I forgot a crucial thing:
+What do we do when the local data is inconsistent with the server?
+Obviously the user should be notified in some way, but what about the built schedule?
+Should we delete it? Should we wait for user confirmation?
+I think we should add a new panel dedicated for solving this inconsistencies.
+
+Solution:
+
+We save the wrong schedule, notify the user, and force him to fix the schedule before continuing to edit it.
+I will make the new panel which will show all courses the changed from the update.
+The user may ignore the updates, but he won't be able to further edit the schedule without fixing the incosistencies.
+
 */
 
-// import 'core-js/actual/iterator';
+import 'core-js/actual/iterator'; // Polyfill
 import { SvelteMap, SvelteSet } from 'svelte/reactivity';
-import { getCurrentCourses } from './storage';
+import {
+	getCurrentActiveInstances,
+	getCurrentCourses,
+	setCurrentActiveInstances,
+	setCurrentCourses,
+} from './storage';
+import { browser } from '$app/environment';
+import { page } from '$app/state';
 
 type CourseIdString = `${number}-${number}`; // `${course_id}-${year}`
 
 const courses = new SvelteMap<CourseIdString, Course>();
 const instances = new SvelteMap<number, FullCourseInstance>();
-const selected_instances_ids = new SvelteSet<number>();
+const active_instances_ids = new SvelteSet<number>();
+
+function clearState(): void {
+	courses.clear();
+	instances.clear();
+	active_instances_ids.clear();
+}
 
 // Get course id string
 function GCID(course: Course): CourseIdString;
@@ -76,7 +106,7 @@ function GCID(courseOrId: number | Course, year?: number): CourseIdString {
 }
 
 function getActiveInstancesIter() {
-	return selected_instances_ids
+	return active_instances_ids
 		.values()
 		.map((id) => instances.get(id))
 		.filter((instance): instance is FullCourseInstance => {
@@ -109,32 +139,50 @@ function constructFullCourses(instances_iter: Iterable<FullCourseInstance>) {
 	return full_courses.values();
 }
 
-export function loadLocalCourses(year: number, semester: string) {}
+////////////// SAVE DATA FUNCTIONS
 
-export function hasCourse(course_id: number, year: number): boolean;
-export function hasCourse(course: Course): boolean;
-export function hasCourse(courseOrId: number | Course, year?: number): boolean {
-	return courses.has(typeof courseOrId === 'number' ? GCID(courseOrId, year!) : GCID(courseOrId));
+function loadServer() {}
+function saveServer() {}
+
+export function saveCourses() {
+	if (!browser) return;
+	setCurrentCourses(getFullCourses(), page.data.year, page.data.semester);
+	setCurrentActiveInstances(
+		active_instances_ids.values().toArray(),
+		page.data.year,
+		page.data.semester
+	);
 }
-
-/** Will return false for instances that don't exist as well */
-export function isInstanceActive(instance: CourseInstance): boolean;
-export function isInstanceActive(instance_id: number): boolean;
-export function isInstanceActive(instanceOrId: number | CourseInstance): boolean {
-	return selected_instances_ids.has(
-		typeof instanceOrId === 'number' ? instanceOrId : instanceOrId.course_instance_id
+export function loadCourses() {
+	if (!browser) return;
+	clearState();
+	const full_courses = getCurrentCourses(page.data.year, page.data.semester);
+	for (const full_course of full_courses) {
+		full_course.instances.forEach((instance) =>
+			instances.set(instance.course_instance_id, instance)
+		);
+		// @ts-ignore; By removing the instances this becomes a normal Course object that we can save in the courses map
+		delete full_course.instances;
+		courses.set(GCID(full_course), full_course);
+	}
+	getCurrentActiveInstances(page.data.year, page.data.semester)?.forEach((id) =>
+		active_instances_ids.add(id)
 	);
 }
 
+////////////// SET STATE FUNCTIONS
+
 export function toggleInstance(instance_id: number) {
 	// Tries to deactivate instance. If instance is already deactivated, activates it.
-	if (!selected_instances_ids.delete(instance_id)) selected_instances_ids.add(instance_id);
+	if (!active_instances_ids.delete(instance_id)) active_instances_ids.add(instance_id);
+	saveCourses();
 }
 
 export function addCourse(course: Course, course_instances: FullCourseInstance[]) {
 	courses.set(GCID(course), course);
 	for (let i = 0; i < course_instances.length; i++)
 		instances.set(course_instances[i].course_instance_id, course_instances[i]);
+	saveCourses();
 }
 
 export function removeCourse(CID: CourseIdString): void;
@@ -156,8 +204,26 @@ export function removeCourse(CourseOrCID: CourseIdString | Course): void {
 	courses.delete(CID);
 	for (const id of instance_ids) {
 		instances.delete(id);
-		selected_instances_ids.delete(id);
+		active_instances_ids.delete(id);
 	}
+	saveCourses();
+}
+
+////////////// GET STATE FUNCTIONS
+
+export function hasCourse(course_id: number, year: number): boolean;
+export function hasCourse(course: Course): boolean;
+export function hasCourse(courseOrId: number | Course, year?: number): boolean {
+	return courses.has(typeof courseOrId === 'number' ? GCID(courseOrId, year!) : GCID(courseOrId));
+}
+
+/** Will return false for instances that don't exist as well */
+export function isInstanceActive(instance: CourseInstance): boolean;
+export function isInstanceActive(instance_id: number): boolean;
+export function isInstanceActive(instanceOrId: number | CourseInstance): boolean {
+	return active_instances_ids.has(
+		typeof instanceOrId === 'number' ? instanceOrId : instanceOrId.course_instance_id
+	);
 }
 
 export function getCoursesAmount(): number {
@@ -177,6 +243,12 @@ export function getActiveCourses(): Course[] {
 			}
 			return true;
 		})
+		.toArray();
+}
+
+export function getActiveExams(): CourseExam[] {
+	return getActiveInstancesIter()
+		.flatMap((instance) => instance.exams)
 		.toArray();
 }
 
