@@ -1,4 +1,5 @@
-import { toggleRoom } from '$lib/state.svelte';
+import { toggleInstance } from '$lib/courseManager.svelte';
+import { hoveredInstanceId, toggleRoom } from '$lib/state.svelte';
 import { hoursList, instanceColors } from './constants.utils';
 import { num2color } from './css.utils';
 
@@ -37,31 +38,6 @@ export function itemizeEmptyRoom(room: EmptyRoom): Item<EmptyRoomItemValue> {
 	};
 }
 
-// function makeCourseItemHandlers(
-// 	course_id: number,
-// 	instance_id: number,
-// 	year: number,
-// 	semester?: string
-// ): { onclick?: () => void; onhover?: () => void; onstopHover?: () => void } {
-// 	for (const course of selectedCourses) {
-// 		if (course.course_id === course_id && course.year === year) {
-// 			const instance = course.instances.find((i) => i.course_instance_id === instance_id);
-// 			if (!instance) return {};
-// 			return {
-// 				onhover: () => (instance.hover = true),
-// 				onstopHover: () => (instance.hover = false),
-// 				onclick: semester
-// 					? () => {
-// 							toggleInstance(instance_id, year, semester);
-// 							instance.hover = false;
-// 						}
-// 					: undefined,
-// 			};
-// 		}
-// 	}
-// 	return {};
-// }
-
 export function itemizeCourse(
 	{ name, instances, course_id, year }: FullCourse,
 	is_preview = false
@@ -76,16 +52,11 @@ export function itemizeCourse(
 			if (start === undefined || end === undefined) {
 				throw new Error('start or end time were not found in hourList');
 			}
-			// const { onhover, onstopHover, onclick } = makeCourseItemHandlers(
-			// 	course_id,
-			// 	course_instance_id,
-			// 	year,
-			// 	semester
-			// );
+
 			return {
-				// onhover,
-				// onstopHover,
-				// onclick,
+				onhover: () => (hoveredInstanceId.id = course_instance_id),
+				onstopHover: () => (hoveredInstanceId.id = undefined),
+				onclick: () => ((hoveredInstanceId.id = undefined), toggleInstance(course_instance_id)),
 				day,
 				end,
 				start,

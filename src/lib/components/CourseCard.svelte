@@ -8,7 +8,7 @@
 		removeCourse,
 		toggleInstance,
 	} from '$lib/courseManager.svelte';
-	import { hoveredItems } from '$lib/state.svelte';
+	import { hoveredInstanceId, hoveredItems } from '$lib/state.svelte';
 	import { instanceColors } from '$lib/utils/constants.utils';
 	import { getContrast, num2color } from '$lib/utils/css.utils';
 	import { listFormatter } from '$lib/utils/formatter.utils';
@@ -84,7 +84,7 @@
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class="instance"
-				class:highlight={instance.hover}
+				class:highlight={hoveredInstanceId.id === instance.course_instance_id}
 				style="z-index: {course.instances.length - i};"
 				style:--instance-background={c.background}
 				style:--instance-background-hover={c.hover}
