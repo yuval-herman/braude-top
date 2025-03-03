@@ -48,7 +48,7 @@
 			const rgb = parseColor(background).values;
 			rgb.length = 3; // truncate alpha if exists
 			const [hue, sat, light] = space.rgb.hsl(rgb as [number, number, number]);
-			background = `hsl(${hue}, ${sat - 15}%, ${light - 5}%)`;
+			background = `hsl(${hue}, ${sat + 20}%, ${light / 2}%)`;
 		}
 		const indicator =
 			instanceColors.get(instance.type) ?? (instanceColors.get('default') as string);
