@@ -1,18 +1,19 @@
 <script lang="ts">
-	import { afterNavigate, goto } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
-	import { showHelp } from '$lib/help.js';
 	import {
-		hoveredInstance,
-		redoStack,
-		selectedCourses,
-		selectedEmptyRooms,
-		undoStack,
-	} from '$lib/state.svelte.js';
-	import { getCurrentCourses, setCurrentCourses, TypedLocalStorage } from '$lib/storage.js';
+		getActiveCourses,
+		getActiveFullCourses,
+		getActiveInstances,
+		getCoursesAmount,
+		getFullCourses,
+	} from '$lib/courseManager.svelte.js';
+	import { showHelp } from '$lib/help.js';
+	import { hoveredItems, redoStack, selectedEmptyRooms, undoStack } from '$lib/state.svelte.js';
+	import { setCurrentCourses, TypedLocalStorage } from '$lib/storage.js';
 	import { itemizeCourseList, itemizeEmptyRoom } from '$lib/utils/item.utils.js';
 	import { debounce } from '$lib/utils/utils.js';
 	import { onMount } from 'svelte';
@@ -30,32 +31,32 @@
 		}
 	});
 
-	const onkeydown: KeyboardEventHandler<Window> = (e) => {
-		function undo() {
-			const courseList = undoStack.pop();
-			if (!courseList) return;
-			redoStack.push($state.snapshot(selectedCourses));
-			selectedCourses.length = 0;
-			selectedCourses.push(...courseList);
-			setCurrentCourses(selectedCourses, data.year, data.semester);
-		}
+	// const onkeydown: KeyboardEventHandler<Window> = (e) => {
+	// 	function undo() {
+	// 		const courseList = undoStack.pop();
+	// 		if (!courseList) return;
+	// 		redoStack.push($state.snapshot(selectedCourses));
+	// 		selectedCourses.length = 0;
+	// 		selectedCourses.push(...courseList);
+	// 		setCurrentCourses(selectedCourses, data.year, data.semester);
+	// 	}
 
-		function redo() {
-			const courseList = redoStack.pop();
-			if (!courseList) return;
-			undoStack.push($state.snapshot(selectedCourses));
-			selectedCourses.length = 0;
-			selectedCourses.push(...courseList);
-			setCurrentCourses(selectedCourses, data.year, data.semester);
-		}
+	// 	function redo() {
+	// 		const courseList = redoStack.pop();
+	// 		if (!courseList) return;
+	// 		undoStack.push($state.snapshot(selectedCourses));
+	// 		selectedCourses.length = 0;
+	// 		selectedCourses.push(...courseList);
+	// 		setCurrentCourses(selectedCourses, data.year, data.semester);
+	// 	}
 
-		if (e.metaKey || e.ctrlKey) {
-			if (e.code === 'KeyZ') {
-				if (e.shiftKey) redo();
-				else undo();
-			} else if (e.code === 'KeyY') redo();
-		}
-	};
+	// 	if (e.metaKey || e.ctrlKey) {
+	// 		if (e.code === 'KeyZ') {
+	// 			if (e.shiftKey) redo();
+	// 			else undo();
+	// 		} else if (e.code === 'KeyY') redo();
+	// 	}
+	// };
 
 	function tabTransition(tab: 'all' | 'my', dir: 'in' | 'out'): FlyParams {
 		const easing = dir === 'in' ? cubicOut : cubicIn;
@@ -124,12 +125,12 @@
 				in:fly={tabTransition('my', 'in')}
 				out:fly={tabTransition('my', 'out')}
 			>
-				{#if selectedCourses.length === 0}
+				{#if getCoursesAmount() === 0}
 					<p class="warn" transition:slide>
 						כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b>
 					</p>
 				{:else}
-					<button
+					<!-- <button
 						transition:slide
 						onclick={() => {
 							if (confirm('מערכת השעות הולכת להמחק, להמשיך?')) {
@@ -139,29 +140,26 @@
 								setCurrentCourses([], data.year, data.semester);
 							}
 						}}>מחק הכל</button
-					>
-					{@const withInstances = selectedCourses.filter(({ instances }) =>
-						instances.some((i) => i.selected)
-					)}
+					> -->
+					{@const activeInstances = getActiveInstances()}
+					{@const activeCourses = getActiveCourses()}
 					<div transition:slide class="small-info">
-						<span>נ"ז {withInstances.reduce((p, c) => p + c.credit, 0)}</span><span
-							>שעות לימוד {withInstances.reduce(
-								(p, c) => p + c.instances.reduce((p, c) => p + (c.selected ? c.hours : 0), 0),
-								0
-							)}</span
+						<span>נ"ז {activeCourses.reduce((p, c) => p + c.credit, 0)}</span><span
+							>שעות לימוד {activeInstances.reduce((p, c) => p + c.hours, 0)}</span
 						>
 					</div>
 				{/if}
-				<PaginatedList items={selectedCourses} mode="my" />
+
+				<PaginatedList items={getFullCourses()} mode="my" />
 			</div>
 		{/if}
 	</div>
 	<div class="table-container" class:hidden={page.state.sidebarOpen}>
 		<TimeTable
-			items={itemizeCourseList(selectedCourses, data.semester).concat(
+			items={itemizeCourseList(getActiveFullCourses()).concat(
 				selectedEmptyRooms.map(itemizeEmptyRoom)
 			)}
-			preview={hoveredInstance.items}
+			preview={hoveredItems.items}
 		/>
 	</div>
 </main>

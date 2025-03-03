@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import {
-		addSelectedCourse,
-		hoveredInstance,
-		removeSelectedCourse,
-		selectedCourses,
+		addCourse,
+		hasCourse,
+		isInstanceActive,
+		removeCourse,
 		toggleInstance,
-	} from '$lib/state.svelte';
+	} from '$lib/courseManager.svelte';
+	import { hoveredItems } from '$lib/state.svelte';
 	import { instanceColors } from '$lib/utils/constants.utils';
 	import { getContrast, num2color } from '$lib/utils/css.utils';
 	import { listFormatter } from '$lib/utils/formatter.utils';
@@ -42,19 +42,9 @@
 		return false;
 	}
 
-	function courseInSelected(course: Course) {
-		return selectedCourses.some((c) => c.course_id === course.course_id);
-	}
-
-	function instanceInSelected(instance: CourseInstance) {
-		return selectedCourses.some((c) =>
-			c.instances.some((i) => i.course_instance_id === instance.course_instance_id && i.selected)
-		);
-	}
-
 	function getColor(instance: CourseInstance) {
 		let background = num2color(course.course_id);
-		if (instanceInSelected(instance)) {
+		if (isInstanceActive(instance)) {
 			const rgb = parseColor(background).values;
 			rgb.length = 3; // truncate alpha if exists
 			const [hue, sat, light] = space.rgb.hsl(rgb as [number, number, number]);
@@ -78,16 +68,10 @@
 		</div>
 		<a aria-label="מידע נוסף" class="icon-info-circled" href="course/{course.course_id}"></a>
 	</header>
-	{#if courseInSelected(course)}
-		<button
-			class="remove-button"
-			onclick={() => removeSelectedCourse(course, page.data.year, page.data.semester)}
-			>מחק קורס מהרשימה</button
-		>
+	{#if hasCourse(course)}
+		<button class="remove-button" onclick={() => removeCourse(course)}>מחק קורס מהרשימה</button>
 	{:else}
-		<button
-			class="add-button"
-			onclick={() => addSelectedCourse(course, page.data.year, page.data.semester)}
+		<button class="add-button" onclick={() => addCourse(course, course.instances)}
 			>הוסף קורס לרשימה</button
 		>
 	{/if}
@@ -108,23 +92,14 @@
 					dark: 'var(--text-dark)',
 				})}
 				onclick={() => {
-					const s = courseInSelected(course);
-					s
-						? toggleInstance(instance.course_instance_id, page.data.year, page.data.semester)
-						: ((instance.selected = true),
-							addSelectedCourse(course, page.data.year, page.data.semester));
+					hasCourse(course)
+						? toggleInstance(instance.course_instance_id)
+						: (addCourse(course, course.instances), toggleInstance(instance.course_instance_id));
 				}}
 				onmouseenter={() => {
-					hoveredInstance.items = itemizeCourse(
-						{
-							...course,
-							instances: [{ ...instance, selected: true }],
-						},
-						page.data.semester,
-						true
-					);
+					hoveredItems.items = itemizeCourse({ ...course, instances: [instance] }, true);
 				}}
-				onmouseleave={() => (hoveredInstance.items.length = 0)}
+				onmouseleave={() => (hoveredItems.items = undefined)}
 			>
 				<Indicator color={c.indicator} />
 				<div class="instance-details">

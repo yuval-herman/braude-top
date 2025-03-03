@@ -1,4 +1,4 @@
-import { selectedCourses, toggleInstance, toggleRoom } from '$lib/state.svelte';
+import { toggleRoom } from '$lib/state.svelte';
 import { hoursList, instanceColors } from './constants.utils';
 import { num2color } from './css.utils';
 
@@ -37,72 +37,69 @@ export function itemizeEmptyRoom(room: EmptyRoom): Item<EmptyRoomItemValue> {
 	};
 }
 
-function makeCourseItemHandlers(
-	course_id: number,
-	instance_id: number,
-	year: number,
-	semester?: string
-): { onclick?: () => void; onhover?: () => void; onstopHover?: () => void } {
-	for (const course of selectedCourses) {
-		if (course.course_id === course_id && course.year === year) {
-			const instance = course.instances.find((i) => i.course_instance_id === instance_id);
-			if (!instance) return {};
-			return {
-				onhover: () => (instance.hover = true),
-				onstopHover: () => (instance.hover = false),
-				onclick: semester
-					? () => {
-							toggleInstance(instance_id, year, semester);
-							instance.hover = false;
-						}
-					: undefined,
-			};
-		}
-	}
-	return {};
-}
+// function makeCourseItemHandlers(
+// 	course_id: number,
+// 	instance_id: number,
+// 	year: number,
+// 	semester?: string
+// ): { onclick?: () => void; onhover?: () => void; onstopHover?: () => void } {
+// 	for (const course of selectedCourses) {
+// 		if (course.course_id === course_id && course.year === year) {
+// 			const instance = course.instances.find((i) => i.course_instance_id === instance_id);
+// 			if (!instance) return {};
+// 			return {
+// 				onhover: () => (instance.hover = true),
+// 				onstopHover: () => (instance.hover = false),
+// 				onclick: semester
+// 					? () => {
+// 							toggleInstance(instance_id, year, semester);
+// 							instance.hover = false;
+// 						}
+// 					: undefined,
+// 			};
+// 		}
+// 	}
+// 	return {};
+// }
 
 export function itemizeCourse(
 	{ name, instances, course_id, year }: FullCourse,
-	semester?: string,
 	is_preview = false
 ): Item[] {
-	return instances
-		.filter((i) => i.selected)
-		.flatMap(({ sessions, instructor, type, course_instance_id }) =>
-			sessions.map(({ week_day, start_time, end_time, room }): Item => {
-				const day = day2Index(week_day);
+	return instances.flatMap(({ sessions, instructor, type, course_instance_id }) =>
+		sessions.map(({ week_day, start_time, end_time, room }): Item => {
+			const day = day2Index(week_day);
 
-				const start = time2Index(start_time);
-				const end = time2Index(end_time);
+			const start = time2Index(start_time);
+			const end = time2Index(end_time);
 
-				if (start === undefined || end === undefined) {
-					throw new Error('start or end time were not found in hourList');
-				}
-				const { onhover, onstopHover, onclick } = makeCourseItemHandlers(
-					course_id,
-					course_instance_id,
-					year,
-					semester
-				);
-				return {
-					onhover,
-					onstopHover,
-					onclick,
-					day,
-					end,
-					start,
-					is_preview,
-					value: { type: 'session', session_type: type, name, room, instructor },
-					indicatorColor: instanceColors.get(type) ?? (instanceColors.get('default') as string),
-					bgColor: num2color(course_id),
-				};
-			})
-		);
+			if (start === undefined || end === undefined) {
+				throw new Error('start or end time were not found in hourList');
+			}
+			// const { onhover, onstopHover, onclick } = makeCourseItemHandlers(
+			// 	course_id,
+			// 	course_instance_id,
+			// 	year,
+			// 	semester
+			// );
+			return {
+				// onhover,
+				// onstopHover,
+				// onclick,
+				day,
+				end,
+				start,
+				is_preview,
+				value: { type: 'session', session_type: type, name, room, instructor },
+				indicatorColor: instanceColors.get(type) ?? (instanceColors.get('default') as string),
+				bgColor: num2color(course_id),
+			};
+		})
+	);
 }
 
-export function itemizeCourseList(courses: FullCourse[], semester?: string): Item[] {
-	const items = courses.flatMap((c) => itemizeCourse(c, semester));
+export function itemizeCourseList(courses: FullCourse[]): Item[] {
+	const items = courses.flatMap((c) => itemizeCourse(c));
 	items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
 	for (let i = 0; i < items.length - 1; i++) {
 		const curr = items[i];

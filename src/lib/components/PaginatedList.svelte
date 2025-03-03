@@ -3,37 +3,15 @@
 	import CourseCard from './CourseCard.svelte';
 
 	interface Props {
-		itemPerPage?: number;
 		mode?: 'all' | 'my';
 		items: FullCourse[];
 	}
-
-	const { itemPerPage = 10, items, mode = 'all' }: Props = $props();
-	let currentPage = $state(0);
-	const lastPage = $derived(Math.floor(items.length / itemPerPage));
-	const pageItems = $derived(
-		items.slice(itemPerPage * currentPage, itemPerPage * (currentPage + 1))
-	);
-
-	$effect(() => {
-		if (pageItems.length === 0) currentPage = 0;
-	});
+	const { items, mode = 'all' }: Props = $props();
 </script>
 
 <div class="container">
-	{#if lastPage != 0}
-		<header>
-			<nav>
-				<button onclick={() => (currentPage--, currentPage < 0 && (currentPage = lastPage))}
-					>הקודם</button
-				>
-				<button onclick={() => (currentPage = (currentPage + 1) % (lastPage + 1))}>הבא</button>
-			</nav>
-			<span id="page-counter">עמ' {currentPage + 1}</span>
-		</header>
-	{/if}
 	<ul>
-		{#each pageItems as course (course.course_id + course.year)}
+		{#each items as course (course.course_id + course.year)}
 			<li transition:slide>
 				<CourseCard {course} {mode} />
 			</li>
@@ -50,19 +28,6 @@
 		gap: 8px;
 		flex-direction: column;
 		flex-grow: 1;
-		header {
-			display: flex;
-			justify-content: space-between;
-			button {
-				padding: 4px 8px;
-				border-radius: 4px;
-			}
-		}
-		#page-counter {
-			border-radius: 4px;
-			padding: 4px;
-			margin: 4px;
-		}
 		ul {
 			flex-grow: 1;
 			list-style-type: none;
