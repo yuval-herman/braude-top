@@ -69,7 +69,7 @@ Solution:
 
 We save the wrong schedule, notify the user, and force him to fix the schedule before continuing to edit it.
 I will make the new panel which will show all courses the changed from the update.
-The user may ignore the updates, but he won't be able to further edit the schedule without fixing the incosistencies.
+The user may ignore the updates, but he won't be able to further edit the schedule without fixing the inconsistencies.
 
 */
 
