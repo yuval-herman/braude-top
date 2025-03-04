@@ -181,22 +181,39 @@ export function saveCourses() {
 const dataTypeToFetch: SavedDataTypes[] = ['courses', 'instances', 'active_instance_ids'];
 const fetchDataTypesUrl = `/api/user/get/data?data_types=${JSON.stringify(dataTypeToFetch)}`;
 
-async function loadServerCourses() {
+async function loadServerData(): Promise<
+	{ data: unknown; data_type: SavedDataTypes }[] | undefined
+> {
 	if (!page.data.user) return;
-	const response = await fetch(fetchDataTypesUrl);
-	const courseAndInstances = await response.json();
-	return courseAndInstances;
+	return (await fetch(fetchDataTypesUrl)).json();
 }
 
 export async function loadCourses() {
 	if (!browser) return;
 	clearState();
+	try {
+		const serverData = await loadServerData();
+		if (serverData?.length) {
+			console.log(serverData);
 
-	const courseAndInstances = await loadServerCourses();
-	if (courseAndInstances) {
-		console.log('server data:', courseAndInstances);
+			const server_courses = serverData.find((d) => d.data_type === 'courses')?.data as Course[];
+			const server_instances = serverData.find((d) => d.data_type === 'instances')
+				?.data as FullCourseInstance[];
+			const server_active_instance_ids = serverData.find(
+				(d) => d.data_type === 'active_instance_ids'
+			)?.data as number[];
+
+			server_courses.forEach((c) => courses.set(GCID(c), c));
+			server_instances.forEach((i) => instances.set(i.course_instance_id, i));
+			server_active_instance_ids.forEach((i) => active_instances_ids.add(i));
+			return;
+		}
+	} catch (error) {
+		console.error(
+			error,
+			'Could not fetch data from server, data is loaded from localstorage instead.'
+		);
 	}
-
 	const full_courses = getCurrentCourses(page.data.year, page.data.semester);
 	for (const full_course of full_courses) {
 		full_course.instances.forEach((instance) =>

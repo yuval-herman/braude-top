@@ -5,21 +5,13 @@
 	import { enhance } from '$app/forms';
 	import { afterNavigate, goto, onNavigate } from '$app/navigation';
 	import { page } from '$app/state';
+	import { loadCourses } from '$lib/courseManager.svelte.js';
 	import { showHelp } from '$lib/help.js';
 	import { settings } from '$lib/settings.svelte.js';
-	import {
-		//  selectedCourses, selectedEmptyRooms,
-		theme,
-	} from '$lib/state.svelte';
-	import {
-		getCurrentCourses,
-		getCurrentEmptyRooms,
-		setCurrentCourses,
-		setCurrentEmptyRooms,
-	} from '$lib/storage.js';
+	import { selectedEmptyRooms, theme } from '$lib/state.svelte';
+	import { getCurrentEmptyRooms } from '$lib/storage.js';
 	import Cookies from 'js-cookie';
-	import { onMount, untrack } from 'svelte';
-	import { loadCourses } from '$lib/courseManager.svelte.js';
+	import { onMount } from 'svelte';
 
 	let { children, data } = $props();
 
@@ -32,35 +24,12 @@
 		loadCourses();
 	});
 
-	// $effect(() => {
-	// 	if (!data.savedTimetableData?.length) return;
+	afterNavigate(() => {
+		loadCourses();
 
-	// 	const courses = data.savedTimetableData.find((d) => d.data_type === 'courses');
-	// 	if (courses) {
-	// 		untrack(() => {
-	// 			selectedCourses.length = 0;
-	// 			selectedCourses.push(...courses.data);
-	// 		});
-	// 		setCurrentCourses(courses.data, data.year, data.semester);
-	// 	}
-
-	// 	const rooms = data.savedTimetableData.find((d) => d.data_type === 'rooms');
-	// 	if (rooms) {
-	// 		untrack(() => {
-	// 			selectedEmptyRooms.length = 0;
-	// 			selectedEmptyRooms.push(...rooms.data);
-	// 		});
-	// 		setCurrentEmptyRooms(rooms.data, data.year, data.semester);
-	// 	}
-	// });
-
-	// afterNavigate(() => {
-	// 	selectedCourses.length = 0;
-	// 	selectedCourses.push(...getCurrentCourses(data.year, data.semester));
-
-	// 	selectedEmptyRooms.length = 0;
-	// 	selectedEmptyRooms.push(...getCurrentEmptyRooms(data.year, data.semester));
-	// });
+		selectedEmptyRooms.length = 0;
+		selectedEmptyRooms.push(...getCurrentEmptyRooms(data.year, data.semester));
+	});
 
 	onNavigate(({ to, type }) => {
 		if (!to || type !== 'link') return;
