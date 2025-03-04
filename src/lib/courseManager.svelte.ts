@@ -90,6 +90,46 @@ const courses = new SvelteMap<CourseIdString, Course>();
 const instances = new SvelteMap<number, FullCourseInstance>();
 const active_instances_ids = new SvelteSet<number>();
 
+type UndoStackItem = [Course[], FullCourseInstance[], number[]];
+const undoStack: UndoStackItem[] = [];
+const redoStack: UndoStackItem[] = [];
+
+function constructUndoStackItem(): UndoStackItem {
+	return [
+		courses.values().toArray(),
+		instances.values().toArray(),
+		active_instances_ids.values().toArray(),
+	];
+}
+
+function loadStackItem(item: UndoStackItem): void {
+	item[0].forEach((i) => courses.set(GCID(i), i));
+	item[1].forEach((i) => instances.set(i.course_instance_id, i));
+	item[2].forEach((i) => active_instances_ids.add(i));
+}
+
+export function undo() {
+	const item = undoStack.pop();
+	if (!item) return;
+	redoStack.push(constructUndoStackItem());
+	clearState();
+	loadStackItem(item);
+	console.log(undoStack, item);
+	saveAllData();
+}
+export function redo() {
+	const item = redoStack.pop();
+	if (!item) return;
+	undoStack.push(constructUndoStackItem());
+	clearState();
+	loadStackItem(item);
+	saveAllData();
+}
+export function saveSnapshotToUndo() {
+	undoStack.push(constructUndoStackItem());
+	redoStack.length = 0;
+}
+
 function clearState(): void {
 	courses.clear();
 	instances.clear();
@@ -166,7 +206,7 @@ function saveServerActiveInstances() {
 		sendDataToServer(active_instances_ids.values().toArray(), 'active_instance_ids');
 }
 
-export function saveLocalData() {
+function saveLocalData() {
 	if (!browser) return;
 	setCurrentCourses(getFullCourses(), page.data.year, page.data.semester);
 	setCurrentActiveInstances(
@@ -174,6 +214,13 @@ export function saveLocalData() {
 		page.data.year,
 		page.data.semester
 	);
+}
+
+function saveAllData() {
+	saveServerCourses();
+	saveServerInstances();
+	saveServerActiveInstances();
+	saveLocalData();
 }
 
 ////////////// LOAD DATA FUNCTIONS
@@ -194,16 +241,19 @@ export async function loadCourses() {
 	try {
 		const serverData = await loadServerData();
 		if (serverData?.length) {
-			const server_courses = serverData.find((d) => d.data_type === 'courses')?.data as Course[];
-			const server_instances = serverData.find((d) => d.data_type === 'instances')
-				?.data as FullCourseInstance[];
+			const server_courses = serverData.find((d) => d.data_type === 'courses')?.data as
+				| undefined
+				| Course[];
+			const server_instances = serverData.find((d) => d.data_type === 'instances')?.data as
+				| undefined
+				| FullCourseInstance[];
 			const server_active_instance_ids = serverData.find(
 				(d) => d.data_type === 'active_instance_ids'
-			)?.data as number[];
+			)?.data as undefined | number[];
 
-			server_courses.forEach((c) => courses.set(GCID(c), c));
-			server_instances.forEach((i) => instances.set(i.course_instance_id, i));
-			server_active_instance_ids.forEach((i) => active_instances_ids.add(i));
+			server_courses?.forEach((c) => courses.set(GCID(c), c));
+			server_instances?.forEach((i) => instances.set(i.course_instance_id, i));
+			server_active_instance_ids?.forEach((i) => active_instances_ids.add(i));
 			return;
 		}
 	} catch (error) {
@@ -228,13 +278,6 @@ export async function loadCourses() {
 
 ////////////// SET STATE FUNCTIONS
 
-export function toggleInstance(instance_id: number) {
-	// Tries to deactivate instance. If instance is already deactivated, activates it.
-	if (!active_instances_ids.delete(instance_id)) active_instances_ids.add(instance_id);
-	saveServerActiveInstances();
-	saveLocalData();
-}
-
 function stripExcessProperties<T extends object>(obj: T, allowedKeys: (keyof T)[]): T {
 	const stripped_obj: Partial<T> = {};
 	for (const key in obj) {
@@ -245,7 +288,16 @@ function stripExcessProperties<T extends object>(obj: T, allowedKeys: (keyof T)[
 	return stripped_obj as T;
 }
 
+export function toggleInstance(instance_id: number) {
+	saveSnapshotToUndo();
+	// Tries to deactivate instance. If instance is already deactivated, activates it.
+	if (!active_instances_ids.delete(instance_id)) active_instances_ids.add(instance_id);
+	saveServerActiveInstances();
+	saveLocalData();
+}
+
 export function addCourse(course: Course, course_instances: FullCourseInstance[]) {
+	saveSnapshotToUndo();
 	const courseKeys: (keyof Course)[] = [
 		'course_id',
 		'name',
@@ -267,6 +319,7 @@ export function addCourse(course: Course, course_instances: FullCourseInstance[]
 export function removeCourse(CID: CourseIdString): void;
 export function removeCourse(course: Course): void;
 export function removeCourse(CourseOrCID: CourseIdString | Course): void {
+	saveSnapshotToUndo();
 	let CID: CourseIdString, course: Course | undefined;
 	if (typeof CourseOrCID === 'string') {
 		CID = CourseOrCID;
@@ -292,11 +345,9 @@ export function removeCourse(CourseOrCID: CourseIdString | Course): void {
 
 /** Removes all courses instances and all other related data from state, localstorage, and server */
 export function removeAllCoursesData() {
+	saveSnapshotToUndo();
 	clearState();
-	saveServerCourses();
-	saveServerInstances();
-	saveServerActiveInstances();
-	saveLocalData();
+	saveAllData();
 }
 
 ////////////// GET STATE FUNCTIONS

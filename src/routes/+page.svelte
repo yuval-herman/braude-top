@@ -10,11 +10,14 @@
 		getActiveInstances,
 		getCoursesAmount,
 		getFullCourses,
+		redo,
 		removeAllCoursesData,
+		saveSnapshotToUndo,
+		undo,
 	} from '$lib/courseManager.svelte.js';
 	import { showHelp } from '$lib/help.js';
-	import { hoveredItems, redoStack, selectedEmptyRooms, undoStack } from '$lib/state.svelte.js';
-	import { setCurrentCourses, TypedLocalStorage } from '$lib/storage.js';
+	import { hoveredItems, selectedEmptyRooms } from '$lib/state.svelte.js';
+	import { TypedLocalStorage } from '$lib/storage.js';
 	import { itemizeCourseList, itemizeEmptyRoom } from '$lib/utils/item.utils.js';
 	import { debounce } from '$lib/utils/utils.js';
 	import { onMount } from 'svelte';
@@ -32,32 +35,14 @@
 		}
 	});
 
-	// const onkeydown: KeyboardEventHandler<Window> = (e) => {
-	// 	function undo() {
-	// 		const courseList = undoStack.pop();
-	// 		if (!courseList) return;
-	// 		redoStack.push($state.snapshot(selectedCourses));
-	// 		selectedCourses.length = 0;
-	// 		selectedCourses.push(...courseList);
-	// 		setCurrentCourses(selectedCourses, data.year, data.semester);
-	// 	}
-
-	// 	function redo() {
-	// 		const courseList = redoStack.pop();
-	// 		if (!courseList) return;
-	// 		undoStack.push($state.snapshot(selectedCourses));
-	// 		selectedCourses.length = 0;
-	// 		selectedCourses.push(...courseList);
-	// 		setCurrentCourses(selectedCourses, data.year, data.semester);
-	// 	}
-
-	// 	if (e.metaKey || e.ctrlKey) {
-	// 		if (e.code === 'KeyZ') {
-	// 			if (e.shiftKey) redo();
-	// 			else undo();
-	// 		} else if (e.code === 'KeyY') redo();
-	// 	}
-	// };
+	const onkeydown: KeyboardEventHandler<Window> = (e) => {
+		if (e.metaKey || e.ctrlKey) {
+			if (e.code === 'KeyZ') {
+				if (e.shiftKey) redo();
+				else undo();
+			} else if (e.code === 'KeyY') redo();
+		}
+	};
 
 	function tabTransition(tab: 'all' | 'my', dir: 'in' | 'out'): FlyParams {
 		const easing = dir === 'in' ? cubicOut : cubicIn;
@@ -135,8 +120,7 @@
 						transition:slide
 						onclick={() => {
 							if (confirm('מערכת השעות הולכת להמחק, להמשיך?')) {
-								// undoStack.push($state.snapshot(selectedCourses));
-								// redoStack.length = 0;
+								saveSnapshotToUndo();
 								removeAllCoursesData();
 							}
 						}}>מחק הכל</button

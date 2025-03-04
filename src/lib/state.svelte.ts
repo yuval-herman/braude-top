@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import { page } from '$app/state';
-import { setCurrentCourses, setCurrentEmptyRooms } from './storage';
+import { setCurrentEmptyRooms } from './storage';
 
 export const hoveredItems = $state<{
 	items: Item[] | undefined;
@@ -9,8 +9,6 @@ export const hoveredInstanceId = $state<{
 	id: number | undefined;
 }>({ id: undefined });
 export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
-export const undoStack: FullCourse[][] = [];
-export const redoStack: FullCourse[][] = [];
 export const selectedEmptyRooms = $state<EmptyRoom[]>([]);
 
 export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
