@@ -166,7 +166,7 @@ function saveServerActiveInstances() {
 		sendDataToServer(active_instances_ids.values().toArray(), 'active_instance_ids');
 }
 
-export function saveCourses() {
+export function saveLocalData() {
 	if (!browser) return;
 	setCurrentCourses(getFullCourses(), page.data.year, page.data.semester);
 	setCurrentActiveInstances(
@@ -194,8 +194,6 @@ export async function loadCourses() {
 	try {
 		const serverData = await loadServerData();
 		if (serverData?.length) {
-			console.log(serverData);
-
 			const server_courses = serverData.find((d) => d.data_type === 'courses')?.data as Course[];
 			const server_instances = serverData.find((d) => d.data_type === 'instances')
 				?.data as FullCourseInstance[];
@@ -234,7 +232,7 @@ export function toggleInstance(instance_id: number) {
 	// Tries to deactivate instance. If instance is already deactivated, activates it.
 	if (!active_instances_ids.delete(instance_id)) active_instances_ids.add(instance_id);
 	saveServerActiveInstances();
-	saveCourses();
+	saveLocalData();
 }
 
 function stripExcessProperties<T extends object>(obj: T, allowedKeys: (keyof T)[]): T {
@@ -263,7 +261,7 @@ export function addCourse(course: Course, course_instances: FullCourseInstance[]
 
 	saveServerInstances();
 	saveServerCourses();
-	saveCourses();
+	saveLocalData();
 }
 
 export function removeCourse(CID: CourseIdString): void;
@@ -289,7 +287,16 @@ export function removeCourse(CourseOrCID: CourseIdString | Course): void {
 	}
 	saveServerInstances();
 	saveServerCourses();
-	saveCourses();
+	saveLocalData();
+}
+
+/** Removes all courses instances and all other related data from state, localstorage, and server */
+export function removeAllCoursesData() {
+	clearState();
+	saveServerCourses();
+	saveServerInstances();
+	saveServerActiveInstances();
+	saveLocalData();
 }
 
 ////////////// GET STATE FUNCTIONS
@@ -314,11 +321,14 @@ export function getCoursesAmount(): number {
 }
 
 export function getActiveCourses(): Course[] {
-	return getActiveInstancesIter()
-		.map((instance) => {
-			const CID = GCID(instance.course_id, instance.year);
-			return courses.get(CID);
-		})
+	const coursesCID = new Set<CourseIdString>();
+	for (const instance of getActiveInstancesIter()) {
+		const CID = GCID(instance.course_id, instance.year);
+		coursesCID.add(CID);
+	}
+	return coursesCID
+		.values()
+		.map((CID) => courses.get(CID))
 		.filter((course): course is Course => {
 			if (!course) {
 				console.error('A selected course was not found in course map!');

@@ -10,6 +10,7 @@
 		getActiveInstances,
 		getCoursesAmount,
 		getFullCourses,
+		removeAllCoursesData,
 	} from '$lib/courseManager.svelte.js';
 	import { showHelp } from '$lib/help.js';
 	import { hoveredItems, redoStack, selectedEmptyRooms, undoStack } from '$lib/state.svelte.js';
@@ -130,19 +131,19 @@
 						כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b>
 					</p>
 				{:else}
-					<!-- <button
+					<button
 						transition:slide
 						onclick={() => {
 							if (confirm('מערכת השעות הולכת להמחק, להמשיך?')) {
-								undoStack.push($state.snapshot(selectedCourses));
-								redoStack.length = 0;
-								selectedCourses.length = 0;
-								setCurrentCourses([], data.year, data.semester);
+								// undoStack.push($state.snapshot(selectedCourses));
+								// redoStack.length = 0;
+								removeAllCoursesData();
 							}
 						}}>מחק הכל</button
-					> -->
+					>
 					{@const activeInstances = getActiveInstances()}
 					{@const activeCourses = getActiveCourses()}
+					{@debug activeCourses}
 					<div transition:slide class="small-info">
 						<span>נ"ז {activeCourses.reduce((p, c) => p + c.credit, 0)}</span><span
 							>שעות לימוד {activeInstances.reduce((p, c) => p + c.hours, 0)}</span
