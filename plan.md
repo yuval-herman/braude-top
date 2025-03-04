@@ -44,6 +44,7 @@
 
 # Considering
 
+- use websockets to efficiently transfer data? search and logged users have lots of calls...
 - suggest to add empty rooms to timetable
 - in course info page, show all years info, show changes between years
 - instead of saving the whole course for the timetable, save the id and year as well as selected instances id and fetch needed data from the server (this will keep the data up to date)
