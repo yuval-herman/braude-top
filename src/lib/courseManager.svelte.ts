@@ -239,6 +239,8 @@ async function loadServerData(): Promise<
 export async function loadCourses() {
 	if (!browser) return;
 	clearState();
+	undoStack.length = 0;
+	redoStack.length = 0;
 	try {
 		const serverData = await loadServerData();
 		if (serverData?.length) {
