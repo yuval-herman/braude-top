@@ -10,3 +10,5 @@ interface User {
 	role: string;
 	name: string;
 }
+
+type SavedDataTypes = 'rooms' | 'courses' | 'instances' | 'active_instance_ids';

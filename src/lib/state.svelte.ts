@@ -29,7 +29,7 @@ export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
 	if (browser) {
 		if (page.data.user)
 			navigator.sendBeacon(
-				'/api/user/data/update/data',
+				'/api/user/update/data',
 				JSON.stringify({
 					year,
 					semester,
@@ -57,7 +57,7 @@ export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
 // 	if (browser) {
 // 		if (page.data.user)
 // 			navigator.sendBeacon(
-// 				'/api/user/data/update/data',
+// 				'/api/user/update/data',
 // 				JSON.stringify({
 // 					year,
 // 					semester,
@@ -88,7 +88,7 @@ export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
 // 	if (browser) {
 // 		if (page.data.user)
 // 			navigator.sendBeacon(
-// 				'/api/user/data/update/data',
+// 				'/api/user/update/data',
 // 				JSON.stringify({
 // 					year,
 // 					semester,
@@ -121,7 +121,7 @@ export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
 // 	if (browser) {
 // 		if (page.data.user)
 // 			navigator.sendBeacon(
-// 				'/api/user/data/update/data',
+// 				'/api/user/update/data',
 // 				JSON.stringify({
 // 					year,
 // 					semester,

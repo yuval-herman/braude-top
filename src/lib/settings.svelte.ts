@@ -15,5 +15,5 @@ export const settings = writable<Settings>(
 settings.subscribe((v) => {
 	if (!browser) return;
 	TypedLocalStorage.setItem('settings', v);
-	if (page.data.user) navigator.sendBeacon('/api/user/data/update/settings', JSON.stringify(v));
+	if (page.data.user) navigator.sendBeacon('/api/user/update/settings', JSON.stringify(v));
 });

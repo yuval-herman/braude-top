@@ -114,14 +114,20 @@ export const getUserSavedTimetableData = (() => {
 		user_id: User['id'];
 		year: number;
 		semester: string;
+		data_types?: SavedDataTypes[];
 	}
-	const stmt = usersDB.prepare<Args, { data: string; data_type: string }>(
+	const stmt = usersDB.prepare<
+		Omit<Args, 'data_types'> & { data_types: string },
+		{ data: string; data_type: string }
+	>(
 		'SELECT data, data_type FROM saved_timetable_data\
-			 WHERE user_id = :user_id AND year = :year AND semester = :semester'
+		 WHERE user_id = :user_id AND year = :year AND semester = :semester\
+		 AND CASE WHEN length(:data_types) THEN data_type in (SELECT value FROM json_each(:data_types))\
+		 ELSE 1 END'
 	);
 
 	return (args: Args) => {
-		const ret = stmt.all(args);
+		const ret = stmt.all({ ...args, data_types: JSON.stringify(args.data_types) });
 		if (ret) return ret.map((i) => ({ ...i, data: JSON.parse(i.data) }));
 	};
 })();

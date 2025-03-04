@@ -15,12 +15,12 @@ export const load = async ({ cookies, locals, url }) => {
 		availableTimeSpans
 	);
 
-	let themeCookie = cookies.get('theme') ?? 'auto';
-
 	if (locals.user) {
 		settings = getUserSettings(locals.user.id);
 		savedTimetableData = getUserSavedTimetableData({ user_id: locals.user.id, year, semester });
 	}
+
+	let themeCookie = cookies.get('theme') ?? 'auto';
 
 	return {
 		themeCookie,

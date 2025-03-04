@@ -141,8 +141,30 @@ function constructFullCourses(instances_iter: Iterable<FullCourseInstance>) {
 
 ////////////// SAVE DATA FUNCTIONS
 
-function loadServer() {}
-function saveServer() {}
+function sendDataToServer(data: unknown, data_type: SavedDataTypes) {
+	navigator.sendBeacon(
+		'/api/user/update/data',
+		JSON.stringify({
+			year: page.data.year,
+			semester: page.data.semester,
+			data_type,
+			data,
+		})
+	);
+}
+
+function saveServerCourses() {
+	if (page.data.user) sendDataToServer(courses.values().toArray(), 'courses');
+}
+
+function saveServerInstances() {
+	if (page.data.user) sendDataToServer(instances.values().toArray(), 'instances');
+}
+
+function saveServerActiveInstances() {
+	if (page.data.user)
+		sendDataToServer(active_instances_ids.values().toArray(), 'active_instance_ids');
+}
 
 export function saveCourses() {
 	if (!browser) return;
@@ -153,9 +175,28 @@ export function saveCourses() {
 		page.data.semester
 	);
 }
-export function loadCourses() {
+
+////////////// LOAD DATA FUNCTIONS
+
+const dataTypeToFetch: SavedDataTypes[] = ['courses', 'instances', 'active_instance_ids'];
+const fetchDataTypesUrl = `/api/user/get/data?data_types=${JSON.stringify(dataTypeToFetch)}`;
+
+async function loadServerCourses() {
+	if (!page.data.user) return;
+	const response = await fetch(fetchDataTypesUrl);
+	const courseAndInstances = await response.json();
+	return courseAndInstances;
+}
+
+export async function loadCourses() {
 	if (!browser) return;
 	clearState();
+
+	const courseAndInstances = await loadServerCourses();
+	if (courseAndInstances) {
+		console.log('server data:', courseAndInstances);
+	}
+
 	const full_courses = getCurrentCourses(page.data.year, page.data.semester);
 	for (const full_course of full_courses) {
 		full_course.instances.forEach((instance) =>
@@ -175,13 +216,36 @@ export function loadCourses() {
 export function toggleInstance(instance_id: number) {
 	// Tries to deactivate instance. If instance is already deactivated, activates it.
 	if (!active_instances_ids.delete(instance_id)) active_instances_ids.add(instance_id);
+	saveServerActiveInstances();
 	saveCourses();
 }
 
+function stripExcessProperties<T extends object>(obj: T, allowedKeys: (keyof T)[]): T {
+	const stripped_obj: Partial<T> = {};
+	for (const key in obj) {
+		if (allowedKeys.includes(key)) {
+			stripped_obj[key] = obj[key];
+		}
+	}
+	return stripped_obj as T;
+}
+
 export function addCourse(course: Course, course_instances: FullCourseInstance[]) {
-	courses.set(GCID(course), course);
+	const courseKeys: (keyof Course)[] = [
+		'course_id',
+		'name',
+		'year',
+		'credit',
+		'description',
+		'syllabus_link',
+	];
+	const stripped_course = stripExcessProperties(course, courseKeys);
+	courses.set(GCID(stripped_course), stripped_course);
 	for (let i = 0; i < course_instances.length; i++)
 		instances.set(course_instances[i].course_instance_id, course_instances[i]);
+
+	saveServerInstances();
+	saveServerCourses();
 	saveCourses();
 }
 
@@ -206,6 +270,8 @@ export function removeCourse(CourseOrCID: CourseIdString | Course): void {
 		instances.delete(id);
 		active_instances_ids.delete(id);
 	}
+	saveServerInstances();
+	saveServerCourses();
 	saveCourses();
 }
 
@@ -261,6 +327,7 @@ export function getActiveFullCourses(): FullCourse[] {
 	return constructFullCourses(getActiveInstancesIter()).toArray();
 }
 
+/** get full courses with including non active ones */
 export function getFullCourses(): FullCourse[] {
 	return constructFullCourses(instances.values()).toArray();
 }
