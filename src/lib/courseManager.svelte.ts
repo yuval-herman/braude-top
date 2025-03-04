@@ -115,7 +115,6 @@ export function undo() {
 	redoStack.push(constructUndoStackItem());
 	clearState();
 	loadStackItem(item);
-	console.log(undoStack, item);
 	saveAllData();
 }
 export function redo() {
