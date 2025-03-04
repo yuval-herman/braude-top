@@ -13,6 +13,16 @@ export function randomNumber(min: number, max: number) {
 	return Math.random() * (max - min) + min;
 }
 
+export function stripExcessProperties<T extends object>(obj: T, allowedKeys: (keyof T)[]): T {
+	const stripped_obj: Partial<T> = {};
+	for (const key in obj) {
+		if (allowedKeys.includes(key)) {
+			stripped_obj[key] = obj[key];
+		}
+	}
+	return stripped_obj as T;
+}
+
 export function sameObject(
 	obj1: Record<string, any>,
 	obj2: Record<string, any>,

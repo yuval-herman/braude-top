@@ -83,6 +83,7 @@ import {
 } from './storage';
 import { browser } from '$app/environment';
 import { page } from '$app/state';
+import { stripExcessProperties } from './utils/utils';
 
 type CourseIdString = `${number}-${number}`; // `${course_id}-${year}`
 
@@ -277,16 +278,6 @@ export async function loadCourses() {
 }
 
 ////////////// SET STATE FUNCTIONS
-
-function stripExcessProperties<T extends object>(obj: T, allowedKeys: (keyof T)[]): T {
-	const stripped_obj: Partial<T> = {};
-	for (const key in obj) {
-		if (allowedKeys.includes(key)) {
-			stripped_obj[key] = obj[key];
-		}
-	}
-	return stripped_obj as T;
-}
 
 export function toggleInstance(instance_id: number) {
 	saveSnapshotToUndo();
