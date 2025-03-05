@@ -31,6 +31,8 @@
 
 ### ui stuff
 
+- make times appear between grid cells, similarly to google calendar (adjustable in settings)
+- clicking items in table unfolds them instead of deleting them (adjustable in settings)
 - add custom events to timetable
 - custom items in timetable should behave like normal items (remake timetable logic?)
 - when hovering in timetable scroll to item location in paginated list (toggle in settings)
