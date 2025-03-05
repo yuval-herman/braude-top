@@ -6,13 +6,13 @@ test.describe('main page', () => {
 
 	test('switch semesters', async ({ page }) => {
 		let baseUrl = page.url();
-		await page.getByLabel('סמסטר אאבקיץ').selectOption('{"year":2024,"semester":"א"}');
+		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2024,"semester":"א"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2024&semester=א');
 
-		await page.getByLabel('סמסטר אאבקיץ').selectOption('{"year":2024,"semester":"קיץ"}');
+		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2024,"semester":"קיץ"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2024&semester=קיץ');
 
-		await page.getByLabel('סמסטר אאבקיץ').selectOption('{"year":2025,"semester":"א"}');
+		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2025,"semester":"א"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2025&semester=א');
 	});
 
@@ -191,11 +191,10 @@ test.describe('main page', () => {
 			await expect(
 				page.getByText('הרצאה מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 709 L')
 			).toBeVisible();
-
+			await expect(page.getByText('הרצאה מבוא למדעי המחשב ושפת C')).toBeVisible();
 			await expect(
 				page.getByText("מעבדה מבוא למדעי המחשב ושפת C גב' רונן ענבל מע' 109 M")
 			).toBeVisible();
-			await expect(page.getByText('הרצאה מבוא למדעי המחשב ושפת C')).toBeVisible();
 		});
 
 		await test.step('remove instances', async () => {
@@ -215,10 +214,7 @@ test.describe('main page', () => {
 			await expect(
 				page.getByText('הרצאה מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 221 M נגישות')
 			).not.toBeVisible();
-			await expect(
-				page.getByText('הרצאה מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 709 L')
-			).not.toBeVisible();
-
+			await expect(page.getByText('הרצאה מבוא למדעי המחשב ושפת C')).not.toBeVisible();
 			await expect(
 				page.getByText("מעבדה מבוא למדעי המחשב ושפת C גב' רונן ענבל מע' 109 M")
 			).not.toBeVisible();
@@ -232,33 +228,30 @@ test.describe('main page', () => {
 		);
 
 		await test.step('add instances', async () => {
+			await page.getByText('הרצאה של ד"ר מילר אורנה בעברית יום ג חדר 709 L 08:30-10:').click();
 			await page
-				.getByText("מעבדה של מר כהן גדעון בעברית, הקורס מלא! יום ב חדר 306 M מע' 15:50-17:")
+				.getByText('הרצאה של ד"ר אידריס גזאוי סמאח בעברית יום ד חדר 705 L 08:30-10:')
 				.click();
+			await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
 			await page
-				.getByText('תרגיל של ד"ר מילר אורנה בעברית, הקורס מלא! יום ג חדר 209 M 10:30-12:')
-				.click();
-			await page
-				.getByText("מעבדה של מר ליחולט אנטולי בעברית יום ד חדר מע' 109 M 16:50-18:")
-				.click();
-			await page
-				.getByText("מעבדה של מר שדה אייל בעברית, הקורס מלא! יום ד חדר 316 M מע' 10:30-12:")
+				.getByText("מעבדה של גב' רונן ענבל ב, הקורס מלא! יום ה חדר מע' 109 M 14:50-16:")
 				.click();
 		});
 
 		await test.step('check instances were added', async () => {
 			await expect(
-				page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
+				page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 709 L' })
 			).toBeVisible();
 			await expect(
-				page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
-			).toBeVisible();
-
-			await expect(
-				page.getByText("מעבדה מבוא למדעי המחשב ושפת C מר שדה אייל 316 M מע'")
+				page.getByRole('gridcell', {
+					name: 'הרצאה מבוא למדעי המחשב (מל"מ) ד"ר אידריס גזאוי סמאח 705 L',
+				})
 			).toBeVisible();
 			await expect(
-				page.getByText("מעבדה מבוא למדעי המחשב ושפת C מר ליחולט אנטולי מע' 109 M")
+				page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב ושפת C' })
+			).toBeVisible();
+			await expect(
+				page.getByRole('gridcell', { name: 'מעבדה מבוא למדעי המחשב ושפת C' })
 			).toBeVisible();
 		});
 
@@ -271,20 +264,18 @@ test.describe('main page', () => {
 
 		await test.step('verify instances were removed', async () => {
 			await expect(
-				page.getByText("כדי לראות קורסים צריך לבחור אותם בלשונית 'כל הקורסים'")
-			).toBeVisible();
-			await expect(
-				page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
+				page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 709 L' })
 			).not.toBeVisible();
 			await expect(
-				page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
-			).not.toBeVisible();
-
-			await expect(
-				page.getByText("מעבדה מבוא למדעי המחשב ושפת C מר שדה אייל 316 M מע'")
+				page.getByRole('gridcell', {
+					name: 'הרצאה מבוא למדעי המחשב (מל"מ) ד"ר אידריס גזאוי סמאח 705 L',
+				})
 			).not.toBeVisible();
 			await expect(
-				page.getByText("מעבדה מבוא למדעי המחשב ושפת C מר ליחולט אנטולי מע' 109 M")
+				page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב ושפת C' })
+			).not.toBeVisible();
+			await expect(
+				page.getByRole('gridcell', { name: 'מעבדה מבוא למדעי המחשב ושפת C' })
 			).not.toBeVisible();
 		});
 	});
@@ -297,9 +288,7 @@ test.describe('main page', () => {
 		await page
 			.getByText("מעבדה של מר כהן גדעון בעברית, הקורס מלא! יום ב חדר 306 M מע' 15:50-17:")
 			.click();
-		await page
-			.getByText('תרגיל של ד"ר מילר אורנה בעברית, הקורס מלא! יום ג חדר 209 M 10:30-12:')
-			.click();
+		await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
 
 		// hover this to remove preview of other instance
 		await page.getByLabel('שינוי צבעים בהיר/כהה').hover();
@@ -311,7 +300,7 @@ test.describe('main page', () => {
 			page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
 		).not.toBeVisible();
 		await expect(
-			page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
+			page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב ושפת C' })
 		).not.toBeVisible();
 
 		await page.locator('body').press('ControlOrMeta+y');
@@ -321,7 +310,7 @@ test.describe('main page', () => {
 			page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
 		).toBeVisible();
 		await expect(
-			page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
+			page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב ושפת C' })
 		).toBeVisible();
 
 		await page.locator('body').press('ControlOrMeta+z');
@@ -331,7 +320,7 @@ test.describe('main page', () => {
 			page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
 		).not.toBeVisible();
 		await expect(
-			page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
+			page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב ושפת C' })
 		).not.toBeVisible();
 
 		await page.getByText("מעבדה של מר ליחולט אנטולי בעברית יום ד חדר מע' 109 M 16:50-18:").click();
@@ -347,7 +336,7 @@ test.describe('main page', () => {
 			page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
 		).not.toBeVisible();
 		await expect(
-			page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
+			page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב ושפת C' })
 		).not.toBeVisible();
 
 		await expect(
@@ -367,9 +356,7 @@ test.describe('main page', () => {
 			await page
 				.getByText("מעבדה של מר כהן גדעון בעברית, הקורס מלא! יום ב חדר 306 M מע' 15:50-17:")
 				.click();
-			await page
-				.getByText('תרגיל של ד"ר מילר אורנה בעברית, הקורס מלא! יום ג חדר 209 M 10:30-12:')
-				.click();
+			await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
 			await page
 				.getByText("מעבדה של מר ליחולט אנטולי בעברית יום ד חדר מע' 109 M 16:50-18:")
 				.click();
@@ -385,9 +372,8 @@ test.describe('main page', () => {
 				page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
 			).toBeVisible();
 			await expect(
-				page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
+				page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב ושפת C' })
 			).toBeVisible();
-
 			await expect(
 				page.getByText("מעבדה מבוא למדעי המחשב ושפת C מר שדה אייל 316 M מע'")
 			).toBeVisible();

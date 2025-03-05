@@ -6,13 +6,13 @@ test.describe('main page', () => {
 
 	test('switch semesters', async ({ page }) => {
 		let baseUrl = page.url();
-		await page.getByLabel('סמסטר אאבקיץ').selectOption('{"year":2024,"semester":"א"}');
+		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2024,"semester":"א"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2024&semester=א');
 
-		await page.getByLabel('סמסטר אאבקיץ').selectOption('{"year":2024,"semester":"קיץ"}');
+		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2024,"semester":"קיץ"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2024&semester=קיץ');
 
-		await page.getByLabel('סמסטר אאבקיץ').selectOption('{"year":2025,"semester":"א"}');
+		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2025,"semester":"א"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2025&semester=א');
 	});
 
@@ -256,9 +256,7 @@ test.describe('main page', () => {
 			await page
 				.getByText("מעבדה של מר כהן גדעון בעברית, הקורס מלא! יום ב חדר 306 M מע' 15:50-17:")
 				.click();
-			await page
-				.getByText('תרגיל של ד"ר מילר אורנה בעברית, הקורס מלא! יום ג חדר 209 M 10:30-12:')
-				.click();
+			await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
 			await page
 				.getByText("מעבדה של מר ליחולט אנטולי בעברית יום ד חדר מע' 109 M 16:50-18:")
 				.click();
@@ -272,10 +270,7 @@ test.describe('main page', () => {
 			await expect(
 				page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
 			).toBeVisible();
-			await expect(
-				page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
-			).toBeVisible();
-
+			await expect(page.getByText('הרצאה מבוא למדעי המחשב ושפת C')).toBeVisible();
 			await expect(
 				page.getByText("מעבדה מבוא למדעי המחשב ושפת C מר שדה אייל 316 M מע'")
 			).toBeVisible();
@@ -301,10 +296,7 @@ test.describe('main page', () => {
 			await expect(
 				page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
 			).not.toBeVisible();
-			await expect(
-				page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
-			).not.toBeVisible();
-
+			await expect(page.getByText('הרצאה מבוא למדעי המחשב ושפת C')).not.toBeVisible();
 			await expect(
 				page.getByText("מעבדה מבוא למדעי המחשב ושפת C מר שדה אייל 316 M מע'")
 			).not.toBeVisible();
@@ -324,9 +316,7 @@ test.describe('main page', () => {
 			await page
 				.getByText("מעבדה של מר כהן גדעון בעברית, הקורס מלא! יום ב חדר 306 M מע' 15:50-17:")
 				.click();
-			await page
-				.getByText('תרגיל של ד"ר מילר אורנה בעברית, הקורס מלא! יום ג חדר 209 M 10:30-12:')
-				.click();
+			await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
 			await page
 				.getByText("מעבדה של מר ליחולט אנטולי בעברית יום ד חדר מע' 109 M 16:50-18:")
 				.click();
@@ -342,9 +332,8 @@ test.describe('main page', () => {
 				page.getByText('מעבדה מבוא למדעי המחשב (מל"מ) מר כהן גדעון 306 M מע\'')
 			).toBeVisible();
 			await expect(
-				page.getByText('תרגיל מבוא למדעי המחשב (מל"מ) ד"ר מילר אורנה 209 M')
+				page.getByRole('gridcell', { name: 'הרצאה מבוא למדעי המחשב ושפת C' })
 			).toBeVisible();
-
 			await expect(
 				page.getByText("מעבדה מבוא למדעי המחשב ושפת C מר שדה אייל 316 M מע'")
 			).toBeVisible();
