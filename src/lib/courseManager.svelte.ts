@@ -288,8 +288,7 @@ export function toggleInstance(instance_id: number) {
 	saveLocalData();
 }
 
-export function addCourse(course: Course, course_instances: FullCourseInstance[]) {
-	saveSnapshotToUndo();
+function addCourseNoUndo(course: Course, course_instances: FullCourseInstance[]) {
 	const courseKeys: (keyof Course)[] = [
 		'course_id',
 		'name',
@@ -306,6 +305,20 @@ export function addCourse(course: Course, course_instances: FullCourseInstance[]
 	saveServerInstances();
 	saveServerCourses();
 	saveLocalData();
+}
+
+export function addCourse(course: Course, course_instances: FullCourseInstance[]) {
+	saveSnapshotToUndo();
+	addCourseNoUndo(course, course_instances);
+}
+
+export function addCourseActivateInstance(
+	course: Course,
+	course_instances: FullCourseInstance[],
+	instance_id: number
+) {
+	addCourseNoUndo(course, course_instances);
+	toggleInstance(instance_id);
 }
 
 export function removeCourse(CID: CourseIdString): void;

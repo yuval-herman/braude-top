@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {
 		addCourse,
+		addCourseActivateInstance,
 		getActiveExams,
 		getActiveInstances,
 		hasCourse,
@@ -96,7 +97,7 @@
 				onclick={() => {
 					hasCourse(course)
 						? toggleInstance(instance.course_instance_id)
-						: (addCourse(course, course.instances), toggleInstance(instance.course_instance_id));
+						: addCourseActivateInstance(course, course.instances, instance.course_instance_id);
 				}}
 				onmouseenter={() => {
 					hoveredItems.items = itemizeCourse({ ...course, instances: [instance] }, true);
