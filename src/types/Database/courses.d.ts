@@ -29,6 +29,7 @@ interface CourseSession {
 	start_time: TimeString;
 	end_time: TimeString;
 	room: string;
+	last_modified: string;
 }
 
 interface EmptyRoom {
@@ -38,6 +39,7 @@ interface EmptyRoom {
 	start_time: TimeString;
 	end_time: TimeString;
 	room: string;
+	last_modified: string;
 }
 
 interface CourseExam {
@@ -52,6 +54,7 @@ interface CourseExam {
 		| 'מבחן בית'
 		| 'ללא השגחה'
 		| 'בחינה מפוצלת';
+	last_modified: string;
 }
 
 interface CourseInstance {
@@ -71,6 +74,8 @@ interface CourseInstance {
 	extra_notes: string | null;
 	instructor: string;
 	co_requirements: string | null;
+	last_modified: string;
+	full_instance_hash: string;
 }
 
 interface Course {
@@ -80,6 +85,7 @@ interface Course {
 	credit: number;
 	description: string;
 	syllabus_link: string | null;
+	last_modified: string;
 }
 
 type FullCourseInstance = CourseInstance & {
