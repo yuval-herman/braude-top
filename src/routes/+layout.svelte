@@ -21,7 +21,6 @@
 
 	onMount(() => {
 		if (data.settings) settings.set(data.settings);
-		loadCourses();
 	});
 
 	afterNavigate(() => {
