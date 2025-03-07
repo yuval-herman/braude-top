@@ -18,6 +18,7 @@
 	import space from 'color-space';
 	import { fade, slide } from 'svelte/transition';
 	import Indicator from './Indicator.svelte';
+	import Sessions from './leaves/Sessions.svelte';
 
 	interface Props {
 		course: FullCourse;
@@ -120,15 +121,7 @@
 					</div>
 				{/if}
 
-				<div class="sessions">
-					{#each instance.sessions as session}
-						<div class="session">
-							<span>יום {session.week_day}</span>
-							<span>חדר {session.room}</span>
-							<span>{session.start_time}-{session.end_time}</span>
-						</div>
-					{/each}
-				</div>
+				<Sessions sessions={instance.sessions} />
 			</div>
 		{/each}
 		{#if mode === 'my'}
@@ -275,19 +268,6 @@
 					background: var(--dark);
 					border-radius: 8px;
 					padding: 4px 6px;
-				}
-			}
-			.sessions {
-				color: black;
-				border-radius: 8px;
-				border: dashed var(--border) 4px;
-				overflow: hidden;
-				.session {
-					background: var(--contrast);
-					&:not(:last-child) {
-						border-bottom: var(--border) 2px solid;
-					}
-					padding: 4px;
 				}
 			}
 		}
