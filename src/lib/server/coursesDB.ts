@@ -8,6 +8,14 @@ export const getCourses = (() => {
 	return () => stmt.all();
 })();
 
+/** Retrieves one course by id and year */
+export const getCourse = (() => {
+	const stmt = coursesDB.prepare<[number, number], Course>(
+		'SELECT * from courses WHERE course_id = ? and year = ?'
+	);
+	return (id: number | string, year: number) => stmt.get(id as number, year);
+})();
+
 /** Check if a course exists in the db */
 export const checkCourse = (() => {
 	const stmt = coursesDB.prepare<[number, number], boolean>(
@@ -16,7 +24,25 @@ export const checkCourse = (() => {
 	return (id: number | string, year: number) => Boolean(stmt.get(id as number, year));
 })();
 
-/** Retrieves full course by id */
+/** Check if an instance hash exists in the db */
+export const checkInstanceHash = (() => {
+	const stmt = coursesDB.prepare<string, boolean>(
+		'SELECT EXISTS(SELECT 1 FROM course_instances WHERE full_instance_hash = ?)'
+	);
+	return (hash: string) => Boolean(stmt.get(hash));
+})();
+
+export const getCourseLastModified = (() => {
+	const stmt = coursesDB
+		.prepare<
+			[number, number],
+			string
+		>('SELECT last_modified FROM courses WHERE course_id = ? and year = ?')
+		.pluck();
+	return (id: number | string, year: number) => stmt.get(id as number, year);
+})();
+
+/** Retrieves full course by id and year */
 export const getFullCourse = (() => {
 	const courseStmt = coursesDB.prepare<[number, number], Course>(
 		'SELECT * from courses WHERE course_id = ? and year = ?'

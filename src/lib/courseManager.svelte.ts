@@ -91,6 +91,10 @@ const courses = new SvelteMap<CourseIdString, Course>();
 const instances = new SvelteMap<number, FullCourseInstance>();
 const active_instances_ids = new SvelteSet<number>();
 
+const course_updates = $state<Course[]>([]);
+const invalidated_instances_ids = $state<number[]>([]);
+const invalidated_course_cids = $state<CourseIdString[]>([]);
+
 type UndoStackItem = [Course[], FullCourseInstance[], number[]];
 const undoStack: UndoStackItem[] = [];
 const redoStack: UndoStackItem[] = [];
@@ -137,9 +141,12 @@ function clearState(): void {
 }
 
 // Get course id string
-function GCID(course: Course): CourseIdString;
+function GCID(course: Pick<Course, 'course_id' | 'year'>): CourseIdString;
 function GCID(course_id: number, year: number): CourseIdString;
-function GCID(courseOrId: number | Course, year?: number): CourseIdString {
+function GCID(
+	courseOrId: number | Pick<Course, 'course_id' | 'year'>,
+	year?: number
+): CourseIdString {
 	return typeof courseOrId === 'number'
 		? `${courseOrId}-${year!}`
 		: `${courseOrId.course_id}-${courseOrId.year}`;
@@ -177,6 +184,72 @@ function constructFullCourses(instances_iter: Iterable<FullCourseInstance>) {
 		}
 	}
 	return full_courses.values();
+}
+
+////////////// SERVER SYNC FUNCTIONS
+
+async function checkForDataUpdates() {
+	const course_identifiers = courses
+		.values()
+		.map((c) => ({ course_id: c.course_id, year: c.year, last_modified: c.last_modified }))
+		.toArray();
+	const instance_hashes = instances
+		.values()
+		.map((c) => c.full_instance_hash)
+		.toArray();
+
+	// TODO handle network errors.
+	const { deleted_courses, missing_hashes, modified_courses } = (await (
+		await fetch('/api/db/verify', {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			method: 'POST',
+			body: JSON.stringify({ courses: course_identifiers, instance_hashes }),
+		})
+	).json()) as {
+		modified_courses: Course[];
+		deleted_courses: Pick<Course, 'course_id' | 'year'>[];
+		missing_hashes: string[];
+	};
+
+	invalidated_course_cids.push(...deleted_courses.map(GCID));
+	invalidated_instances_ids.push(
+		...instances
+			.values()
+			.filter((i) => missing_hashes.includes(i.full_instance_hash))
+			.map((i) => i.course_instance_id)
+			.toArray()
+	);
+	course_updates.push(...modified_courses);
+}
+
+// TODO should alert users to changes in course details, but this is less important then changes in
+// sessions and instances, so no action is needed in such a case
+// export function getOutdatedCourses();
+
+export function getDeletedCourses(): Course[] {
+	return invalidated_course_cids
+		.map((cid) => courses.get(cid) ?? cid)
+		.filter((courseOrCid): courseOrCid is Course => {
+			if (typeof courseOrCid === 'object') return true;
+			console.error(
+				`course CID (${courseOrCid}) from invalidated_course_cids was not found in courses map`
+			);
+			return false;
+		});
+}
+
+export function getDeletedInstances(): FullCourseInstance[] {
+	return invalidated_instances_ids
+		.map((id) => instances.get(id) ?? id)
+		.filter((instanceOrId): instanceOrId is FullCourseInstance => {
+			if (typeof instanceOrId === 'object') return true;
+			console.error(
+				`instance id (${instanceOrId}) from invalidated_instances_ids was not found in instances map`
+			);
+			return false;
+		});
 }
 
 ////////////// SAVE DATA FUNCTIONS
@@ -256,6 +329,7 @@ export async function loadCourses() {
 			server_courses?.forEach((c) => courses.set(GCID(c), c));
 			server_instances?.forEach((i) => instances.set(i.course_instance_id, i));
 			server_active_instance_ids?.forEach((i) => active_instances_ids.add(i));
+			checkForDataUpdates();
 			return;
 		}
 	} catch (error) {
@@ -276,6 +350,7 @@ export async function loadCourses() {
 	getCurrentActiveInstances(page.data.year, page.data.semester)?.forEach((id) =>
 		active_instances_ids.add(id)
 	);
+	checkForDataUpdates();
 }
 
 ////////////// SET STATE FUNCTIONS
@@ -296,6 +371,7 @@ function addCourseNoUndo(course: Course, course_instances: FullCourseInstance[])
 		'credit',
 		'description',
 		'syllabus_link',
+		'last_modified',
 	];
 	const stripped_course = stripExcessProperties(course, courseKeys);
 	courses.set(GCID(stripped_course), stripped_course);
