@@ -110,7 +110,9 @@
 					<span>{instance.type}</span>
 					<span>של</span>
 					<span>{instance.instructor}</span>
-					<span>ב{instance.language}{instance.is_full ? ',' : ''}</span>
+					{#if instance.language}
+						<span>ב{instance.language}</span>
+					{/if}
 					{#if instance.is_full}
 						<span class="warn">הקורס מלא!</span>
 					{/if}
