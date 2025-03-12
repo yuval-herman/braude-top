@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import Sessions from '$lib/components/leaves/Sessions.svelte';
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
@@ -9,9 +10,13 @@
 		getActiveFullCourses,
 		getActiveInstances,
 		getCoursesAmount,
+		getDeletedCourses,
+		getDeletedInstancesByCourse,
 		getFullCourses,
 		redo,
 		removeAllCoursesData,
+		removeCourse,
+		removeInstance,
 		saveSnapshotToUndo,
 		undo,
 	} from '$lib/courseManager.svelte.js';
@@ -23,10 +28,10 @@
 	import { onMount } from 'svelte';
 	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
-	import { fly, slide, type FlyParams } from 'svelte/transition';
+	import { slide, type FlyParams } from 'svelte/transition';
 
 	const { data } = $props();
-	let tab = $state<'all' | 'my'>('all');
+	let tab = $state<'all' | 'my' | 'updates'>('updates');
 
 	onMount(() => {
 		if (!TypedLocalStorage.getItem('onboarded')) {
@@ -78,14 +83,11 @@
 			</div>
 			<button id="all-courses" onclick={() => (tab = 'all')}>כל הקורסים</button>
 			<button id="my-courses" onclick={() => (tab = 'my')}>הקורסים שלי</button>
+			<button id="course-updates" onclick={() => (tab = 'updates')}>עדכוני מערכת</button>
 		</nav>
 
 		{#if tab === 'all'}
-			<div
-				class="list-container"
-				in:fly={tabTransition('all', 'in')}
-				out:fly={tabTransition('all', 'out')}
-			>
+			<div class="list-container">
 				<input
 					id="course-query"
 					type="text"
@@ -105,12 +107,8 @@
 					<i class="info" transition:slide>חפש קורסים בתיבת החיפוש!</i>
 				{/if}
 			</div>
-		{:else}
-			<div
-				class="list-container"
-				in:fly={tabTransition('my', 'in')}
-				out:fly={tabTransition('my', 'out')}
-			>
+		{:else if tab === 'my'}
+			<div class="list-container">
 				{#if getCoursesAmount() === 0}
 					<p class="warn" transition:slide>
 						כדי לראות קורסים צריך לבחור אותם בלשונית <b>'כל הקורסים'</b>
@@ -127,15 +125,62 @@
 					>
 					{@const activeInstances = getActiveInstances()}
 					{@const activeCourses = getActiveCourses()}
-					{@debug activeCourses}
 					<div transition:slide class="small-info">
 						<span>נ"ז {activeCourses.reduce((p, c) => p + c.credit, 0)}</span><span
 							>שעות לימוד {activeInstances.reduce((p, c) => p + c.hours, 0)}</span
 						>
 					</div>
 				{/if}
-
 				<PaginatedList items={getFullCourses()} mode="my" />
+			</div>
+		{:else}
+			{@const deletedCourses = getDeletedCourses()}
+			{@const deletedInstanceCourses = getDeletedInstancesByCourse()}
+			<div class="course-updates-panel">
+				<h2>קורסים מחוקים</h2>
+				<p class="small-info">
+					הקורסים ברשימה נמחקו מהשרתים של המכללה, לכן יש למחוק אותם מהמערכת שבנית. אם לדעתך יש כאן
+					טעות, מומלץ להיכנס לקבוצת הווטסאפ ולדווח על כך או לשלוח הודעה אנונימית דרך האתר.
+				</p>
+				<ol class="course-updates-list">
+					{#each deletedCourses as course}
+						<li>
+							<div class="course-update">
+								<span>{course.name}</span>
+								<button onclick={() => removeCourse(course)}>מחק</button>
+							</div>
+						</li>
+					{/each}
+				</ol>
+				<h2>שיעורים מחוקים</h2>
+				<p class="small-info">
+					השיעורים ברשימה שונו לשעות אחרות, החליפו כיתה, השתנו בצורה כלשהי או התבטלו לחלוטין. יש
+					למחוק אותם מהמערכת שבנית ולבחור בשיעורים אחרים.
+				</p>
+				<ol class="instance-update-list">
+					{#each deletedInstanceCourses as course}
+						<li>
+							<h3>{course.name}</h3>
+							<ol class="instances-list">
+								{#each course.instances as instance}
+									<li>
+										<div class="instance-details">
+											<div>
+												<span>{instance.type}</span>
+												<span>של</span>
+												<span>{instance.instructor}</span>
+											</div>
+											<button onclick={() => removeInstance(instance)}>מחק</button>
+										</div>
+										<div class="sessions">
+											<Sessions sessions={instance.sessions} />
+										</div>
+									</li>
+								{/each}
+							</ol>
+						</li>
+					{/each}
+				</ol>
 			</div>
 		{/if}
 	</div>
@@ -183,27 +228,18 @@
 		}
 	}
 	.selector {
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
 		height: 100%;
 		overflow: hidden;
-
 		padding: 8px;
 		border-radius: 8px;
 
-		.list-container {
-			display: grid;
-			gap: 12px;
-			max-height: 100%;
-			overflow: hidden;
-			.small-info {
-				background: var(--info);
-				border-radius: 8px;
-				padding: 4px 8px;
-				span {
-					margin: 4px;
-				}
+		& nav {
+			margin-bottom: 8px;
+			min-height: 2rem;
+			display: flex;
+			gap: 6px;
+			& > * {
+				flex-grow: 1;
 			}
 		}
 		& input {
@@ -212,17 +248,76 @@
 			border: 1px solid #ccc;
 			width: 100%;
 		}
-		& nav {
-			min-height: 2rem;
-			display: flex;
-			gap: 6px;
-			& > * {
-				flex-grow: 1;
+		.list-container {
+			display: grid;
+			gap: 12px;
+			height: 100%;
+			overflow: hidden;
+		}
+		.course-updates-panel {
+			max-height: 100%;
+			overflow-y: scroll;
+
+			padding-bottom: 24px;
+			.small-info {
+				font-size: 0.85em;
 			}
+			ol {
+				list-style: none;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+			.course-updates-list {
+				.course-update {
+					display: flex;
+					justify-content: space-between;
+					background: var(--neutral);
+					padding: 4px;
+					border-radius: 8px;
+					align-items: center;
+					span {
+						margin: 8px;
+					}
+					button {
+						padding: 4px 8px;
+						margin: 4px;
+					}
+				}
+			}
+			.instance-update-list {
+				.instances-list {
+					gap: 8px;
+					.instance-details {
+						display: flex;
+						justify-content: space-between;
+						background: var(--neutral);
+						padding: 8px;
+						margin-right: 8px;
+						margin-top: 8px;
+						border-radius: 4px;
+						box-shadow: 2px 2px 2px var(--shadow);
+					}
+					.sessions {
+						padding: 8px;
+						margin-right: 8px;
+					}
+				}
+			}
+		}
+	}
+	.small-info {
+		background: var(--info);
+		border-radius: 8px;
+		padding: 4px 8px;
+		span {
+			margin: 4px;
 		}
 	}
 	.menu-button {
 		display: none;
 		position: relative;
+		min-width: 40px;
 	}
 </style>

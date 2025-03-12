@@ -27,7 +27,6 @@
 		display: flex;
 		gap: 8px;
 		flex-direction: column;
-		flex-grow: 1;
 		ul {
 			flex-grow: 1;
 			list-style-type: none;

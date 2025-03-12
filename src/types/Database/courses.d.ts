@@ -93,3 +93,5 @@ type FullCourseInstance = CourseInstance & {
 	exams: CourseExam[];
 };
 type FullCourse = Course & { instances: FullCourseInstance[] };
+
+type CourseIdentifier = { course_id: number; year: number; last_modified: string };

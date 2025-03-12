@@ -16,6 +16,31 @@ export const getCourse = (() => {
 	return (id: number | string, year: number) => stmt.get(id as number, year);
 })();
 
+/** Retrieves one course identifier by id and year */
+export const getCourseIdentifier = (() => {
+	const stmt = coursesDB.prepare<[number, number], CourseIdentifier>(
+		'SELECT course_id, year, last_modified from courses WHERE course_id = ? and year = ?'
+	);
+	return (id: number | string, year: number) => stmt.get(id as number, year);
+})();
+
+/** Retrieves all instance hashes for a given course semester */
+export const getCourseInstanceHashes = (() => {
+	interface Args {
+		course_id: number;
+		year: number;
+		semester: string;
+	}
+	const stmt = coursesDB
+		.prepare<Args, string>(
+			'SELECT full_instance_hash FROM course_instances\
+			 join sessions USING (course_instance_id)\
+			 WHERE course_id = :course_id and year = :year AND semester = :semester'
+		)
+		.pluck();
+	return (args: Args) => stmt.all(args);
+})();
+
 /** Check if a course exists in the db */
 export const checkCourse = (() => {
 	const stmt = coursesDB.prepare<[number, number], boolean>(
@@ -60,6 +85,23 @@ export const getFullCourse = (() => {
 		);
 
 		return { ...course, instances };
+	};
+})();
+
+/** Retrieves full instance by id or hash */
+export const getFullInstance = (() => {
+	const idStmt = coursesDB.prepare<number, CourseInstance>(
+		'SELECT * from course_instances WHERE course_instance_id = ?'
+	);
+	const hashStmt = coursesDB.prepare<string, CourseInstance>(
+		'SELECT * from course_instances WHERE full_instance_hash = ?'
+	);
+	return (idOrHash: number | string): FullCourseInstance | undefined => {
+		const instance = typeof idOrHash === 'string' ? hashStmt.get(idOrHash) : idStmt.get(idOrHash);
+		if (!instance) return;
+		const sessions = getInstancesSession(instance.course_instance_id);
+		const exams = getInstancesExams(instance.course_instance_id);
+		return { ...instance, sessions, exams };
 	};
 })();
 

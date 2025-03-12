@@ -1,3 +1,5 @@
+import { browser } from '$app/environment';
+import { page } from '$app/state';
 import 'core-js/actual/iterator'; // Polyfill
 import { SvelteMap, SvelteSet } from 'svelte/reactivity';
 import {
@@ -6,8 +8,6 @@ import {
 	setCurrentActiveInstances,
 	setCurrentCourses,
 } from './storage';
-import { browser } from '$app/environment';
-import { page } from '$app/state';
 import { stripExcessProperties } from './utils/utils';
 
 type CourseIdString = `${number}-${number}`; // `${course_id}-${year}`
@@ -16,9 +16,8 @@ const courses = new SvelteMap<CourseIdString, Course>();
 const instances = new SvelteMap<number, FullCourseInstance>();
 const active_instances_ids = new SvelteSet<number>();
 
-const course_updates = $state<Course[]>([]);
-const invalidated_instances_ids = $state<number[]>([]);
-const invalidated_course_cids = $state<CourseIdString[]>([]);
+const invalidated_instances_ids = new SvelteSet<number>();
+const invalidated_course_cids = new SvelteSet<CourseIdString>();
 
 type UndoStackItem = [Course[], FullCourseInstance[], number[]];
 const undoStack: UndoStackItem[] = [];
@@ -63,6 +62,8 @@ function clearState(): void {
 	courses.clear();
 	instances.clear();
 	active_instances_ids.clear();
+	invalidated_instances_ids.clear();
+	invalidated_course_cids.clear();
 }
 
 // Get course id string
@@ -113,40 +114,90 @@ function constructFullCourses(instances_iter: Iterable<FullCourseInstance>) {
 
 ////////////// SERVER SYNC FUNCTIONS
 
-async function checkForDataUpdates() {
-	const course_identifiers = courses
+async function checkApplyForDataUpdates() {
+	const local_course_identifiers: CourseIdentifier[] = courses
 		.values()
-		.map((c) => ({ course_id: c.course_id, year: c.year, last_modified: c.last_modified }))
-		.toArray();
-	const instance_hashes = instances
-		.values()
-		.map((c) => c.full_instance_hash)
+		.map((course) => ({
+			course_id: course.course_id,
+			last_modified: course.last_modified,
+			year: course.year,
+		}))
 		.toArray();
 
+	const hash2id = new Map<string, number>(
+		instances.values().map((c) => [c.full_instance_hash, c.course_instance_id])
+	);
+
 	// TODO handle network errors.
-	const { deleted_courses, missing_hashes, modified_courses } = (await (
+	type ServerResponse = ({ course_id: number; year: number } & (
+		| { exists: false }
+		| { instance_hashes: string[]; exists: true; last_modified: string }
+	))[];
+	const server_response = (await (
 		await fetch('/api/db/verify', {
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			method: 'POST',
-			body: JSON.stringify({ courses: course_identifiers, instance_hashes }),
+			body: JSON.stringify({ courses: local_course_identifiers, semester: page.data.semester }),
 		})
-	).json()) as {
-		modified_courses: Course[];
-		deleted_courses: Pick<Course, 'course_id' | 'year'>[];
-		missing_hashes: string[];
-	};
+	).json()) as ServerResponse;
 
-	invalidated_course_cids.push(...deleted_courses.map(GCID));
-	invalidated_instances_ids.push(
-		...instances
-			.values()
-			.filter((i) => missing_hashes.includes(i.full_instance_hash))
-			.map((i) => i.course_instance_id)
-			.toArray()
-	);
-	course_updates.push(...modified_courses);
+	const new_instances_map = new Map<CourseIdString, string[]>();
+
+	for (const res of server_response) {
+		const CID = GCID(res.course_id, res.year);
+		if (!res.exists) {
+			invalidated_course_cids.add(CID);
+			continue;
+		}
+		const course = courses.get(CID);
+		if (!course) {
+			console.error(
+				'Course',
+				res.course_id,
+				'was checked for update but does not exist in course map'
+			);
+			continue;
+		}
+		// if(course.last_modified != last_modified) TODO update course
+		for (const hash of res.instance_hashes) {
+			const instance_id = hash2id.get(hash);
+			if (instance_id) {
+				hash2id.delete(hash);
+				continue;
+			}
+			const new_instance_hashes = new_instances_map.get(CID);
+			if (!new_instance_hashes) {
+				new_instances_map.set(CID, [hash]);
+			} else {
+				new_instance_hashes.push(hash);
+			}
+		}
+	}
+
+	if (hash2id.size > 0) {
+		hash2id.forEach((id) => invalidated_instances_ids.add(id));
+	}
+
+	for (const [CID, hashes] of new_instances_map) {
+		for (const hash of hashes) {
+			try {
+				const instance: FullCourseInstance = await (
+					await fetch('/api/db/instance/' + hash, {
+						// headers: {
+						// 	'Content-Type': 'application/json',
+						// },
+						method: 'get',
+						// body: JSON.stringify(local_course_identifiers),
+					})
+				).json();
+				instances.set(instance.course_instance_id, instance);
+			} catch (error) {
+				console.error('Failed fetching new instance', error);
+			}
+		}
+	}
 }
 
 // TODO should alert users to changes in course details, but this is less important then changes in
@@ -155,6 +206,7 @@ async function checkForDataUpdates() {
 
 export function getDeletedCourses(): Course[] {
 	return invalidated_course_cids
+		.values()
 		.map((cid) => courses.get(cid) ?? cid)
 		.filter((courseOrCid): courseOrCid is Course => {
 			if (typeof courseOrCid === 'object') return true;
@@ -162,11 +214,13 @@ export function getDeletedCourses(): Course[] {
 				`course CID (${courseOrCid}) from invalidated_course_cids was not found in courses map`
 			);
 			return false;
-		});
+		})
+		.toArray();
 }
 
 export function getDeletedInstances(): FullCourseInstance[] {
 	return invalidated_instances_ids
+		.values()
 		.map((id) => instances.get(id) ?? id)
 		.filter((instanceOrId): instanceOrId is FullCourseInstance => {
 			if (typeof instanceOrId === 'object') return true;
@@ -174,7 +228,38 @@ export function getDeletedInstances(): FullCourseInstance[] {
 				`instance id (${instanceOrId}) from invalidated_instances_ids was not found in instances map`
 			);
 			return false;
-		});
+		})
+		.toArray();
+}
+
+/** returns a list of full courses with the deleted instances in the `instances` field */
+export function getDeletedInstancesByCourse(): FullCourse[] {
+	const courseMap = new Map<CourseIdString, FullCourse>();
+
+	for (const id of invalidated_instances_ids) {
+		const instance = instances.get(id);
+		if (!instance) {
+			console.error(
+				`instance id (${id}) from invalidated_instances_ids was not found in instances map`
+			);
+			continue;
+		}
+
+		const cid = GCID(instance);
+		let ccourse = courseMap.get(cid);
+		if (!ccourse) {
+			const course = courses.get(cid);
+			if (!course) {
+				console.error(`instance (${id}) was not found in course map`);
+				continue;
+			}
+			ccourse = { ...course, instances: [instance] };
+			courseMap.set(cid, ccourse);
+		} else {
+			ccourse.instances.push(instance);
+		}
+	}
+	return courseMap.values().toArray();
 }
 
 ////////////// SAVE DATA FUNCTIONS
@@ -254,7 +339,7 @@ export async function loadCourses() {
 			server_courses?.forEach((c) => courses.set(GCID(c), c));
 			server_instances?.forEach((i) => instances.set(i.course_instance_id, i));
 			server_active_instance_ids?.forEach((i) => active_instances_ids.add(i));
-			checkForDataUpdates();
+			checkApplyForDataUpdates();
 			return;
 		}
 	} catch (error) {
@@ -275,7 +360,7 @@ export async function loadCourses() {
 	getCurrentActiveInstances(page.data.year, page.data.semester)?.forEach((id) =>
 		active_instances_ids.add(id)
 	);
-	checkForDataUpdates();
+	checkApplyForDataUpdates();
 }
 
 ////////////// SET STATE FUNCTIONS
@@ -322,6 +407,19 @@ export function addCourseActivateInstance(
 	toggleInstance(instance_id);
 }
 
+export function removeInstance(id: number): void;
+export function removeInstance(instance: CourseInstance): void;
+export function removeInstance(InstanceOrId: CourseInstance | number): void {
+	saveSnapshotToUndo();
+	const id = typeof InstanceOrId === 'number' ? InstanceOrId : InstanceOrId.course_instance_id;
+	instances.delete(id);
+	active_instances_ids.delete(id);
+	invalidated_instances_ids.delete(id);
+	saveServerInstances();
+	saveServerCourses();
+	saveLocalData();
+}
+
 export function removeCourse(CID: CourseIdString): void;
 export function removeCourse(course: Course): void;
 export function removeCourse(CourseOrCID: CourseIdString | Course): void {
@@ -330,20 +428,19 @@ export function removeCourse(CourseOrCID: CourseIdString | Course): void {
 	if (typeof CourseOrCID === 'string') {
 		CID = CourseOrCID;
 		course = courses.get(CID);
-		if (!course) throw Error('Tried to remove non existent course');
+		return;
 	} else {
 		CID = GCID(CourseOrCID);
 		course = CourseOrCID;
 	}
-	const instance_ids = instances
-		.values()
-		.filter((instance) => instance.course_id === course.course_id && instance.year === course.year)
-		.map((instance) => instance.course_instance_id);
-	courses.delete(CID);
-	for (const id of instance_ids) {
-		instances.delete(id);
-		active_instances_ids.delete(id);
+
+	for (const instance of instances.values()) {
+		if (instance.course_id === course.course_id && instance.year === course.year)
+			removeInstance(instance);
 	}
+	courses.delete(CID);
+	invalidated_course_cids.delete(CID);
+
 	saveServerInstances();
 	saveServerCourses();
 	saveLocalData();
@@ -362,6 +459,10 @@ export function hasCourse(course_id: number, year: number): boolean;
 export function hasCourse(course: Course): boolean;
 export function hasCourse(courseOrId: number | Course, year?: number): boolean {
 	return courses.has(typeof courseOrId === 'number' ? GCID(courseOrId, year!) : GCID(courseOrId));
+}
+
+export function getCourse(course_id: number, year: number): Course | undefined {
+	return courses.get(GCID(course_id, year));
 }
 
 /** Will return false for instances that don't exist as well */
