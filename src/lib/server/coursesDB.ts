@@ -101,7 +101,7 @@ export const getFullInstance = (() => {
 		if (!instance) return;
 		const sessions = getInstancesSession(instance.course_instance_id);
 		const exams = getInstancesExams(instance.course_instance_id);
-		return { ...instance, sessions, exams };
+		return { ...transformCourseInstance(instance), sessions, exams };
 	};
 })();
 
