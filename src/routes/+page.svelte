@@ -249,7 +249,8 @@
 			width: 100%;
 		}
 		.list-container {
-			display: grid;
+			display: flex;
+			flex-direction: column;
 			gap: 12px;
 			height: 100%;
 			overflow: hidden;
