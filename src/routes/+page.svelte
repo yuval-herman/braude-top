@@ -31,7 +31,7 @@
 	import { slide, type FlyParams } from 'svelte/transition';
 
 	const { data } = $props();
-	let tab = $state<'all' | 'my' | 'updates'>('updates');
+	let tab = $state<'all' | 'my' | 'updates'>('all');
 
 	onMount(() => {
 		if (!TypedLocalStorage.getItem('onboarded')) {

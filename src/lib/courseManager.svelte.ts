@@ -128,24 +128,31 @@ async function checkApplyForDataUpdates() {
 		instances.values().map((c) => [c.full_instance_hash, c.course_instance_id])
 	);
 
-	// TODO handle network errors.
-	type ServerResponse = ({ course_id: number; year: number } & (
+	type ServerUpdates = ({ course_id: number; year: number } & (
 		| { exists: false }
 		| { instance_hashes: string[]; exists: true; last_modified: string }
 	))[];
-	const server_response = (await (
-		await fetch('/api/db/verify', {
+	let response: Response;
+	try {
+		response = await fetch('/api/db/verify', {
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			method: 'POST',
 			body: JSON.stringify({ courses: local_course_identifiers, semester: page.data.semester }),
-		})
-	).json()) as ServerResponse;
+		});
+	} catch (error) {
+		console.error('could no fetch server updates:', error);
+		return;
+	}
+	if (!response.ok) {
+		console.error('could no fetch server updates:', response.statusText);
+		return;
+	}
 
-	const new_instances_map = new Map<CourseIdString, string[]>();
+	const server_updates = (await response.json()) as ServerUpdates;
 
-	for (const res of server_response) {
+	for (const res of server_updates) {
 		const CID = GCID(res.course_id, res.year);
 		if (!res.exists) {
 			invalidated_course_cids.add(CID);
@@ -167,21 +174,6 @@ async function checkApplyForDataUpdates() {
 				hash2id.delete(hash);
 				continue;
 			}
-			const new_instance_hashes = new_instances_map.get(CID);
-			if (!new_instance_hashes) {
-				new_instances_map.set(CID, [hash]);
-			} else {
-				new_instance_hashes.push(hash);
-			}
-		}
-	}
-
-	if (hash2id.size > 0) {
-		hash2id.forEach((id) => invalidated_instances_ids.add(id));
-	}
-
-	for (const [CID, hashes] of new_instances_map) {
-		for (const hash of hashes) {
 			try {
 				const instance: FullCourseInstance = await (
 					await fetch('/api/db/instance/' + hash, {
@@ -197,6 +189,10 @@ async function checkApplyForDataUpdates() {
 				console.error('Failed fetching new instance', error);
 			}
 		}
+	}
+
+	if (hash2id.size > 0) {
+		hash2id.forEach((id) => invalidated_instances_ids.add(id));
 	}
 }
 
