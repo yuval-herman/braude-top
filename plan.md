@@ -46,6 +46,7 @@
 
 # Considering
 
+- alow manual editing of sessions
 - use websockets to efficiently transfer data? search and logged users have lots of calls...
 - suggest to add empty rooms to timetable
 - in course info page, show all years info, show changes between years

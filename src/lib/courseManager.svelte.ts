@@ -16,6 +16,7 @@ const courses = new SvelteMap<CourseIdString, Course>();
 const instances = new SvelteMap<number, FullCourseInstance>();
 const active_instances_ids = new SvelteSet<number>();
 
+const new_instances = new Map<number, FullCourseInstance>();
 const invalidated_instances_ids = new SvelteSet<number>();
 const invalidated_course_cids = new SvelteSet<CourseIdString>();
 
@@ -167,7 +168,7 @@ async function checkApplyForDataUpdates() {
 			);
 			continue;
 		}
-		// if(course.last_modified != last_modified) TODO update course
+		// if(course.last_modified != res.last_modified) // TODO update course
 		for (const hash of res.instance_hashes) {
 			const instance_id = hash2id.get(hash);
 			if (instance_id) {
@@ -184,7 +185,7 @@ async function checkApplyForDataUpdates() {
 						// body: JSON.stringify(local_course_identifiers),
 					})
 				).json();
-				instances.set(instance.course_instance_id, instance);
+				new_instances.set(instance.course_instance_id, instance);
 			} catch (error) {
 				console.error('Failed fetching new instance', error);
 			}
@@ -411,6 +412,11 @@ export function removeInstance(InstanceOrId: CourseInstance | number): void {
 	instances.delete(id);
 	active_instances_ids.delete(id);
 	invalidated_instances_ids.delete(id);
+	const new_instance = new_instances.get(id);
+	if (new_instance) {
+		new_instances.delete(id);
+		instances.set(id, new_instance);
+	}
 	saveServerInstances();
 	saveServerCourses();
 	saveLocalData();

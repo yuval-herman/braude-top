@@ -143,11 +143,13 @@
 					טעות, מומלץ להיכנס לקבוצת הווטסאפ ולדווח על כך או לשלוח הודעה אנונימית דרך האתר.
 				</p>
 				<ol class="course-updates-list">
+					<button onclick={() => deletedCourses.forEach((course) => removeCourse(course))}
+						>מחק הכל</button
+					>
 					{#each deletedCourses as course}
 						<li>
 							<div class="course-update">
 								<span>{course.name}</span>
-								<button onclick={() => removeCourse(course)}>מחק</button>
 							</div>
 						</li>
 					{/each}
@@ -158,6 +160,12 @@
 					למחוק אותם מהמערכת שבנית ולבחור בשיעורים אחרים.
 				</p>
 				<ol class="instance-update-list">
+					<button
+						onclick={() =>
+							deletedInstanceCourses.forEach((course) =>
+								course.instances.forEach((instance) => removeInstance(instance))
+							)}>מחק הכל</button
+					>
 					{#each deletedInstanceCourses as course}
 						<li>
 							<h3>{course.name}</h3>
@@ -170,7 +178,6 @@
 												<span>של</span>
 												<span>{instance.instructor}</span>
 											</div>
-											<button onclick={() => removeInstance(instance)}>מחק</button>
 										</div>
 										<div class="sessions">
 											<Sessions sessions={instance.sessions} />
@@ -270,6 +277,10 @@
 				flex-direction: column;
 				gap: 4px;
 			}
+			button {
+				padding: 4px 8px;
+				margin: 4px;
+			}
 			.course-updates-list {
 				.course-update {
 					display: flex;
@@ -280,10 +291,6 @@
 					align-items: center;
 					span {
 						margin: 8px;
-					}
-					button {
-						padding: 4px 8px;
-						margin: 4px;
 					}
 				}
 			}
