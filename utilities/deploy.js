@@ -9,8 +9,8 @@ const servicename = prod ? 'braude-scheduler' : 'braude-beta-scheduler';
 /**
  * @param {string[]} commands
  */
-function runCommands(commands) {
-	execSync(`ssh ${secrets.server} "${commands.join(' && ')}"`, {
+function runSSHCommands(commands) {
+	execSync(`ssh -i ${secrets.identity_file} ${secrets.server} "${commands.join(' && ')}"`, {
 		stdio: 'inherit',
 	});
 }
@@ -24,12 +24,14 @@ execSync('npm run build' + (!prod ? ' -- --mode beta' : ''), { stdio: 'inherit' 
 execSync('tar -zcf build.tar.gz build/ package.json package-lock.json');
 
 // Copy new files to server
-execSync(`scp -r build.tar.gz ${secrets.server}:/root/`, { stdio: 'inherit' });
+execSync(`scp -i ${secrets.identity_file} -r build.tar.gz ${secrets.server}:/root/`, {
+	stdio: 'inherit',
+});
 
 execSync('rm build.tar.gz');
 
 const backupFolder = `${prod ? 'prod' : 'beta'}-${isoTime}`;
-runCommands([
+runSSHCommands([
 	// Stop, backup db, and remove app from server
 	`systemctl stop ${servicename}.service`,
 	`mkdir ${backupFolder}`,
@@ -41,7 +43,7 @@ runCommands([
 	`cp -r ${backupFolder}/data ${servicename}`,
 ]);
 
-runCommands([
+runSSHCommands([
 	`cd ${servicename}`,
 
 	// Extract files and move build files out
@@ -51,8 +53,8 @@ runCommands([
 	'rm -r build/',
 
 	// Install dependencies and copy data from braude-fetcher project
-	'source /root/.nvm/nvm.sh',
-	'npm ci --omit dev',
+	'echo "stable" > .nvmrc',
+	'/root/.nvm/nvm-exec npm ci --omit dev',
 	'cp ../braude-fetcher/courses.db data/',
 
 	// Start the server
