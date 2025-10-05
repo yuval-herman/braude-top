@@ -67,6 +67,11 @@
 			<textarea name="message" rows="4" placeholder="פרט את הבקשה שלך כאן" required></textarea>
 		</label>
 
+		<label
+			>פרטים נוספים:
+			<textarea name="additional" rows="4" placeholder="פרטים נוספים לאירוע"></textarea>
+		</label>
+
 		<input type="submit" value="שלח!" />
 	</form>
 </main>
@@ -126,6 +131,13 @@
 				border: 1px solid var(--border);
 				border-radius: 4px;
 				resize: none;
+			}
+			label:nth-last-of-type(1) {
+				/* Hide honeypot */
+				display: none;
+				* {
+					display: none;
+				}
 			}
 		}
 	}

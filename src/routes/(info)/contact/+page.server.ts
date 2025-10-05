@@ -3,7 +3,12 @@ import { fail } from '@sveltejs/kit';
 
 export const actions = {
 	contact: async ({ request }) => {
-		const message = Object.fromEntries(await request.formData());
+		const form_data = await request.formData();
+		// Just ignore honeypot messages
+		if (form_data.has('additional')) return { success: true };
+
+		const message = Object.fromEntries(form_data);
+
 		message.date = new Date().toISOString();
 		if (!verifyMessage(message)) return fail(400, { success: false });
 
