@@ -9,11 +9,12 @@ export function time2Index(timestring: string): number | undefined {
 	return index === -1 ? undefined : index;
 }
 
+const week_days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי"];
+
 export function day2Index(day: string) {
-	const first_day = 1488;
-	const index = day.charCodeAt(0) - first_day;
+	const index = week_days.indexOf(day);
 	if (index < 0 || index > 5) {
-		throw new Error('day is not recognized');
+		throw new Error(`day '${day}' is not recognized`);
 	}
 	return index;
 }
