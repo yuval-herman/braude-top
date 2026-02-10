@@ -1,0 +1,49 @@
+[[language]]
+name = "svelte"
+formatter = { command = "npx", args = ["prettier", "--plugin", "prettier-plugin-svelte", "--parser", "svelte"] }
+auto-format = true
+
+[[language]]
+name = "javascript"
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "typescript"
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "tsx"
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+auto-format = true
+
+[[language]]
+name = "json"
+formatter = { command = "npx", args = ["prettier", "--parser", "json"] }
+auto-format = true
+
+[[language]]
+name = "jsonc"
+formatter = { command = "npx", args = ["prettier", "--parser", "jsonc"] }
+auto-format = true
+
+[[language]]
+name = "html"
+formatter = { command = "npx", args = ["prettier", "--parser", "html"] }
+auto-format = true
+
+[[language]]
+name = "css"
+formatter = { command = "npx", args = ["prettier", "--parser", "css"] }
+auto-format = true
+
+[[language]]
+name = "scss"
+formatter = { command = "npx", args = ["prettier", "--parser", "scss"] }
+auto-format = true
+
+[[language]]
+name = "markdown"
+formatter = { command = "npx", args = ["prettier", "--parser", "markdown"] }
+auto-format = true
