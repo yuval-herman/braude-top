@@ -63,6 +63,42 @@
 			a:hover {
 				text-decoration: none;
 			}
+			#copy-button {
+				margin-top: 20px;
+				padding: 10px 20px;
+				background-color: transparent;
+				color: #00ff00;
+				border: none;
+				border-radius: 3px;
+				font-family: monospace;
+				font-size: 14px;
+				font-weight: bold;
+				cursor: pointer;
+				opacity: 0;
+				transition: all 0.2s ease;
+			}
+			#copy-button:hover {
+				box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+			}
+			#copy-button:active {
+				background-color: #00aa00;
+			}
+			#copy-notification {
+				display: none;
+				color: #00ff00;
+				font-weight: bold;
+				margin-top: 10px;
+				animation: fadeInOut 2s ease-in-out;
+			}
+			@keyframes fadeInOut {
+				0%,
+				100% {
+					opacity: 0;
+				}
+				50% {
+					opacity: 1;
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -70,12 +106,47 @@
 			<ul class="text">
 				<span class="cursor"></span>
 			</ul>
+			<button id="copy-button">📋 Copy Debug Info</button>
+			<div id="copy-notification">✓ Debug info copied to clipboard</div>
 		</div>
 	</body>
 	<script>
+		function copyDebugInfoToClipboard() {
+			const debugInfo = {
+				'Screen Size': `${window.screen.width}x${window.screen.height}`,
+				'Viewport Size': `${window.innerWidth}x${window.innerHeight}`,
+				'User Agent': navigator.userAgent,
+				Timestamp: new Date().toISOString(),
+				URL: window.location.href,
+				Referrer: document.referrer || 'none',
+				'Local Storage': JSON.stringify(localStorage),
+			};
+
+			navigator.clipboard
+				.writeText(JSON.stringify(debugInfo))
+				.then(() => {
+					const notification = document.getElementById('copy-notification');
+					notification.style.display = 'block';
+					setTimeout(() => {
+						notification.style.display = 'none';
+					}, 2000);
+				})
+				.catch(() => {
+					alert('Failed to copy to clipboard');
+				});
+		}
+
+		// Show button after animation completes
+		function showCopyButton() {
+			const copyButton = document.getElementById('copy-button');
+			copyButton.style.opacity = 1;
+			copyButton.addEventListener('click', copyDebugInfoToClipboard);
+		}
+
 		const list = document.getElementsByClassName('text')[0];
 		const cursor = document.getElementsByClassName('cursor')[0];
 
+		const messageSpeed = 1000;
 		const messages = [
 			'<b>SYSTEM ERROR</b>',
 			'ERROR CODE: %sveltekit.status%',
@@ -90,7 +161,7 @@
 			'<span dir="rtl">בתור סליחה, אשמח אם תוכל לשלוח לי מייל איך זה קרה, אני אשמח לתקן את הבעיה</span>',
 			'<span dir="rtl">הכל אמור לעבוד שוב אחרי רענון של הדף, מצטער על התקלה😅</span>',
 			'<span dir="rtl">זה המייל שלי: <a href="mailto:nhajeho1@gmail.com">nhajeho1@gmail.com</a></span>',
-			'<span dir="rtl">אשמח שתשלח לי לפה את כל הפרטים, או לפחות תעתיק את כל התוכן של הדף הזה ותשלח לי אותו</span>',
+			'<span dir="rtl">אשמח שתשלח לי לפה את כל הפרטים, שהובילו לתקלה, מה עשית קודם, האם זו פעם ראשונה וכו\', בנוסף, יש כפתור קטן כדי להעתיק מספר פרטים שיעזרו לי לדבג את הבעיה, תודה!</span>',
 			'<span dir="rtl">אתה יכול לנסות לרענן את הדף עכשיו, אם אתה מגיע עדיין לדף הזה, בהחלט כדאי שתשלח לי מייל...</span>',
 			'===ADMIN MESSAGE END===',
 		].reverse();
@@ -106,7 +177,7 @@
 				list.append(cursor);
 				const letters = messages.pop().split('');
 				let index = 0;
-				const interval = 2000 / letters.length;
+				const interval = messageSpeed / letters.length;
 				const id = setInterval(() => {
 					if (letters.length === index) {
 						res();
@@ -121,6 +192,8 @@
 				list.append(br);
 			}
 			cursor.classList.add('animation');
+			// Show the copy button after animation completes
+			showCopyButton();
 		})();
 	</script>
 </html>
