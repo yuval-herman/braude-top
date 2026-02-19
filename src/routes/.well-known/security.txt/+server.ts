@@ -1,3 +1,4 @@
+//@ts-expect-error
 import { ORIGIN } from '$env/static/private';
 import { resolve } from 'url';
 import { text } from '@sveltejs/kit';

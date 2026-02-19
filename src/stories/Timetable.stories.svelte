@@ -1,6 +1,6 @@
 <script module>
 	import TimeTable from '$lib/components/TimeTable.svelte';
-	import { itemizeCourseList } from '$lib/utils';
+	import { itemizeCourseList } from '$lib/utils/item.utils';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import allCourses from '../fullcourses.json';
 
