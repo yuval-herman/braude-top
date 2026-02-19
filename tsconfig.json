@@ -9,12 +9,16 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"moduleResolution": "bundler"
+		"moduleResolution": "bundler",
+		"plugins": [
+			{
+				"name": "typescript-svelte-plugin",
+				"enabled": true,
+				"assumeIsSvelteProject": true
+			}
+		]
 	},
-	"plugins": [{
-            "name": "typescript-svelte-plugin"
-  }]
-  // Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
+	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
 	//
 	// If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
