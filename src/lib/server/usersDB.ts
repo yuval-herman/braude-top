@@ -10,19 +10,19 @@ usersDB.exec(schema);
 
 /** Insert session into DB */
 export const insertSession = (() => {
-	const stmt = usersDB.prepare<Omit<Session, 'expires_at'> & { expires_at: string }>(
+	const stmt = usersDB.prepare<Omit<LoginSession, 'expires_at'> & { expires_at: string }>(
 		'INSERT INTO session (id, user_id, expires_at) VALUES (:id, :user_id, :expires_at)'
 	);
-	return (session: Session) =>
+	return (session: LoginSession) =>
 		stmt.run({ ...session, expires_at: session.expires_at.toISOString() });
 })();
 
 /** Retrieve a session */
 export const getSession = (() => {
-	const stmt = usersDB.prepare<string, Omit<Session, 'expires_at'> & { expires_at: string }>(
+	const stmt = usersDB.prepare<string, Omit<LoginSession, 'expires_at'> & { expires_at: string }>(
 		'SELECT * FROM session WHERE id = ?'
 	);
-	return (session_id: string): Session | undefined => {
+	return (session_id: string): LoginSession | undefined => {
 		const session = stmt.get(session_id);
 		return session ? { ...session, expires_at: new Date(session.expires_at) } : undefined;
 	};
@@ -36,10 +36,10 @@ export const deleteSession = (() => {
 
 /** update session expiration date */
 export const updateSessionExpiration = (() => {
-	const stmt = usersDB.prepare<Omit<Session, 'user_id' | 'expires_at'> & { expires_at: string }>(
-		'UPDATE session SET expires_at = :expires_at WHERE id = :id'
-	);
-	return (session: Omit<Session, 'user_id'>) =>
+	const stmt = usersDB.prepare<
+		Omit<LoginSession, 'user_id' | 'expires_at'> & { expires_at: string }
+	>('UPDATE session SET expires_at = :expires_at WHERE id = :id');
+	return (session: Omit<LoginSession, 'user_id'>) =>
 		stmt.run({ ...session, expires_at: session.expires_at.toISOString() });
 })();
 

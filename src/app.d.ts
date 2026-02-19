@@ -5,7 +5,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			user?: User;
-			session?: Session;
+			session?: LoginSession;
 		}
 		interface PageData {
 			availableTimeSpans: {

@@ -18,9 +18,9 @@ export function generateSessionToken(): string {
 	return token;
 }
 
-export function createSession(token: string, user_id: number | bigint): Session {
+export function createSession(token: string, user_id: number | bigint): LoginSession {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
-	const session: Session = {
+	const session: LoginSession = {
 		id: sessionId,
 		user_id,
 		expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
@@ -29,7 +29,7 @@ export function createSession(token: string, user_id: number | bigint): Session 
 	return session;
 }
 
-export function validateSessionToken(token: string): Session | null {
+export function validateSessionToken(token: string): LoginSession | null {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const session = getSession(sessionId);
 	if (!session) {
@@ -56,7 +56,7 @@ export function deleteSessionCookie(event: RequestEvent) {
 	event.cookies.delete('session', { path: '/' });
 }
 
-export function setSessionCookie(event: RequestEvent, token: string, session: Session) {
+export function setSessionCookie(event: RequestEvent, token: string, session: LoginSession) {
 	event.cookies.set('session', token, {
 		httpOnly: true,
 		sameSite: 'lax',

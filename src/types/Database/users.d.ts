@@ -1,4 +1,4 @@
-interface Session {
+interface LoginSession {
 	id: string;
 	user_id: number | bigint;
 	expires_at: Date;
