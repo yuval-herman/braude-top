@@ -4,14 +4,9 @@ import {
 	insertComment,
 	updateComment,
 } from '$lib/server/commentsDB.js';
-import {
-	checkCourse,
-	getFullCourse,
-	getSemestersAvailable,
-	getYearsAvailable,
-} from '$lib/server/coursesDB';
+import { checkCourse, getFullCourse } from '$lib/server/coursesDB';
 import { getUser } from '$lib/server/usersDB.js';
-import { resolveYearSemester } from '$lib/utils/utils.js';
+import { resolveYearSemester } from '$lib/server/utils.js';
 import { error } from '@sveltejs/kit';
 
 export const load = async ({ params, setHeaders, parent, locals }) => {
@@ -43,14 +38,10 @@ export const load = async ({ params, setHeaders, parent, locals }) => {
 
 export const actions = {
 	'add-comment': async ({ request, locals, params, url, cookies }) => {
-		const { year } = resolveYearSemester(
-			url,
-			{ year: cookies.get('year'), semester: cookies.get('semester') },
-			getYearsAvailable().map((y) => ({
-				year: y,
-				semesters: getSemestersAvailable(y),
-			}))
-		);
+		const { year } = resolveYearSemester(url, {
+			year: cookies.get('year'),
+			semester: cookies.get('semester'),
+		});
 		if (!checkCourse(params.course_id, year)) error(400, 'לא ניתן להגיב על קורס שאינו קיים');
 		const { user } = locals;
 		if (!user) error(401, 'כדי להגיב חובה להתחבר');

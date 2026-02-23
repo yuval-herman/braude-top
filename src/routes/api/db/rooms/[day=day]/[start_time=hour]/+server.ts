@@ -1,20 +1,12 @@
-import {
-	getEmptyRoomsByStart,
-	getSemestersAvailable,
-	getYearsAvailable,
-} from '$lib/server/coursesDB.js';
-import { resolveYearSemester } from '$lib/utils/utils.js';
+import { getEmptyRoomsByStart } from '$lib/server/coursesDB.js';
+import { resolveYearSemester } from '$lib/server/utils.js';
 import { json } from '@sveltejs/kit';
 
 export const GET = async ({ url, params, cookies, setHeaders }) => {
-	const { year, semester } = resolveYearSemester(
-		url,
-		{ year: cookies.get('year'), semester: cookies.get('semester') },
-		getYearsAvailable().map((y) => ({
-			year: y,
-			semesters: getSemestersAvailable(y),
-		}))
-	);
+	const { year, semester } = resolveYearSemester(url, {
+		year: cookies.get('year'),
+		semester: cookies.get('semester'),
+	});
 	const rooms = getEmptyRoomsByStart({
 		year,
 		semester,
