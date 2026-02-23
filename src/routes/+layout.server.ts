@@ -1,30 +1,15 @@
-import { getSemestersAvailable, getYearsAvailable } from '$lib/server/coursesDB';
+import { getYearSemesterMap } from '$lib/server/coursesDB';
 import { getUserSavedTimetableData, getUserSettings } from '$lib/server/usersDB.js';
 import { resolveYearSemester } from '$lib/utils/utils.js';
 
 export const load = async ({ cookies, locals, url }) => {
 	let settings, savedTimetableData;
-	const availableTimeSpans = getYearsAvailable().map((y) => ({
-		year: y,
-		semesters: getSemestersAvailable(y),
-	}));
-	let year: number | undefined = undefined,
-		semester: string | undefined = undefined;
-	while (year === undefined || semester === undefined) {
-		try {
-			({ year, semester } = resolveYearSemester(
-				url,
-				{ year: cookies.get('year'), semester: cookies.get('semester') },
-				availableTimeSpans
-			));
-		} catch {
-			// we try our best to not let this function fail because if it does the site won't load
-			availableTimeSpans.shift();
-			if (availableTimeSpans.length === 0) {
-				throw new Error('לא נמצאו תקופות זמנים זמינות');
-			}
-		}
-	}
+	const availableTimeSpans = getYearSemesterMap();
+	const { year, semester } = resolveYearSemester(
+		url,
+		{ year: cookies.get('year'), semester: cookies.get('semester') },
+		availableTimeSpans
+	);
 
 	if (locals.user) {
 		settings = getUserSettings(locals.user.id);

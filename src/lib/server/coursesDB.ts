@@ -4,41 +4,16 @@ const coursesDB = new Database('data/courses.db');
 
 /** Retrieves all the courses */
 export const getCourses = (() => {
-	const stmt = coursesDB.prepare<[], Course>('SELECT * FROM courses ORDER by name');
+	const stmt = coursesDB.prepare<[], StrippedCourse>('SELECT * FROM courses ORDER by name');
 	return () => stmt.all();
 })();
 
-/** Retrieves one course by id and year */
+/** Retrieves one stripped course by id and year */
 export const getCourse = (() => {
-	const stmt = coursesDB.prepare<[number, number], Course>(
+	const stmt = coursesDB.prepare<[number | string, number], StrippedCourse>(
 		'SELECT * from courses WHERE course_id = ? and year = ?'
 	);
-	return (id: number | string, year: number) => stmt.get(id as number, year);
-})();
-
-/** Retrieves one course identifier by id and year */
-export const getCourseIdentifier = (() => {
-	const stmt = coursesDB.prepare<[number, number], CourseIdentifier>(
-		'SELECT course_id, year, last_modified from courses WHERE course_id = ? and year = ?'
-	);
-	return (id: number | string, year: number) => stmt.get(id as number, year);
-})();
-
-/** Retrieves all instance hashes for a given course semester */
-export const getCourseInstanceHashes = (() => {
-	interface Args {
-		course_id: number;
-		year: number;
-		semester: string;
-	}
-	const stmt = coursesDB
-		.prepare<Args, string>(
-			'SELECT full_instance_hash FROM course_instances\
-			 join sessions USING (course_instance_id)\
-			 WHERE course_id = :course_id and year = :year AND semester = :semester'
-		)
-		.pluck();
-	return (args: Args) => stmt.all(args);
+	return (id: number | string, year: number) => stmt.get(id, year);
 })();
 
 /** Check if a course exists in the db */
@@ -49,63 +24,7 @@ export const checkCourse = (() => {
 	return (id: number | string, year: number) => Boolean(stmt.get(id as number, year));
 })();
 
-/** Check if an instance hash exists in the db */
-export const checkInstanceHash = (() => {
-	const stmt = coursesDB.prepare<string, boolean>(
-		'SELECT EXISTS(SELECT 1 FROM course_instances WHERE full_instance_hash = ?)'
-	);
-	return (hash: string) => Boolean(stmt.get(hash));
-})();
-
-export const getCourseLastModified = (() => {
-	const stmt = coursesDB
-		.prepare<
-			[number, number],
-			string
-		>('SELECT last_modified FROM courses WHERE course_id = ? and year = ?')
-		.pluck();
-	return (id: number | string, year: number) => stmt.get(id as number, year);
-})();
-
-/** Retrieves full course by id and year */
-export const getFullCourse = (() => {
-	const courseStmt = coursesDB.prepare<[number, number], Course>(
-		'SELECT * from courses WHERE course_id = ? and year = ?'
-	);
-	return (id: number | string, year: number): FullCourse | undefined => {
-		const course = courseStmt.get(id as number, year);
-		if (course === undefined) return;
-
-		const instances: FullCourseInstance[] = getCourseInstances(id as number, year).map(
-			(instance) => {
-				const sessions = getInstancesSession(instance.course_instance_id);
-				const exams = getInstancesExams(instance.course_instance_id);
-				return { ...instance, sessions, exams };
-			}
-		);
-
-		return { ...course, instances };
-	};
-})();
-
-/** Retrieves full instance by id or hash */
-export const getFullInstance = (() => {
-	const idStmt = coursesDB.prepare<number, CourseInstance>(
-		'SELECT * from course_instances WHERE course_instance_id = ?'
-	);
-	const hashStmt = coursesDB.prepare<string, CourseInstance>(
-		'SELECT * from course_instances WHERE full_instance_hash = ?'
-	);
-	return (idOrHash: number | string): FullCourseInstance | undefined => {
-		const instance = typeof idOrHash === 'string' ? hashStmt.get(idOrHash) : idStmt.get(idOrHash);
-		if (!instance) return;
-		const sessions = getInstancesSession(instance.course_instance_id);
-		const exams = getInstancesExams(instance.course_instance_id);
-		return { ...transformCourseInstance(instance), sessions, exams };
-	};
-})();
-
-/** Search all the course  that have sessions for a query*/
+/** Search all the courses that have sessions for a query*/
 export const queryNonEmptyCourses = (() => {
 	type Args = {
 		year: number;
@@ -115,8 +34,8 @@ export const queryNonEmptyCourses = (() => {
 
 	const stmt = coursesDB.prepare<Args, Course>(
 		"SELECT distinct c.* from courses c\
-		join course_instances using (course_id, year)\
-		join sessions USING (course_instance_id)\
+		join instances using (course_id, year)\
+		join sessions USING (instance_id)\
 		WHERE year = :year AND semester = :semester\
 		AND name like '%' || :query || '%'\
 		LIMIT 5"
@@ -127,11 +46,10 @@ export const queryNonEmptyCourses = (() => {
 
 /** Retrieves all the course instances for a given course id */
 export const getCourseInstances = (() => {
-	const stmt = coursesDB.prepare<[number, number], CourseInstance>(
-		'SELECT * FROM course_instances WHERE course_id = ? and year = ?'
+	const stmt = coursesDB.prepare<[number | string, number], CourseInstance>(
+		'SELECT * FROM instances WHERE course_id = ? and year = ?'
 	);
-	return (id: number | string, year: number) =>
-		stmt.all(id as number, year).map(transformCourseInstance);
+	return (id: number | string, year: number) => stmt.all(id, year);
 })();
 
 /** Retrieves all the course instances for a given course id that have sessions*/
@@ -142,48 +60,67 @@ export const getNonEmptyCourseInstances = (() => {
 		semester: string;
 	};
 	const stmt = coursesDB.prepare<Args, CourseInstance>(
-		'SELECT distinct c.* from course_instances c\
-		 JOIN sessions USING (course_instance_id)\
+		'SELECT distinct c.* from instances c\
+		 JOIN sessions USING (instance_id)\
 		 WHERE course_id = :course_id AND year = :year AND semester = :semester'
 	);
-	return (args: Args) => stmt.all(args).map(transformCourseInstance);
+	return (args: Args) => stmt.all(args);
 })();
 
 /** Retrieves all the instance session for a given course instance id */
 export const getInstancesSession = (() => {
-	const stmt = coursesDB.prepare<number, CourseSession>(
-		'SELECT * from sessions where course_instance_id = ?'
-	);
+	const stmt = coursesDB.prepare<number, Session>('SELECT * from sessions where instance_id = ?');
 	return (id: number | string) => stmt.all(id as number);
 })();
 
 /** Retrieves all the exams for a given course instance id */
 export const getInstancesExams = (() => {
-	const stmt = coursesDB.prepare<number, CourseExam>(
-		'SELECT * from exams WHERE course_instance_id = ?'
-	);
+	const stmt = coursesDB.prepare<number, Exam>('SELECT * from exams WHERE instance_id = ?');
 	return (id: number | string) => stmt.all(id as number);
 })();
 
-/** Retrieves the actual years that exists on courses in the db */
+/** Retrieves the list of years that exists on courses in the db */
 export const getYearsAvailable = (() => {
 	const stmt = coursesDB
-		.prepare<[], number>('SELECT DISTINCT year FROM courses ORDER by year DESC')
+		.prepare<[], string>("SELECT value from metadata where key = 'available_years'")
 		.pluck();
-	return () => stmt.all();
+	return () => JSON.parse(stmt.get()!) as number[];
 })();
 
 /** Retrieves the semesters that exists for a given year in the db */
 export const getSemestersAvailable = (() => {
 	const stmt = coursesDB
 		.prepare<number, string>(
-			'SELECT DISTINCT semester FROM sessions\
-			JOIN course_instances USING (course_instance_id)\
-			WHERE year = ?\
-			ORDER by semester'
+			"SELECT json_extract(value, '$.\"' || ? || '\"') AS semesters\
+		  FROM metadata\
+		  WHERE key = 'semesters'"
 		)
 		.pluck();
-	return (year: number) => stmt.all(year);
+	return (year: number) => JSON.parse(stmt.get(year) || '[]') as string[];
+})();
+
+/** Retrieves an object that maps between existing years to list of semesters in them */
+export const getYearSemesterMap = (() => {
+	const stmt = coursesDB
+		.prepare<[], string>("SELECT value from metadata where key = 'semesters'")
+		.pluck();
+	return () => JSON.parse(stmt.get()!) as Record<string, string[]>;
+})();
+
+/** Retrieves full course by id and year */
+export const getFullCourse = (() => {
+	return (id: number | string, year: number): Course | undefined => {
+		const strippedCourse = getCourse(id, year);
+		if (strippedCourse === undefined) return;
+
+		const instances = getCourseInstances(id as number, year).map((instance) => {
+			const sessions = getInstancesSession(instance.instance_id);
+			const exams = getInstancesExams(instance.instance_id);
+			return { ...instance, sessions, exams };
+		});
+
+		return { ...strippedCourse, instances };
+	};
 })();
 
 /** Retrieves empty rooms by year, semester and week day */
@@ -240,8 +177,3 @@ export const getEmptyRoomsByRoom = (() => {
 	);
 	return (args: Args) => stmt.all(args);
 })();
-
-function transformCourseInstance(instance: CourseInstance): CourseInstance {
-	if (typeof instance.faculty === 'string') instance.faculty = JSON.parse(instance.faculty);
-	return instance;
-}

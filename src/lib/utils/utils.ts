@@ -61,14 +61,14 @@ export function hashNumber(num: number) {
 export function resolveYearSemester(
 	url: URL,
 	currentCookies: { year?: string; semester?: string },
-	available: {
-		year: number;
-		semesters: string[];
-	}[]
+	yearSemesterMap: Record<string, string[]>
 ) {
 	let year: number = Number(url.searchParams.get('year') ?? currentCookies.year);
 	let semester: string | undefined = url.searchParams.get('semester') ?? currentCookies.semester;
 
+	const available = Object.entries(yearSemesterMap)
+		.map(([year, semesters]) => ({ year: +year, semesters }))
+		.sort((a, b) => a.year - b.year);
 	if (!year || !semester) {
 		year ||= available[0].year;
 		semester ||= available.find((i) => i.year === year)?.semesters[0];
