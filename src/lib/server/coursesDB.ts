@@ -2,6 +2,21 @@ import Database from 'better-sqlite3';
 
 const coursesDB = new Database('data/courses.db');
 
+// Any array type is stored in the db as a JSON string, this is the DB representation
+type DBStrippedCourseInstance = StrippedCourseInstance & {
+	pre_requirements?: string;
+	co_requirement_instance_ids?: string;
+};
+
+// This function to to transform a DB type course instance into our desired type with proper arrays
+function transformInstance(instance: DBStrippedCourseInstance): StrippedCourseInstance {
+	return {
+		...instance,
+		pre_requirements: JSON.parse(instance.pre_requirements || '[]'),
+		co_requirement_instance_ids: JSON.parse(instance.co_requirement_instance_ids || '[]'),
+	};
+}
+
 /** Retrieves all the courses */
 export const getCourses = (() => {
 	const stmt = coursesDB.prepare<[], StrippedCourse>('SELECT * FROM courses ORDER by name');
@@ -46,10 +61,10 @@ export const queryNonEmptyCourses = (() => {
 
 /** Retrieves all the course instances for a given course id */
 export const getCourseInstances = (() => {
-	const stmt = coursesDB.prepare<[number | string, number], StrippedCourseInstance>(
+	const stmt = coursesDB.prepare<[number | string, number], DBStrippedCourseInstance>(
 		'SELECT * FROM instances WHERE course_id = ? and year = ?'
 	);
-	return (id: number | string, year: number) => stmt.all(id, year);
+	return (id: number | string, year: number) => stmt.all(id, year).map(transformInstance);
 })();
 
 /** Retrieves all the course instances for a given course id that have sessions*/
@@ -59,12 +74,12 @@ export const getNonEmptyCourseInstances = (() => {
 		year: number;
 		semester: string;
 	};
-	const stmt = coursesDB.prepare<Args, StrippedCourseInstance>(
+	const stmt = coursesDB.prepare<Args, DBStrippedCourseInstance>(
 		'SELECT distinct c.* from instances c\
 		 JOIN sessions USING (instance_id)\
 		 WHERE course_id = :course_id AND year = :year AND semester = :semester'
 	);
-	return (args: Args) => stmt.all(args);
+	return (args: Args) => stmt.all(args).map(transformInstance);
 })();
 
 /** Retrieves all the instance session for a given course instance id */
