@@ -1,6 +1,6 @@
 <script lang="ts">
 	interface Props {
-		sessions: CourseSession[];
+		sessions: Session[];
 	}
 	const { sessions }: Props = $props();
 </script>

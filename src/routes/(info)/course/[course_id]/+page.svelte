@@ -11,19 +11,14 @@
 		const languages = new Set<string>();
 		const types = new Set<string>();
 		const notes: { id: number; note: string }[] = [];
-		let fullInstances = new Map<string, number>();
 
 		for (const instance of course.instances) {
 			if (instance.language) languages.add(instance.language);
-			if (instance.is_full)
-				fullInstances.set(instance.type, (fullInstances.get(instance.type) ?? 0) + 1);
-			if (instance.extra_notes)
-				notes.push({ note: instance.extra_notes, id: instance.course_instance_id });
 
 			types.add(instance.type);
 		}
 
-		return { languages, types, fullInstances, notes };
+		return { languages, types, notes };
 	});
 
 	const overall_rating = $derived(
@@ -71,12 +66,15 @@
 </header>
 <main>
 	<div class="flex-info">
-		<a id="syllabus" href={course.syllabus_link} target="_blank" rel="noopener noreferrer"
-			>סילבוס הקורס</a
+		<a
+			id="syllabus"
+			href={course.instances.find((i) => i.syllabus_link)?.syllabus_link}
+			target="_blank"
+			rel="noopener noreferrer">סילבוס הקורס</a
 		>
 		<span id="points"
 			><b>נ"זים:</b>
-			{course.credit}
+			{course.instances.find((i) => i.credit)?.credit}
 		</span>
 		{#if properties.languages.size > 0}
 			<span id="languages">הקורס זמין ב{joinSet(properties.languages)} </span>
@@ -100,22 +98,10 @@
 			<li>
 				<span>לקורס שיעורים מסוג {joinSet(properties.types)} </span>
 			</li>
-			{#if properties.fullInstances.size > 0}
-				<li>
-					כמויות השיעורים שכבר התמלאו הן:
-					<table>
-						<tbody>
-							{#each properties.fullInstances as [type, amount]}
-								<tr><th>{type}:</th><td> {amount}</td></tr>
-							{/each}
-						</tbody>
-					</table>
-				</li>
-			{/if}
 		</ul>
 	</div>
 	<div class="description" id="description">
-		{#each course.description.split('\n') as paragraph}
+		{#each course.description?.split('\n') as paragraph}
 			<p>{paragraph}</p>
 		{/each}
 	</div>

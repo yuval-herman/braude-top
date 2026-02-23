@@ -12,7 +12,6 @@
 	import { hoveredInstanceId, hoveredItems } from '$lib/state.svelte';
 	import { instanceColors } from '$lib/utils/constants.utils';
 	import { getContrast, num2color } from '$lib/utils/css.utils';
-	import { listFormatter } from '$lib/utils/formatter.utils';
 	import { itemizeCourse } from '$lib/utils/item.utils';
 	import parseColor from 'color-parse';
 	import space from 'color-space';
@@ -21,7 +20,7 @@
 	import Sessions from './leaves/Sessions.svelte';
 
 	interface Props {
-		course: FullCourse;
+		course: Course;
 		mode?: 'all' | 'my';
 	}
 
@@ -30,18 +29,16 @@
 	// warn when the course registration is incomplete
 	const warn = $derived(registrationIncomplete(mode, course));
 
-	function registrationIncomplete(mode: 'all' | 'my', course: FullCourse): false | string {
+	function registrationIncomplete(mode: 'all' | 'my', course: Course): false | string {
 		if (mode === 'all') return false;
 		const selected = getActiveInstances();
 		inst_loop: for (const instance of selected) {
-			if (!instance.co_requirements) continue;
-			const co_requirements: number[] = JSON.parse(instance.co_requirements);
+			if (!instance.co_requirement_instance_ids) continue;
+			const co_requirements = instance.co_requirement_instance_ids;
 			for (const req_id of co_requirements) {
-				if (selected.some((s) => s.course_instance_id === req_id)) continue inst_loop;
+				if (selected.some((s) => s.instance_id === req_id)) continue inst_loop;
 			}
-			return (
-				course.instances.find((i) => i.course_instance_id === co_requirements[0])?.type || 'תרגיל'
-			);
+			return course.instances.find((i) => i.instance_id === co_requirements[0])?.type || 'תרגיל';
 		}
 		return false;
 	}
@@ -81,12 +78,12 @@
 	{/if}
 	<div class="instances">
 		<!-- svelte-ignore a11y_no_static_element_interactions -->
-		{#each course.instances as instance, i (instance.course_instance_id)}
+		{#each course.instances as instance, i (instance.instance_id)}
 			{@const c = getColor(instance)}
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class="instance"
-				class:highlight={hoveredInstanceId.id === instance.course_instance_id}
+				class:highlight={hoveredInstanceId.id === instance.instance_id}
 				style="z-index: {course.instances.length - i};"
 				style:--instance-background={c.background}
 				style:--instance-background-hover={c.hover}
@@ -97,8 +94,8 @@
 				})}
 				onclick={() => {
 					hasCourse(course)
-						? toggleInstance(instance.course_instance_id)
-						: addCourseActivateInstance(course, course.instances, instance.course_instance_id);
+						? toggleInstance(instance.instance_id)
+						: addCourseActivateInstance(course, course.instances, instance.instance_id);
 				}}
 				onmouseenter={() => {
 					hoveredItems.items = itemizeCourse({ ...course, instances: [instance] }, true);
@@ -113,16 +110,15 @@
 					{#if instance.language}
 						<span>ב{instance.language}</span>
 					{/if}
-					{#if instance.is_full}
+					<!-- {#if instance.is_full}
 						<span class="warn">הקורס מלא!</span>
-					{/if}
+					{/if} -->
 				</div>
-				{#if instance.faculty.length}
+				<!--				{#if instance.faculty.length}
 					<div class="instance-details important">
 						<span>מיועד ל{listFormatter.format(instance.faculty)} </span>
 					</div>
-				{/if}
-
+				{/if} -->
 				<Sessions sessions={instance.sessions} />
 			</div>
 		{/each}

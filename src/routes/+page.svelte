@@ -1,22 +1,16 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import Sessions from '$lib/components/leaves/Sessions.svelte';
 	import MenuButton from '$lib/components/MenuButton.svelte';
 	import PaginatedList from '$lib/components/PaginatedList.svelte';
 	import TimeTable from '$lib/components/TimeTable.svelte';
 	import {
-		getActiveCourses,
 		getActiveFullCourses,
 		getActiveInstances,
 		getCoursesAmount,
-		getDeletedCourses,
-		getDeletedInstancesByCourse,
 		getFullCourses,
 		redo,
 		removeAllCoursesData,
-		removeCourse,
-		removeInstance,
 		saveSnapshotToUndo,
 		undo,
 	} from '$lib/courseManager.svelte.js';
@@ -26,12 +20,11 @@
 	import { itemizeCourseList, itemizeEmptyRoom } from '$lib/utils/item.utils.js';
 	import { debounce } from '$lib/utils/utils.js';
 	import { onMount } from 'svelte';
-	import { cubicIn, cubicOut } from 'svelte/easing';
 	import type { KeyboardEventHandler } from 'svelte/elements';
-	import { slide, type FlyParams } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 
 	const { data } = $props();
-	let tab = $state<'all' | 'my' | 'updates'>('all');
+	let tab = $state<'all' | 'my'>('all');
 
 	onMount(() => {
 		if (!TypedLocalStorage.getItem('onboarded')) {
@@ -48,14 +41,6 @@
 			} else if (e.code === 'KeyY') redo();
 		}
 	};
-
-	function tabTransition(tab: 'all' | 'my', dir: 'in' | 'out'): FlyParams {
-		const easing = dir === 'in' ? cubicOut : cubicIn;
-		const duration = 200;
-		const delay = dir === 'in' ? duration : 0;
-		const x = 100;
-		return { duration, easing, delay, x: tab === 'all' ? x : -x };
-	}
 
 	function initialInput(node: HTMLInputElement) {
 		node.value = page.url.searchParams.get('query') ?? '';
@@ -83,7 +68,6 @@
 			</div>
 			<button id="all-courses" onclick={() => (tab = 'all')}>כל הקורסים</button>
 			<button id="my-courses" onclick={() => (tab = 'my')}>הקורסים שלי</button>
-			<button id="course-updates" onclick={() => (tab = 'updates')}>עדכוני מערכת</button>
 		</nav>
 
 		{#if tab === 'all'}
@@ -124,70 +108,16 @@
 						}}>מחק הכל</button
 					>
 					{@const activeInstances = getActiveInstances()}
-					{@const activeCourses = getActiveCourses()}
 					<div transition:slide class="small-info">
-						<span>נ"ז {activeCourses.reduce((p, c) => p + c.credit, 0)}</span><span
+						<!-- This means that if a user activates more then one instance with a credit for the same 
+						course it might show an incorrect number. On the other hand, this might be correct 
+						behaviour in some cases. If users report issues I will investigate this. -->
+						<span>נ"ז {activeInstances.reduce((p, c) => p + c.credit, 0)}</span><span
 							>שעות לימוד {activeInstances.reduce((p, c) => p + c.hours, 0)}</span
 						>
 					</div>
 				{/if}
 				<PaginatedList items={getFullCourses()} mode="my" />
-			</div>
-		{:else}
-			{@const deletedCourses = getDeletedCourses()}
-			{@const deletedInstanceCourses = getDeletedInstancesByCourse()}
-			<div class="course-updates-panel">
-				<h2>קורסים מחוקים</h2>
-				<p class="small-info">
-					הקורסים ברשימה נמחקו מהשרתים של המכללה, לכן יש למחוק אותם מהמערכת שבנית. אם לדעתך יש כאן
-					טעות, מומלץ להיכנס לקבוצת הווטסאפ ולדווח על כך או לשלוח הודעה אנונימית דרך האתר.
-				</p>
-				<ol class="course-updates-list">
-					<button onclick={() => deletedCourses.forEach((course) => removeCourse(course))}
-						>מחק הכל</button
-					>
-					{#each deletedCourses as course}
-						<li>
-							<div class="course-update">
-								<span>{course.name}</span>
-							</div>
-						</li>
-					{/each}
-				</ol>
-				<h2>שיעורים מחוקים</h2>
-				<p class="small-info">
-					השיעורים ברשימה שונו לשעות אחרות, החליפו כיתה, השתנו בצורה כלשהי או התבטלו לחלוטין. יש
-					למחוק אותם מהמערכת שבנית ולבחור בשיעורים אחרים.
-				</p>
-				<ol class="instance-update-list">
-					<button
-						onclick={() =>
-							deletedInstanceCourses.forEach((course) =>
-								course.instances.forEach((instance) => removeInstance(instance))
-							)}>מחק הכל</button
-					>
-					{#each deletedInstanceCourses as course}
-						<li>
-							<h3>{course.name}</h3>
-							<ol class="instances-list">
-								{#each course.instances as instance}
-									<li>
-										<div class="instance-details">
-											<div>
-												<span>{instance.type}</span>
-												<span>של</span>
-												<span>{instance.instructor}</span>
-											</div>
-										</div>
-										<div class="sessions">
-											<Sessions sessions={instance.sessions} />
-										</div>
-									</li>
-								{/each}
-							</ol>
-						</li>
-					{/each}
-				</ol>
 			</div>
 		{/if}
 	</div>
@@ -261,58 +191,6 @@
 			gap: 12px;
 			height: 100%;
 			overflow: hidden;
-		}
-		.course-updates-panel {
-			max-height: 100%;
-			overflow-y: scroll;
-
-			padding-bottom: 24px;
-			.small-info {
-				font-size: 0.85em;
-			}
-			ol {
-				list-style: none;
-				padding: 0;
-				display: flex;
-				flex-direction: column;
-				gap: 4px;
-			}
-			button {
-				padding: 4px 8px;
-				margin: 4px;
-			}
-			.course-updates-list {
-				.course-update {
-					display: flex;
-					justify-content: space-between;
-					background: var(--neutral);
-					padding: 4px;
-					border-radius: 8px;
-					align-items: center;
-					span {
-						margin: 8px;
-					}
-				}
-			}
-			.instance-update-list {
-				.instances-list {
-					gap: 8px;
-					.instance-details {
-						display: flex;
-						justify-content: space-between;
-						background: var(--neutral);
-						padding: 8px;
-						margin-right: 8px;
-						margin-top: 8px;
-						border-radius: 4px;
-						box-shadow: 2px 2px 2px var(--shadow);
-					}
-					.sessions {
-						padding: 8px;
-						margin-right: 8px;
-					}
-				}
-			}
 		}
 	}
 	.small-info {

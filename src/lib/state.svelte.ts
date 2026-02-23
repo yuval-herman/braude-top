@@ -6,7 +6,7 @@ export const hoveredItems = $state<{
 	items: Item[] | undefined;
 }>({ items: undefined });
 export const hoveredInstanceId = $state<{
-	id: number | undefined;
+	id: CourseInstance['instance_id'] | undefined;
 }>({ id: undefined });
 export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
 export const selectedEmptyRooms = $state<EmptyRoom[]>([]);

@@ -9,9 +9,20 @@ export function time2Index(timestring: string): number | undefined {
 	return index === -1 ? undefined : index;
 }
 
-const week_days = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי"];
+const week_days: string[] = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'] as const;
 
+// There are two variants of weekday formats, one that uses a single letter, like א,
+// and one that uses the whole name, like ראשון
 export function day2Index(day: string) {
+	// single letter variant
+	if (day.length === 1) {
+		const first_day = 1488;
+		const index = day.charCodeAt(0) - first_day;
+		if (index < 0 || index > 5) {
+			throw new Error(`day '${day}' is not recognized`);
+		}
+		return index;
+	}
 	const index = week_days.indexOf(day);
 	if (index < 0 || index > 5) {
 		throw new Error(`day '${day}' is not recognized`);
@@ -40,10 +51,10 @@ export function itemizeEmptyRoom(room: EmptyRoom): Item<EmptyRoomItemValue> {
 }
 
 export function itemizeCourse(
-	{ name, instances, course_id, year }: FullCourse,
+	{ name, instances, course_id, year }: Course,
 	is_preview = false
 ): Item[] {
-	return instances.flatMap(({ sessions, instructor, type, course_instance_id }) =>
+	return instances.flatMap(({ sessions, instructor, type, instance_id }) =>
 		sessions.map(({ week_day, start_time, end_time, room }): Item => {
 			const day = day2Index(week_day);
 
@@ -55,9 +66,9 @@ export function itemizeCourse(
 			}
 
 			return {
-				onhover: () => (hoveredInstanceId.id = course_instance_id),
+				onhover: () => (hoveredInstanceId.id = instance_id),
 				onstopHover: () => (hoveredInstanceId.id = undefined),
-				onclick: () => ((hoveredInstanceId.id = undefined), toggleInstance(course_instance_id)),
+				onclick: () => ((hoveredInstanceId.id = undefined), toggleInstance(instance_id)),
 				day,
 				end,
 				start,
@@ -70,7 +81,7 @@ export function itemizeCourse(
 	);
 }
 
-export function itemizeCourseList(courses: FullCourse[]): Item[] {
+export function itemizeCourseList(courses: Course[]): Item[] {
 	const items = courses.flatMap((c) => itemizeCourse(c));
 	items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
 	for (let i = 0; i < items.length - 1; i++) {
