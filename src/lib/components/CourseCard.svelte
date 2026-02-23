@@ -46,7 +46,7 @@
 		return false;
 	}
 
-	function getColor(instance: CourseInstance) {
+	function getColor(instance: StrippedCourseInstance) {
 		let background = num2color(course.course_id);
 		if (isInstanceActive(instance)) {
 			const rgb = parseColor(background).values;

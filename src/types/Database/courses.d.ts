@@ -5,7 +5,7 @@ type StrippedCourse = {
 	description?: string;
 };
 
-type CourseInstance = {
+type StrippedCourseInstance = {
 	year: number;
 	course_id: number;
 	instance_id: string;
@@ -47,8 +47,10 @@ type EmptyRoom = Slot & {
 	room: string;
 };
 
+type CourseInstance = StrippedCourseInstance & { sessions: Session[]; exams: Exam[] };
+
 type Course = StrippedCourse & {
-	instances: (CourseInstance & { sessions: Session[]; exams: Exam[] })[];
+	instances: CourseInstance[];
 };
 
 type Exam = {

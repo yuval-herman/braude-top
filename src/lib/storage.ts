@@ -2,9 +2,9 @@ import { browser, version } from '$app/environment';
 import semverMinor from 'semver/functions/minor';
 
 interface StorageItems {
-	[key: `selected-${number}-${string}`]: FullCourse[];
-	[key: `active-${number}-${string}`]: number[];
-	[key: `rooms-${number}-${string}`]: EmptyRoom[];
+	[key: `selected-${Course['year']}-${Session['semester']}`]: Course[];
+	[key: `active-${Course['year']}-${Session['semester']}`]: StrippedCourseInstance['instance_id'][];
+	[key: `rooms-${Course['year']}-${Session['semester']}`]: EmptyRoom[];
 	version: string; // semver, can be compared with normal comparison operators
 	onboarded: boolean; // whether the user has been onboraded
 	settings: Settings;
@@ -34,18 +34,26 @@ export class TypedLocalStorage {
 	}
 }
 
-export function getCurrentCourses(year: number, semester: string): FullCourse[] {
+export function getCurrentCourses(year: Course['year'], semester: Session['semester']): Course[] {
 	if (!browser) return [];
 	return TypedLocalStorage.getItem(`selected-${year}-${semester}`) ?? [];
 }
-export function setCurrentCourses(courses: FullCourse[], year: number, semester: string) {
+export function setCurrentCourses(
+	courses: Course[],
+	year: Course['year'],
+	semester: Session['semester']
+) {
 	if (!browser) return;
 	return TypedLocalStorage.setItem(`selected-${year}-${semester}`, courses);
 }
-export function getCurrentActiveInstances(year: number, semester: string) {
+export function getCurrentActiveInstances(year: Course['year'], semester: Session['semester']) {
 	return TypedLocalStorage.getItem(`active-${year}-${semester}`);
 }
-export function setCurrentActiveInstances(instance_ids: number[], year: number, semester: string) {
+export function setCurrentActiveInstances(
+	instance_ids: StrippedCourseInstance['instance_id'][],
+	year: Course['year'],
+	semester: Session['semester']
+) {
 	return TypedLocalStorage.setItem(`active-${year}-${semester}`, instance_ids);
 }
 
