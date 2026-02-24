@@ -71,7 +71,7 @@ if (browser) {
 	const selectedList = TypedLocalStorage.keys().filter((k) => k.startsWith('selected'));
 	if (localVersion && semverMinor(localVersion) < semverMinor(version) && selectedList.length) {
 		alert('האתר עודכן ולכן המערכת השמורה נמחקה');
-		selectedList.forEach(TypedLocalStorage.removeItem);
+		localStorage.clear();
 	}
 	TypedLocalStorage.setItem('version', version);
 }
