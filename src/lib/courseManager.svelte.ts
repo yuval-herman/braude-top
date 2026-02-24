@@ -67,8 +67,6 @@ function clearState(): void {
 }
 
 // Get course id string
-function GCID(course: Pick<Course, 'course_id' | 'year'>): CourseIdString;
-function GCID(course_id: Course['course_id'], year: Course['year']): CourseIdString;
 function GCID(
 	courseOrId: Course['course_id'] | Pick<Course, 'course_id' | 'year'>,
 	year?: Course['year']
@@ -295,10 +293,13 @@ export function removeAllCoursesData() {
 
 ////////////// GET STATE FUNCTIONS
 
-export function hasCourse(course_id: number, year: number): boolean;
-export function hasCourse(course: Course): boolean;
-export function hasCourse(courseOrId: number | Course, year?: number): boolean {
-	return courses.has(typeof courseOrId === 'number' ? GCID(courseOrId, year!) : GCID(courseOrId));
+export function hasCourse(course_id: Course['course_id'], year: Course['year']): boolean;
+export function hasCourse(course: StrippedCourse): boolean;
+export function hasCourse(
+	courseOrId: Course['course_id'] | StrippedCourse,
+	year?: Course['year']
+): boolean {
+	return courses.has(GCID(courseOrId, year));
 }
 
 export function getCourse(course_id: number, year: number): Course | undefined {
