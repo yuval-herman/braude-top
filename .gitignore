@@ -29,7 +29,7 @@ vite.config.ts.timestamp-*
 *.db-wal
 !courses.db
 
-src/fullcourses.json
+fullcourses.json
 secrets.json
 
 *storybook.log
