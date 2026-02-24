@@ -162,7 +162,7 @@
 </div>
 
 <style>
-	.warn:is(span, h4) {
+	.warn:is(h4) {
 		color: var(--warn);
 		font-weight: bolder;
 	}
@@ -261,12 +261,6 @@
 			}
 			.instance-details {
 				margin-bottom: 8px;
-				&.important {
-					color: white;
-					background: var(--dark);
-					border-radius: 8px;
-					padding: 4px 6px;
-				}
 			}
 		}
 	}

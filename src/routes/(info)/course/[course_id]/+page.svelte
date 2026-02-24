@@ -3,6 +3,7 @@
 	import { listFormatter } from '$lib/utils/formatter.utils.js';
 
 	const { data } = $props();
+	// svelte-ignore state_referenced_locally
 	const { course, comments, user, user_previous_comment } = data;
 
 	let anonymous = $state(user_previous_comment?.is_anon ?? $settings.anonymous_comment);

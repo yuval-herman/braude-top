@@ -3,11 +3,10 @@
 	import { slide } from 'svelte/transition';
 
 	const { data, form } = $props();
-	const { user, messages } = data;
 </script>
 
 <header>
-	<h1>שלום, {user.name}!</h1>
+	<h1>שלום, {data.user.name}!</h1>
 </header>
 <main>
 	{#if form}
@@ -17,9 +16,9 @@
 			<span transition:slide class="failure">ההודעה לא נמחקה...</span>
 		{/if}
 	{/if}
-	{#if messages.length > 0}
+	{#if data.messages.length > 0}
 		<h2>הודעות:</h2>
-		{#each messages as message, i}
+		{#each data.messages as message}
 			<div class="message">
 				<div class="message-header">
 					<span>{message.date}</span> | <span>{message.type}</span> |

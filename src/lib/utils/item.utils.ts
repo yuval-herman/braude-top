@@ -50,10 +50,7 @@ export function itemizeEmptyRoom(room: EmptyRoom): Item<EmptyRoomItemValue> {
 	};
 }
 
-export function itemizeCourse(
-	{ name, instances, course_id, year }: Course,
-	is_preview = false
-): Item[] {
+export function itemizeCourse({ name, instances, course_id }: Course, is_preview = false): Item[] {
 	return instances.flatMap(({ sessions, instructor, type, instance_id }) =>
 		sessions.map(({ week_day, start_time, end_time, room }): Item => {
 			const day = day2Index(week_day);
