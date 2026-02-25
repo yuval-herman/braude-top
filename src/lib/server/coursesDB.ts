@@ -12,8 +12,8 @@ type DBStrippedCourseInstance = StrippedCourseInstance & {
 function transformInstance(instance: DBStrippedCourseInstance): StrippedCourseInstance {
 	return {
 		...instance,
-		pre_requirements: JSON.parse(instance.pre_requirements || '[]'),
-		co_requirement_instance_ids: JSON.parse(instance.co_requirement_instance_ids || '[]'),
+		pre_requirements: JSON.parse(instance.pre_requirements || 'null'),
+		co_requirement_instance_ids: JSON.parse(instance.co_requirement_instance_ids || 'null'),
 	};
 }
 
