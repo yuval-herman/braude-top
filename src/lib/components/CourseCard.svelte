@@ -31,7 +31,7 @@
 
 	function registrationIncomplete(mode: 'all' | 'my', course: Course): false | string {
 		if (mode === 'all') return false;
-		const selected = getActiveInstances();
+		const selected = getActiveInstances(course);
 		inst_loop: for (const instance of selected) {
 			if (!instance.co_requirement_instance_ids) continue;
 			const co_requirements = instance.co_requirement_instance_ids;
@@ -123,7 +123,7 @@
 			</div>
 		{/each}
 		{#if mode === 'my'}
-			{@const exams = getActiveExams()}
+			{@const exams = getActiveExams(course)}
 			{#if exams.length}
 				<div class="exams" transition:slide>
 					{#each exams as exam}

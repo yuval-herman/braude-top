@@ -76,7 +76,8 @@ function GCID(
 		: `${courseOrId.course_id}-${courseOrId.year}`;
 }
 
-function getActiveInstancesIter() {
+/** Get a iterator of the active instances, optionally filter by course */
+function getActiveInstancesIter(course?: Pick<Course, 'course_id' | 'year'>) {
 	return active_instances_ids
 		.values()
 		.map((id) => instances.get(id))
@@ -84,8 +85,12 @@ function getActiveInstancesIter() {
 			if (!instance) {
 				console.error('A selected instance was not found in instance map!');
 				return false;
-			}
-			return true;
+			} else if (
+				course &&
+				!(instance.course_id === course.course_id && instance.year === course.year)
+			)
+				return false;
+			else return true;
 		});
 }
 
@@ -340,14 +345,16 @@ export function getActiveCourses(): Course[] {
 		.toArray();
 }
 
-export function getActiveExams(): Exam[] {
-	return getActiveInstancesIter()
+/** Get a list of exams for the active instances, optionally filter by course */
+export function getActiveExams(course?: Pick<Course, 'course_id' | 'year'>): Exam[] {
+	return getActiveInstancesIter(course)
 		.flatMap((instance) => instance.exams)
 		.toArray();
 }
 
-export function getActiveInstances(): CourseInstance[] {
-	return getActiveInstancesIter().toArray();
+/** Get a list of the active instances, optionally filter by course */
+export function getActiveInstances(course?: Pick<Course, 'course_id' | 'year'>): CourseInstance[] {
+	return getActiveInstancesIter(course).toArray();
 }
 
 /** get full courses with only active instances included in instance list */
