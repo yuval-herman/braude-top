@@ -3,7 +3,7 @@ import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { cwd } from 'process';
 
-const DB_PATH = join(cwd(), 'data/courses.db');
+const DB_PATH = join(cwd(), 'data/braude.sqlite');
 const OUTPUT_PATH = join(cwd(), './fullcourses.json');
 const db = new Database(DB_PATH);
 

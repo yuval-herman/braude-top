@@ -55,7 +55,7 @@ runSSHCommands([
 	// Install dependencies and copy data from braude-fetcher project
 	'echo "stable" > .nvmrc',
 	'/root/.nvm/nvm-exec npm ci --omit dev',
-	'cp ../braude-fetcher/courses.db data/',
+	'cp ../braude-fetcher/.dbs/* data/',
 
 	// Start the server
 	`systemctl start ${servicename}.service`,

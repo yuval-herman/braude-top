@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 
-const coursesDB = new Database('data/courses.db');
+const coursesDB = new Database('data/braude.sqlite');
 
 // Any array type is stored in the db as a JSON string, this is the DB representation
 type DBStrippedCourseInstance = StrippedCourseInstance & {
