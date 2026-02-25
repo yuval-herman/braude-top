@@ -15,6 +15,7 @@
 
 	let { children, data } = $props();
 
+	// svelte-ignore state_referenced_locally
 	if (validateTheme(data.themeCookie) && theme.theme !== data.themeCookie) {
 		theme.theme = data.themeCookie;
 	}
