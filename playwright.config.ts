@@ -4,8 +4,12 @@ export default defineConfig({
 	use: { trace: 'on' },
 	webServer: {
 		command: 'npm run build &&  npm run preview',
-		// command: 'npm run preview',
+		reuseExistingServer: true,
 		port: 4173,
+	},
+	timeout: 10_000, // 10 seconds timeout for each test
+	expect: {
+		timeout: 1000, // 1 seconds timeout for expects
 	},
 	testDir: 'e2e',
 	projects: [

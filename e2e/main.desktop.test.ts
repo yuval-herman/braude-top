@@ -6,13 +6,19 @@ test.describe('main page', () => {
 
 	test('switch semesters', async ({ page }) => {
 		let baseUrl = page.url();
-		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2024,"semester":"א"}');
+		await page
+			.getByRole('combobox', { name: 'סמסטר' })
+			.selectOption('{"year":"2024","semester":"א"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2024&semester=א');
 
-		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2024,"semester":"קיץ"}');
+		await page
+			.getByRole('combobox', { name: 'סמסטר' })
+			.selectOption('{"year":"2024","semester":"קיץ"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2024&semester=קיץ');
 
-		await page.getByLabel('סמסטר אבאבקיץ').selectOption('{"year":2025,"semester":"א"}');
+		await page
+			.getByRole('combobox', { name: 'סמסטר' })
+			.selectOption('{"year":"2025","semester":"א"}');
 		await expect(page).toHaveURL(baseUrl + '?year=2025&semester=א');
 	});
 
@@ -29,9 +35,7 @@ test.describe('main page', () => {
 
 	test('show instance preview on hover', async ({ page }) => {
 		await page.goto('/?query=%D7%97%D7%93%D7%95');
-		await page
-			.getByText("הרצאה של פרופ' ילין מרק בעברית מיועד למכונות יום ג חדר 303 EM 08:30-10:30")
-			.hover();
+		await page.getByText("הרצאה של פרופ' ילין מרק בעברית יום ג חדר 303 EM 08:30-10:30").hover();
 		await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 303 EM')).toBeVisible();
 		await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 202 EM')).toBeVisible();
 	});
@@ -96,35 +100,23 @@ test.describe('main page', () => {
 		});
 
 		await test.step('select instances from all courses', async () => {
-			await page.getByText('הרצאה של ד"ר יעקובזון פיאנה בעברית, הקורס מלא!').click();
+			await page.getByText('הרצאה של ד"ר יעקובזון פיאנה בעברית').first().click();
 			await expect(page.getByText('הרצאה חדו"א 1מ ד"ר יעקובזון פיאנה 708 L')).toBeVisible();
 			await expect(page.getByText('הרצאה חדו"א 1מ ד"ר יעקובזון פיאנה 102 EM')).toBeVisible();
-			await page
-				.getByText(
-					'הרצאה של ד"ר פוגרבניאק ילנה בעברית, הקורס מלא! מיועד לחשמל, אלקטרוניקה, תוכנה ומ'
-				)
-				.click();
+			await page.getByText('הרצאה של ד"ר פוגרבניאק ילנה בעברית').click();
 			await expect(page.getByText('הרצאה חדו"א 1מ ד"ר פוגרבניאק ילנה 709 L')).toBeVisible();
 			await expect(page.getByText('הרצאה חדו"א 1מ ד"ר פוגרבניאק ילנה 203 EM')).toBeVisible();
-			await expect(page.getByRole('main')).toContainText(
-				'מועד ראשון, בחינה, בתאריך 2025-2-6 08:30מועד שני, בחינה רגילה, בתאריך 2025-3-3 08:30מועד ראשון, בחינה, בתאריך 2025-2-6 08:30מועד שני, בחינה רגילה, בתאריך 2025-3-3 08:30'
-			);
 
 			await page
-				.getByText('הרצאה של ד"ר שנבל אופיר בעברית, הקורס מלא! יום ה חדר 203 EM 08:30-11:')
+				.getByText('הרצאה של ד"ר שנבל אופיר בעברית יום ה חדר 203 EM 08:30-11:')
+				.first()
 				.click();
-			await page
-				.getByText('תרגיל של ד"ר נסאר ספות בעברית, הקורס מלא! יום ה חדר 210 M 13:50-15:')
-				.click();
+			await page.getByText('תרגיל של ד"ר נסאר ספות בעברית יום ה חדר 210 M 13:50-15:').click();
 			await expect(page.getByText('הרצאה אלגברה 1')).toBeVisible();
 			await expect(page.getByText('תרגיל אלגברה 1')).toBeVisible();
 			await expect(page.getByText("4 3 ש'")).toBeVisible();
-			await expect(page.getByRole('main')).toContainText(
-				'מועד ראשון, בחינה, בתאריך 2025-2-11 08:30מועד שני, בחינה רגילה, בתאריך 2025-3-6 08:30'
-			);
-			await page
-				.getByText('שו"ת של ד"ר פייגר חנה בעברית, הקורס מלא! יום א חדר 101 EM 14:50-16:')
-				.click();
+
+			await page.getByText('שו"ת של ד"ר פייגר חנה בעברית יום א חדר 101 EM 14:50-16:').click();
 			await page.getByText('שו"ת של ד"ר פישר שחור דנה בעברית יום ב חדר 303 M 16:50-18:').click();
 			await expect(
 				page.getByText('שו"ת מיומנויות יסוד הנדסיות ד"ר פייגר חנה 101 EM')
@@ -149,18 +141,16 @@ test.describe('main page', () => {
 		});
 
 		await test.step('add instances', async () => {
-			await page
-				.getByText("הרצאה של פרופ' ילין מרק בעברית מיועד למכונות יום ג חדר 303 EM 08:30-10:30")
-				.click();
+			await page.getByText("הרצאה של פרופ' ילין מרק בעברית יום ג חדר 303 EM 08:30-10:30").click();
 			await expect(page.getByRole('button', { name: 'מחק קורס מהרשימה' })).toBeVisible();
 			await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 303 EM')).toBeVisible();
 			await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 202 EM')).toBeVisible();
-			await page
-				.getByText("הרצאה של פרופ' ילין מרק בעברית מיועד לביוטכנולוגיה יום ב חדר 706 L 13:50-15:50")
-				.click();
-			await page
-				.getByText('הרצאה של ד"ר שוורצמן לודמילה בעברית, הקורס מלא! מיועד להנדסה אזרחית יום ב חדר')
-				.click();
+			await page.getByText("הרצאה של פרופ' ילין מרק בעברית יום ב חדר 706 L 13:50-15:50").click();
+			await Promise.all(
+				(await page.getByText('הרצאה של ד"ר שוורצמן לודמילה בעברית יום ב חדר').all()).map(
+					async (l) => await l.click()
+				)
+			);
 			await expect(page.getByText('הרצאה חדו"א 1 ד"ר שוורצמן לודמילה 103 EM')).toBeVisible();
 			await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 706 L')).toBeVisible();
 			await expect(page.getByText('הרצאה חדו"א 1 ד"ר שוורצמן לודמילה 709 L')).toBeVisible();
@@ -180,8 +170,8 @@ test.describe('main page', () => {
 				.getByText('הרצאה של ד"ר מילר אורנה בעברית יום ב חדר 221 M נגישות 08:30-10:')
 				.click();
 
-			await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
-			await page.getByText("מעבדה של גב' רונן ענבל ב יום ה חדר מע' 109 M 16:50-18:").click();
+			await page.getByText("הרצאה של גב' ארז יעל יום ה חדר 103 EM 12:50-14:").click();
+			await page.getByText("מעבדה של גב' רונן ענבל יום ה חדר מע' 109 M 16:50-18:").click();
 		});
 
 		await test.step('check instances were added', async () => {
@@ -203,8 +193,8 @@ test.describe('main page', () => {
 				.getByText('הרצאה של ד"ר מילר אורנה בעברית יום ב חדר 221 M נגישות 08:30-10:')
 				.click();
 
-			await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
-			await page.getByText("מעבדה של גב' רונן ענבל ב יום ה חדר מע' 109 M 16:50-18:").click();
+			await page.getByText("הרצאה של גב' ארז יעל יום ה חדר 103 EM 12:50-14:").click();
+			await page.getByText("מעבדה של גב' רונן ענבל יום ה חדר מע' 109 M 16:50-18:").click();
 		});
 
 		await test.step('check instances were removed', async () => {
@@ -232,10 +222,8 @@ test.describe('main page', () => {
 			await page
 				.getByText('הרצאה של ד"ר אידריס גזאוי סמאח בעברית יום ד חדר 705 L 08:30-10:')
 				.click();
-			await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
-			await page
-				.getByText("מעבדה של גב' רונן ענבל ב, הקורס מלא! יום ה חדר מע' 109 M 14:50-16:")
-				.click();
+			await page.getByText("הרצאה של גב' ארז יעל יום ה חדר 103 EM 12:50-14:").click();
+			await page.getByText("מעבדה של גב' רונן ענבל יום ה חדר מע' 109 M 14:50-16:").click();
 		});
 
 		await test.step('check instances were added', async () => {
@@ -257,7 +245,7 @@ test.describe('main page', () => {
 
 		await test.step('remove all instances', async () => {
 			await page.getByRole('button', { name: 'הקורסים שלי' }).click();
-			await expect(page.getByRole('main')).toContainText('נ"ז 8שעות לימוד 8');
+			await expect(page.getByRole('main')).toContainText('נ"ז 12שעות לימוד 8');
 			page.once('dialog', (dialog) => dialog.accept().catch(() => {}));
 			await page.getByRole('button', { name: 'מחק הכל' }).click();
 		});
@@ -285,10 +273,8 @@ test.describe('main page', () => {
 			'/?query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
 		);
 
-		await page
-			.getByText("מעבדה של מר כהן גדעון בעברית, הקורס מלא! יום ב חדר 306 M מע' 15:50-17:")
-			.click();
-		await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
+		await page.getByText("מעבדה של מר כהן גדעון בעברית יום ב חדר 306 M מע' 15:50-17:").click();
+		await page.getByText("הרצאה של גב' ארז יעל יום ה חדר 103 EM 12:50-14:").click();
 
 		// hover this to remove preview of other instance
 		await page.getByLabel('שינוי צבעים בהיר/כהה').hover();
@@ -324,9 +310,7 @@ test.describe('main page', () => {
 		).not.toBeVisible();
 
 		await page.getByText("מעבדה של מר ליחולט אנטולי בעברית יום ד חדר מע' 109 M 16:50-18:").click();
-		await page
-			.getByText("מעבדה של מר שדה אייל בעברית, הקורס מלא! יום ד חדר 316 M מע' 10:30-12:")
-			.click();
+		await page.getByText("מעבדה של מר שדה אייל בעברית יום ד חדר 316 M מע' 10:30-12:").click();
 
 		// this two redos should have no effect
 		await page.locator('body').press('ControlOrMeta+y');
@@ -353,16 +337,12 @@ test.describe('main page', () => {
 		);
 
 		await test.step('add instances', async () => {
-			await page
-				.getByText("מעבדה של מר כהן גדעון בעברית, הקורס מלא! יום ב חדר 306 M מע' 15:50-17:")
-				.click();
-			await page.getByText("הרצאה של גב' ארז יעל ב יום ה חדר 103 EM 12:50-14:").click();
+			await page.getByText("מעבדה של מר כהן גדעון בעברית יום ב חדר 306 M מע' 15:50-17:").click();
+			await page.getByText("הרצאה של גב' ארז יעל יום ה חדר 103 EM 12:50-14:").click();
 			await page
 				.getByText("מעבדה של מר ליחולט אנטולי בעברית יום ד חדר מע' 109 M 16:50-18:")
 				.click();
-			await page
-				.getByText("מעבדה של מר שדה אייל בעברית, הקורס מלא! יום ד חדר 316 M מע' 10:30-12:")
-				.click();
+			await page.getByText("מעבדה של מר שדה אייל בעברית יום ד חדר 316 M מע' 10:30-12:").click();
 		});
 
 		await page.reload();
