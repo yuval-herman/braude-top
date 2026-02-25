@@ -1,6 +1,7 @@
 import {
 	getInstancesExams,
-	getInstancesSession,
+	getInstancesSemesterSessions,
+	getInstancesSessions,
 	getNonEmptyCourseInstances,
 	queryNonEmptyCourses,
 } from '$lib/server/coursesDB';
@@ -15,7 +16,7 @@ export const load = async ({ url, parent }) => {
 				instances: getNonEmptyCourseInstances({ course_id: course.course_id, year, semester }).map(
 					(instance) => ({
 						...instance,
-						sessions: getInstancesSession(instance.instance_id),
+						sessions: getInstancesSemesterSessions(instance.instance_id, semester),
 						exams: getInstancesExams(instance.instance_id),
 					})
 				),
