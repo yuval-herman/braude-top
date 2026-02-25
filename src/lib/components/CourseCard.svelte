@@ -29,18 +29,20 @@
 	// warn when the course registration is incomplete
 	const warn = $derived(registrationIncomplete(mode, course));
 
-	function registrationIncomplete(mode: 'all' | 'my', course: Course): false | string {
-		if (mode === 'all') return false;
-		const selected = getActiveInstances(course);
-		inst_loop: for (const instance of selected) {
+	function registrationIncomplete(
+		mode: 'all' | 'my',
+		course: Course
+	): undefined | CourseInstance['co_requirement_instance_ids'] {
+		if (mode === 'all') return;
+		const selected_from_course = getActiveInstances(course);
+		inst_loop: for (const instance of selected_from_course) {
 			if (!instance.co_requirement_instance_ids) continue;
 			const co_requirements = instance.co_requirement_instance_ids;
 			for (const req_id of co_requirements) {
-				if (selected.some((s) => s.instance_id === req_id)) continue inst_loop;
+				if (selected_from_course.some((s) => s.instance_id === req_id)) continue inst_loop;
 			}
-			return course.instances.find((i) => i.instance_id === co_requirements[0])?.type || 'תרגיל';
+			return co_requirements;
 		}
-		return false;
 	}
 
 	function getColor(instance: StrippedCourseInstance) {
@@ -83,6 +85,7 @@
 			<!-- svelte-ignore a11y_click_events_have_key_events -->
 			<div
 				class="instance"
+				class:warn={warn?.includes(instance.instance_id)}
 				class:highlight={hoveredInstanceId.id === instance.instance_id}
 				style="z-index: {course.instances.length - i};"
 				style:--instance-background={c.background}
@@ -156,7 +159,7 @@
 	{#if warn}
 		<div class="info" transition:fade>
 			<h4 class="warn">הרישום לקורס אינו שלם!</h4>
-			<span>כדי להשלים את הרישום לקורס עליך להירשם גם לאחד מקורסי ה{warn}</span>
+			<span>כדי להשלים את הרישום לקורס עליך להירשם גם לאחד מהקורסים המודגשים</span>
 		</div>
 	{/if}
 </div>
@@ -255,9 +258,13 @@
 			border: var(--border) 1px solid;
 			cursor: pointer;
 			transition: all 0.25s;
+			overflow: hidden;
 
 			&:hover {
 				background: var(--instance-background-hover);
+			}
+			&.warn {
+				border: solid 4px var(--warn);
 			}
 			.instance-details {
 				margin-bottom: 8px;
