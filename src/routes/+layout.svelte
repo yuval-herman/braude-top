@@ -15,6 +15,8 @@
 
 	let { children, data } = $props();
 
+	const isBetaSite = $derived(page.url.hostname.split('.')[0] === 'beta');
+
 	// svelte-ignore state_referenced_locally
 	if (validateTheme(data.themeCookie) && theme.theme !== data.themeCookie) {
 		theme.theme = data.themeCookie;
@@ -45,6 +47,11 @@
 </script>
 
 <svelte:head>
+	<script
+		data-goatcounter={`https://stats${isBetaSite ? '.beta' : ''}.braude.top/count`}
+		async
+		src={`https://stats${isBetaSite ? '.beta' : ''}.braude.top/count.js`}
+	></script>
 	<link rel="canonical" href={page.url.origin + page.url.pathname} />
 	<meta name="color-scheme" content={theme.theme === 'auto' ? 'light dark' : theme.theme} />
 </svelte:head>
