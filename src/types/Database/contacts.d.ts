@@ -6,3 +6,7 @@ interface ContactMessage {
 	message: string;
 	date: string;
 }
+
+interface SpamMessage extends ContactMessage {
+	additional: string;
+}

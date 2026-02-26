@@ -1,8 +1,16 @@
 import { dev } from '$app/environment';
 import { createSession, generateSessionToken } from '$lib/server/auth';
-import { deleteContactMessage, getContactMessages } from '$lib/server/contactDB.js';
+import {
+	deleteContactMessage,
+	getContactMessages,
+	deleteSpamMessage,
+	getSpamMessages,
+} from '$lib/server/contactDB.js';
 import { getUser } from '$lib/server/usersDB.js';
-import { error } from '@sveltejs/kit';
+import { error, type RequestEvent } from '@sveltejs/kit';
+
+// This two need to be explicitly imported for use in the `deleteMessageHandler` function
+import type { RouteId, RouteParams } from './$types.js';
 
 export const load = async ({ cookies, locals }) => {
 	let session = locals.session,
@@ -36,18 +44,25 @@ export const load = async ({ cookies, locals }) => {
 			user,
 			signedBy,
 			messages: getContactMessages(),
+			spam: getSpamMessages(),
 		};
 	}
 };
 
 export const actions = {
-	'delete-message': async ({ request }) => {
-		const message_id = Number((await request.formData()).get('id') ?? undefined);
+	'delete-message': deleteMessageHandler({ spam: false }),
+	'delete-spam': deleteMessageHandler({ spam: true }),
+};
 
+// Return handler for deleting messages from spam or normal table
+function deleteMessageHandler({ spam }: { spam: boolean }) {
+	return async ({ request }: RequestEvent<RouteParams, RouteId>) => {
+		const message_id = Number((await request.formData()).get('id') ?? undefined);
 		if (isNaN(message_id)) {
 			return { success: false };
 		}
-		deleteContactMessage(message_id);
+		if (spam) deleteSpamMessage(message_id);
+		else deleteContactMessage(message_id);
 		return { success: true };
-	},
-};
+	};
+}

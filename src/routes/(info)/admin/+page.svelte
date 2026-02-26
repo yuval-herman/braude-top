@@ -5,6 +5,26 @@
 	const { data, form } = $props();
 </script>
 
+{#snippet messageBlock(message: SpamMessage | ContactMessage)}
+	{@const isSpam = 'additional' in message}
+	<div class="message">
+		<div class="message-header">
+			<span>{message.date}</span> | <span>{message.type}</span> |
+			<span>{message.email || 'ללא מייל'}</span> | <span>{message.name || 'שם לא צויין'}</span>
+		</div>
+		<div class="message-body">
+			<p>{message.message}</p>
+			{#if isSpam}
+				<p><strong>Additional info:</strong> {message.additional}</p>
+			{/if}
+		</div>
+		<form method="POST" action={isSpam ? '?/delete-spam' : '?/delete-message'} use:enhance>
+			<input type="hidden" name="id" value={message.id} />
+			<button type="submit">מחק</button>
+		</form>
+	</div>
+{/snippet}
+
 <header>
 	<h1>שלום, {data.user.name}!</h1>
 </header>
@@ -19,22 +39,19 @@
 	{#if data.messages.length > 0}
 		<h2>הודעות:</h2>
 		{#each data.messages as message}
-			<div class="message">
-				<div class="message-header">
-					<span>{message.date}</span> | <span>{message.type}</span> |
-					<span>{message.email || 'ללא מייל'}</span> | <span>{message.name || 'שם לא צויין'}</span>
-				</div>
-				<div class="message-body">
-					<p>{message.message}</p>
-				</div>
-				<form method="POST" action="?/delete-message" use:enhance>
-					<input type="hidden" name="id" value={message.id} />
-					<button type="submit">מחק</button>
-				</form>
-			</div>
+			{@render messageBlock(message)}
 		{/each}
 	{:else}
 		<p>אין הודעות להצגה.</p>
+	{/if}
+
+	{#if data.spam?.length > 0}
+		<h2>הודעות ספאם:</h2>
+		{#each data.spam as message}
+			{@render messageBlock(message)}
+		{/each}
+	{:else}
+		<p>אין הודעות ספאם.</p>
 	{/if}
 </main>
 
