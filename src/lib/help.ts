@@ -56,7 +56,9 @@ function mainPage() {
 					description: 'כאן ניתן לבחור את הסמסטר שאתם מעוניינים לעבוד איתו.',
 					onNextClick: () => {
 						if (!hiddenListMode) {
-							const courseQueryInput = document.getElementById('course-query') as HTMLInputElement;
+							const courseQueryInput = document.getElementById(
+								'course-name-query'
+							) as HTMLInputElement;
 
 							courseQueryInput.value = 'נתונים';
 							courseQueryInput.dispatchEvent(new Event('input', { bubbles: true }));
@@ -75,7 +77,9 @@ function mainPage() {
 					description: 'כדי לראות את רשימת הקורסים, ניתן ללחוץ על הכפתור הזה.',
 					onNextClick: () => {
 						showListBtn.click();
-						const courseQueryInput = document.getElementById('course-query') as HTMLInputElement;
+						const courseQueryInput = document.getElementById(
+							'course-name-query'
+						) as HTMLInputElement;
 						courseQueryInput.value = 'נתונים';
 						courseQueryInput.dispatchEvent(new Event('input', { bubbles: true }));
 						driverObj.moveNext();

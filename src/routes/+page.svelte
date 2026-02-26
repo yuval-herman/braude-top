@@ -24,6 +24,7 @@
 	import { slide } from 'svelte/transition';
 
 	const { data } = $props();
+
 	let tab = $state<'all' | 'my'>('all');
 
 	onMount(() => {
@@ -43,7 +44,8 @@
 	};
 
 	function initialInput(node: HTMLInputElement) {
-		node.value = page.url.searchParams.get('query') ?? '';
+		if (node.id === 'course-name-query') node.value = page.url.searchParams.get('name-query') ?? '';
+		if (node.id === 'course-id-query') node.value = page.url.searchParams.get('id-query') ?? '';
 	}
 
 	export const snapshot = {
@@ -72,20 +74,37 @@
 
 		{#if tab === 'all'}
 			<div class="list-container">
-				<input
-					id="course-query"
-					type="text"
-					placeholder="חפש כאן..."
-					use:initialInput
-					oninput={debounce((ev) => {
-						if (!(ev.target instanceof HTMLInputElement)) return;
-						const { value } = ev.target;
-						const url = new URL(page.url);
-						url.searchParams.set('query', value.toLowerCase());
-						goto(url, { replaceState: true, state: page.state, keepFocus: true });
-					}, 300)}
-				/>
-				{#if data.full_courses?.length}
+				<div class="query-box">
+					<input
+						id="course-name-query"
+						type="text"
+						placeholder="חפש כאן..."
+						use:initialInput
+						oninput={debounce((ev) => {
+							if (!(ev.target instanceof HTMLInputElement)) return;
+							const { value } = ev.target;
+							const url = new URL(page.url);
+							url.searchParams.set('name-query', value.toLowerCase());
+							goto(url, { replaceState: true, state: page.state, keepFocus: true });
+						}, 300)}
+					/>
+					<input
+						id="course-id-query"
+						type="text"
+						inputmode="numeric"
+						pattern="\d*"
+						placeholder="קוד קורס"
+						use:initialInput
+						oninput={debounce((ev) => {
+							if (!(ev.target instanceof HTMLInputElement)) return;
+							const { value } = ev.target;
+							const url = new URL(page.url);
+							url.searchParams.set('id-query', value);
+							goto(url, { replaceState: true, state: page.state, keepFocus: true });
+						}, 300)}
+					/>
+				</div>
+				{#if data.full_courses.length}
 					<PaginatedList items={data.full_courses} />
 				{:else}
 					<i class="info" transition:slide>חפש קורסים בתיבת החיפוש!</i>
@@ -183,7 +202,6 @@
 			padding: 8px;
 			border-radius: 8px;
 			border: 1px solid #ccc;
-			width: 100%;
 		}
 		.list-container {
 			display: flex;
@@ -191,6 +209,20 @@
 			gap: 12px;
 			height: 100%;
 			overflow: hidden;
+
+			.query-box {
+				display: flex;
+				gap: 8px;
+
+				& input {
+					flex: 1 1 0;
+					min-width: 70px;
+				}
+
+				#course-name-query {
+					flex-grow: 40;
+				}
+			}
 		}
 	}
 	.small-info {
