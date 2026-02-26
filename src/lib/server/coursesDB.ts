@@ -147,6 +147,24 @@ export const getFullCourse = (() => {
 	};
 })();
 
+/** Retrieves full course by id and year, filtering instances by sessions of the provided semester */
+export const getFullCourseSemester = (() => {
+	return (id: number, year: number, semester: string): Course | undefined => {
+		const strippedCourse = getCourse(id, year);
+		if (strippedCourse === undefined) return;
+
+		const instances = getNonEmptyCourseInstances({ course_id: id, year, semester }).map(
+			(instance) => {
+				const sessions = getInstancesSemesterSessions(instance.instance_id, semester);
+				const exams = getInstancesExams(instance.instance_id);
+				return { ...instance, sessions, exams };
+			}
+		);
+
+		return { ...strippedCourse, instances };
+	};
+})();
+
 /** Retrieves empty rooms by year, semester and week day */
 export const getEmptyRoomsByDay = (() => {
 	type Args = {

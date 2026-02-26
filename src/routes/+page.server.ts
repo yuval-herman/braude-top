@@ -1,5 +1,5 @@
 import {
-	getFullCourse,
+	getFullCourseSemester,
 	getInstancesExams,
 	getInstancesSemesterSessions,
 	getNonEmptyCourseInstances,
@@ -31,7 +31,7 @@ export const load = async ({ url, parent }) => {
 		: [];
 
 	if (!isNaN(idQuery)) {
-		const queriedCourse = getFullCourse(idQuery, year);
+		const queriedCourse = getFullCourseSemester(idQuery, year, semester);
 		if (queriedCourse) full_courses.unshift(queriedCourse);
 	}
 
