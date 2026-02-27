@@ -41,7 +41,13 @@ type Session = Slot & {
 	room: string;
 	instance_id: string;
 };
+/** A branded `Session` type, signifying it has bean filtered to contain only sessions for a certain semester.
+ * Only use this type of you received it like that from the database.
+ * DO NOT use `as` to assert this type. */
 type SemesterSession = Branded<Session, 'semester'>;
+/** A branded `Session` type, signifying it has bean filtered to contain only sessions for a certain year.
+ * Only use this type of you received it like that from the database.
+ * DO NOT use `as` to assert this type. */
 type YearlySession = Branded<Session, 'yearly'>;
 
 type EmptyRoom = Slot & {
@@ -50,10 +56,16 @@ type EmptyRoom = Slot & {
 };
 
 type CourseInstance = StrippedCourseInstance & { sessions: Session[]; exams: Exam[] };
+/** A branded `CourseInstance` type, signifying it has bean filtered to contain only sessions for a certain semester.
+ * Only use this type of you received it like that from the database.
+ * DO NOT use `as` to assert this type. */
 type SemesterCourseInstance = StrippedCourseInstance & {
 	sessions: SemesterSession[];
 	exams: Exam[];
 };
+/** A branded `CourseInstance` type, signifying it has bean filtered to contain only sessions for a certain year.
+ * Only use this type of you received it like that from the database.
+ * DO NOT use `as` to assert this type. */
 type YearlyCourseInstance = StrippedCourseInstance & {
 	sessions: YearlySession[];
 	exams: Exam[];
@@ -62,9 +74,15 @@ type YearlyCourseInstance = StrippedCourseInstance & {
 type Course = StrippedCourse & {
 	instances: CourseInstance[];
 };
+/** A branded `Course` type, signifying it has bean filtered to contain only sessions for a certain semester.
+ * Only use this type of you received it like that from the database.
+ * DO NOT use `as` to assert this type. */
 type SemesterCourse = StrippedCourse & {
 	instances: SemesterCourseInstance[];
 };
+/** A branded `Course` type, signifying it has bean filtered to contain only sessions for a certain year.
+ * Only use this type of you received it like that from the database.
+ * DO NOT use `as` to assert this type. */
 type YearlyCourse = StrippedCourse & {
 	instances: YearlyCourseInstance[];
 };
