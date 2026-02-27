@@ -2,9 +2,11 @@ import { browser, version } from '$app/environment';
 import semverMinor from 'semver/functions/minor';
 
 interface StorageItems {
-	[key: `selected-${Course['year']}-${Session['semester']}`]: Course[];
-	[key: `active-${Course['year']}-${Session['semester']}`]: StrippedCourseInstance['instance_id'][];
-	[key: `rooms-${Course['year']}-${Session['semester']}`]: EmptyRoom[];
+	[key: `selected-${SemesterCourse['year']}-${SemesterSession['semester']}`]: SemesterCourse[];
+	[
+		key: `active-${SemesterCourse['year']}-${SemesterSession['semester']}`
+	]: StrippedCourseInstance['instance_id'][];
+	[key: `rooms-${SemesterCourse['year']}-${SemesterSession['semester']}`]: EmptyRoom[];
 	version: string; // semver, can be compared with normal comparison operators
 	onboarded: boolean; // whether the user has been onboraded
 	settings: Settings;
@@ -34,25 +36,31 @@ export class TypedLocalStorage {
 	}
 }
 
-export function getCurrentCourses(year: Course['year'], semester: Session['semester']): Course[] {
+export function getCurrentCourses(
+	year: SemesterCourse['year'],
+	semester: SemesterSession['semester']
+): SemesterCourse[] {
 	if (!browser) return [];
 	return TypedLocalStorage.getItem(`selected-${year}-${semester}`) ?? [];
 }
 export function setCurrentCourses(
-	courses: Course[],
-	year: Course['year'],
-	semester: Session['semester']
+	courses: SemesterCourse[],
+	year: SemesterCourse['year'],
+	semester: SemesterSession['semester']
 ) {
 	if (!browser) return;
 	return TypedLocalStorage.setItem(`selected-${year}-${semester}`, courses);
 }
-export function getCurrentActiveInstances(year: Course['year'], semester: Session['semester']) {
+export function getCurrentActiveInstances(
+	year: SemesterCourse['year'],
+	semester: SemesterSession['semester']
+) {
 	return TypedLocalStorage.getItem(`active-${year}-${semester}`);
 }
 export function setCurrentActiveInstances(
 	instance_ids: StrippedCourseInstance['instance_id'][],
-	year: Course['year'],
-	semester: Session['semester']
+	year: SemesterCourse['year'],
+	semester: SemesterSession['semester']
 ) {
 	return TypedLocalStorage.setItem(`active-${year}-${semester}`, instance_ids);
 }

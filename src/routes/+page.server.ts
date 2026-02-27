@@ -11,7 +11,7 @@ export const load = async ({ url, parent }) => {
 	const idQuery = parseInt(url.searchParams.get('id-query') || '');
 	const { year, semester } = await parent();
 
-	const full_courses = nameQuery
+	const full_courses: SemesterCourse[] = nameQuery
 		? queryNonEmptyCourses({ year, semester, query: nameQuery })
 				.map((course) => ({
 					...course,

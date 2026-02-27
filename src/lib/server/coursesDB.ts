@@ -85,7 +85,7 @@ export const getNonEmptyCourseInstances = (() => {
 
 /** Retrieves all the instance session for a given course instance id for one semester */
 export const getInstancesSemesterSessions = (() => {
-	const stmt = coursesDB.prepare<[number, string], Session>(
+	const stmt = coursesDB.prepare<[number, string], SemesterSession>(
 		'SELECT * from sessions where instance_id = ? and semester = ?'
 	);
 	return (id: number | string, semester: string) => stmt.all(id as number, semester);
@@ -93,7 +93,9 @@ export const getInstancesSemesterSessions = (() => {
 
 /** Retrieves all the instance session for a given course instance id across all semesters */
 export const getInstancesSessions = (() => {
-	const stmt = coursesDB.prepare<number, Session>('SELECT * from sessions where instance_id = ?');
+	const stmt = coursesDB.prepare<number, YearlySession>(
+		'SELECT * from sessions where instance_id = ?'
+	);
 	return (id: number | string) => stmt.all(id as number);
 })();
 
@@ -133,15 +135,17 @@ export const getYearSemesterMap = (() => {
 
 /** Retrieves full course by id and year */
 export const getFullCourse = (() => {
-	return (id: number | string, year: number): Course | undefined => {
+	return (id: number | string, year: number): YearlyCourse | undefined => {
 		const strippedCourse = getCourse(id, year);
 		if (strippedCourse === undefined) return;
 
-		const instances = getCourseInstances(id as number, year).map((instance) => {
-			const sessions = getInstancesSessions(instance.instance_id);
-			const exams = getInstancesExams(instance.instance_id);
-			return { ...instance, sessions, exams };
-		});
+		const instances: YearlyCourseInstance[] = getCourseInstances(id as number, year).map(
+			(instance) => {
+				const sessions = getInstancesSessions(instance.instance_id);
+				const exams = getInstancesExams(instance.instance_id);
+				return { ...instance, sessions, exams };
+			}
+		);
 
 		return { ...strippedCourse, instances };
 	};
@@ -149,17 +153,19 @@ export const getFullCourse = (() => {
 
 /** Retrieves full course by id and year, filtering instances by sessions of the provided semester */
 export const getFullCourseSemester = (() => {
-	return (id: number, year: number, semester: string): Course | undefined => {
+	return (id: number, year: number, semester: string): SemesterCourse | undefined => {
 		const strippedCourse = getCourse(id, year);
 		if (strippedCourse === undefined) return;
 
-		const instances = getNonEmptyCourseInstances({ course_id: id, year, semester }).map(
-			(instance) => {
-				const sessions = getInstancesSemesterSessions(instance.instance_id, semester);
-				const exams = getInstancesExams(instance.instance_id);
-				return { ...instance, sessions, exams };
-			}
-		);
+		const instances: SemesterCourseInstance[] = getNonEmptyCourseInstances({
+			course_id: id,
+			year,
+			semester,
+		}).map((instance) => {
+			const sessions = getInstancesSemesterSessions(instance.instance_id, semester);
+			const exams = getInstancesExams(instance.instance_id);
+			return { ...instance, sessions, exams };
+		});
 
 		return { ...strippedCourse, instances };
 	};

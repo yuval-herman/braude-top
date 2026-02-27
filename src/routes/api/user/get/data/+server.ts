@@ -7,6 +7,7 @@ export const GET = async ({ locals, cookies, url }) => {
 	const url_data_types = url.searchParams.get('data_types') ?? undefined;
 	const data_types = url_data_types ? (JSON.parse(url_data_types) as SavedDataTypes[]) : undefined;
 
+	// Getting this from cookies here is insane design. Shame on you :( @fix!
 	const { year, semester } = resolveYearSemester(url, {
 		year: cookies.get('year'),
 		semester: cookies.get('semester'),

@@ -40,3 +40,5 @@ interface Settings {
 	show_lunch?: boolean;
 	anonymous_comment?: boolean;
 }
+
+type Branded<T, Name extends string> = T & { __brand: Name };

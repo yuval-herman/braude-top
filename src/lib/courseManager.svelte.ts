@@ -10,16 +10,16 @@ import {
 } from './storage';
 import { stripExcessProperties } from './utils/utils';
 
-type CourseIdString = `${Course['course_id']}-${number}`; // `${course_id}-${year}`
+type CourseIdString = `${SemesterCourse['course_id']}-${number}`; // `${course_id}-${year}`
 
-const courses = new SvelteMap<CourseIdString, Course>();
-const instances = new SvelteMap<CourseInstance['instance_id'], CourseInstance>();
-const active_instances_ids = new SvelteSet<CourseInstance['instance_id']>();
+const courses = new SvelteMap<CourseIdString, SemesterCourse>();
+const instances = new SvelteMap<SemesterCourseInstance['instance_id'], SemesterCourseInstance>();
+const active_instances_ids = new SvelteSet<SemesterCourseInstance['instance_id']>();
 
 type UndoStackItem = {
-	courses: Course[];
-	instances: CourseInstance[];
-	active_instances_ids: CourseInstance['instance_id'][];
+	courses: SemesterCourse[];
+	instances: SemesterCourseInstance[];
+	active_instances_ids: SemesterCourseInstance['instance_id'][];
 };
 
 const undoStack: UndoStackItem[] = [];
@@ -68,8 +68,8 @@ function clearState(): void {
 
 // Get course id string
 function GCID(
-	courseOrId: Course['course_id'] | Pick<Course, 'course_id' | 'year'>,
-	year?: Course['year']
+	courseOrId: SemesterCourse['course_id'] | Pick<SemesterCourse, 'course_id' | 'year'>,
+	year?: SemesterCourse['year']
 ): CourseIdString {
 	return typeof courseOrId === 'number'
 		? `${courseOrId}-${year!}`
@@ -77,11 +77,11 @@ function GCID(
 }
 
 /** Get a iterator of the active instances, optionally filter by course */
-function getActiveInstancesIter(course?: Pick<Course, 'course_id' | 'year'>) {
+function getActiveInstancesIter(course?: Pick<SemesterCourse, 'course_id' | 'year'>) {
 	return active_instances_ids
 		.values()
 		.map((id) => instances.get(id))
-		.filter((instance): instance is CourseInstance => {
+		.filter((instance): instance is SemesterCourseInstance => {
 			if (!instance) {
 				console.error('A selected instance was not found in instance map!');
 				return false;
@@ -94,8 +94,8 @@ function getActiveInstancesIter(course?: Pick<Course, 'course_id' | 'year'>) {
 		});
 }
 
-function constructFullCourses(instances_iter: Iterable<CourseInstance>) {
-	const full_courses = new Map<CourseIdString, Course>();
+function constructFullCourses(instances_iter: Iterable<SemesterCourseInstance>) {
+	const full_courses = new Map<CourseIdString, SemesterCourse>();
 	for (const instance of instances_iter) {
 		const CID = GCID(instance.course_id, instance.year);
 		const course = full_courses.get(CID);
@@ -181,13 +181,13 @@ export async function loadCourses() {
 		if (serverData?.length) {
 			const server_courses = serverData.find((d) => d.data_type === 'courses')?.data as
 				| undefined
-				| Course[];
+				| SemesterCourse[];
 			const server_instances = serverData.find((d) => d.data_type === 'instances')?.data as
 				| undefined
-				| CourseInstance[];
+				| SemesterCourseInstance[];
 			const server_active_instance_ids = serverData.find(
 				(d) => d.data_type === 'active_instance_ids'
-			)?.data as undefined | CourseInstance['instance_id'][];
+			)?.data as undefined | SemesterCourseInstance['instance_id'][];
 
 			server_courses?.forEach((c) => courses.set(GCID(c), c));
 			server_instances?.forEach((i) => instances.set(i.instance_id, i));
@@ -204,7 +204,7 @@ export async function loadCourses() {
 	for (const full_course of full_courses) {
 		full_course.instances.forEach((instance) => instances.set(instance.instance_id, instance));
 		// @ts-ignore;
-		// By removing the instances this becomes a normal Course object that we can save in the courses map.
+		// By removing the instances this becomes a normal SemesterCourse object that we can save in the courses map.
 		// This is just to save on precious ram :)
 		delete full_course.instances;
 		courses.set(GCID(full_course), full_course);
@@ -224,8 +224,8 @@ export function toggleInstance(instance_id: CourseInstance['instance_id']) {
 	saveLocalData();
 }
 
-function addCourseNoUndo(course: Course, course_instances: CourseInstance[]) {
-	const courseKeys: (keyof Course)[] = ['course_id', 'name', 'year', 'description'];
+function addCourseNoUndo(course: SemesterCourse, course_instances: SemesterCourseInstance[]) {
+	const courseKeys: (keyof SemesterCourse)[] = ['course_id', 'name', 'year', 'description'];
 	const stripped_course = stripExcessProperties(course, courseKeys);
 	courses.set(GCID(stripped_course), stripped_course);
 	for (let i = 0; i < course_instances.length; i++)
@@ -236,15 +236,15 @@ function addCourseNoUndo(course: Course, course_instances: CourseInstance[]) {
 	saveLocalData();
 }
 
-export function addCourse(course: Course, course_instances: CourseInstance[]) {
+export function addCourse(course: SemesterCourse, course_instances: SemesterCourseInstance[]) {
 	saveSnapshotToUndo();
 	addCourseNoUndo(course, course_instances);
 }
 
 export function addCourseActivateInstance(
-	course: Course,
-	course_instances: CourseInstance[],
-	instance_id: CourseInstance['instance_id']
+	course: SemesterCourse,
+	course_instances: SemesterCourseInstance[],
+	instance_id: SemesterCourseInstance['instance_id']
 ) {
 	addCourseNoUndo(course, course_instances);
 	toggleInstance(instance_id);
@@ -265,10 +265,10 @@ export function removeInstance(
 }
 
 export function removeCourse(CID: CourseIdString): void;
-export function removeCourse(course: Course): void;
-export function removeCourse(CourseOrCID: CourseIdString | Course): void {
+export function removeCourse(course: SemesterCourse): void;
+export function removeCourse(CourseOrCID: CourseIdString | SemesterCourse): void {
 	saveSnapshotToUndo();
-	let CID: CourseIdString, course: Course | undefined;
+	let CID: CourseIdString, course: SemesterCourse | undefined;
 	if (typeof CourseOrCID === 'string') {
 		CID = CourseOrCID;
 		course = courses.get(CID);
@@ -298,16 +298,19 @@ export function removeAllCoursesData() {
 
 ////////////// GET STATE FUNCTIONS
 
-export function hasCourse(course_id: Course['course_id'], year: Course['year']): boolean;
+export function hasCourse(
+	course_id: SemesterCourse['course_id'],
+	year: SemesterCourse['year']
+): boolean;
 export function hasCourse(course: StrippedCourse): boolean;
 export function hasCourse(
-	courseOrId: Course['course_id'] | StrippedCourse,
-	year?: Course['year']
+	courseOrId: SemesterCourse['course_id'] | StrippedCourse,
+	year?: SemesterCourse['year']
 ): boolean {
 	return courses.has(GCID(courseOrId, year));
 }
 
-export function getCourse(course_id: number, year: number): Course | undefined {
+export function getCourse(course_id: number, year: number): SemesterCourse | undefined {
 	return courses.get(GCID(course_id, year));
 }
 
@@ -326,7 +329,7 @@ export function getCoursesAmount(): number {
 	return courses.size;
 }
 
-export function getActiveCourses(): Course[] {
+export function getActiveCourses(): SemesterCourse[] {
 	const coursesCID = new Set<CourseIdString>();
 	for (const instance of getActiveInstancesIter()) {
 		const CID = GCID(instance.course_id, instance.year);
@@ -335,7 +338,7 @@ export function getActiveCourses(): Course[] {
 	return coursesCID
 		.values()
 		.map((CID) => courses.get(CID))
-		.filter((course): course is Course => {
+		.filter((course): course is SemesterCourse => {
 			if (!course) {
 				console.error('A selected course was not found in course map!');
 				return false;
@@ -346,23 +349,25 @@ export function getActiveCourses(): Course[] {
 }
 
 /** Get a list of exams for the active instances, optionally filter by course */
-export function getActiveExams(course?: Pick<Course, 'course_id' | 'year'>): Exam[] {
+export function getActiveExams(course?: Pick<SemesterCourse, 'course_id' | 'year'>): Exam[] {
 	return getActiveInstancesIter(course)
 		.flatMap((instance) => instance.exams)
 		.toArray();
 }
 
 /** Get a list of the active instances, optionally filter by course */
-export function getActiveInstances(course?: Pick<Course, 'course_id' | 'year'>): CourseInstance[] {
+export function getActiveInstances(
+	course?: Pick<SemesterCourse, 'course_id' | 'year'>
+): SemesterCourseInstance[] {
 	return getActiveInstancesIter(course).toArray();
 }
 
 /** get full courses with only active instances included in instance list */
-export function getActiveFullCourses(): Course[] {
+export function getActiveFullCourses(): SemesterCourse[] {
 	return constructFullCourses(getActiveInstancesIter()).toArray();
 }
 
 /** get full courses with including non active ones */
-export function getFullCourses(): Course[] {
+export function getFullCourses(): SemesterCourse[] {
 	return constructFullCourses(instances.values()).toArray();
 }

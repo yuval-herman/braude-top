@@ -20,7 +20,7 @@
 	import Sessions from './leaves/Sessions.svelte';
 
 	interface Props {
-		course: Course;
+		course: SemesterCourse;
 		mode?: 'all' | 'my';
 	}
 
@@ -31,7 +31,7 @@
 
 	function registrationIncomplete(
 		mode: 'all' | 'my',
-		course: Course
+		course: Pick<Course, 'course_id' | 'year'>
 	): undefined | CourseInstance['co_requirement_instance_ids'] {
 		if (mode === 'all') return;
 		const selected_from_course = getActiveInstances(course);

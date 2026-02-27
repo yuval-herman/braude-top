@@ -41,6 +41,8 @@ type Session = Slot & {
 	room: string;
 	instance_id: string;
 };
+type SemesterSession = Branded<Session, 'semester'>;
+type YearlySession = Branded<Session, 'yearly'>;
 
 type EmptyRoom = Slot & {
 	year: number;
@@ -48,9 +50,23 @@ type EmptyRoom = Slot & {
 };
 
 type CourseInstance = StrippedCourseInstance & { sessions: Session[]; exams: Exam[] };
+type SemesterCourseInstance = StrippedCourseInstance & {
+	sessions: SemesterSession[];
+	exams: Exam[];
+};
+type YearlyCourseInstance = StrippedCourseInstance & {
+	sessions: YearlySession[];
+	exams: Exam[];
+};
 
 type Course = StrippedCourse & {
 	instances: CourseInstance[];
+};
+type SemesterCourse = StrippedCourse & {
+	instances: SemesterCourseInstance[];
+};
+type YearlyCourse = StrippedCourse & {
+	instances: YearlyCourseInstance[];
 };
 
 type Exam = {

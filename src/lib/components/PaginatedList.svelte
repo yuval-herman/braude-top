@@ -4,7 +4,7 @@
 
 	interface Props {
 		mode?: 'all' | 'my';
-		items: Course[];
+		items: SemesterCourse[];
 	}
 	const { items, mode = 'all' }: Props = $props();
 </script>
