@@ -83,7 +83,7 @@ export const getNonEmptyCourseInstances = (() => {
 	return (args: Args) => stmt.all(args).map(transformInstance);
 })();
 
-/** Retrieves all the instance session for a given course instance id across all semesters */
+/** Retrieves all the instance session for a given course instance id for one semester */
 export const getInstancesSemesterSessions = (() => {
 	const stmt = coursesDB.prepare<[number, string], Session>(
 		'SELECT * from sessions where instance_id = ? and semester = ?'
@@ -91,7 +91,7 @@ export const getInstancesSemesterSessions = (() => {
 	return (id: number | string, semester: string) => stmt.all(id as number, semester);
 })();
 
-/** Retrieves all the instance session for a given course instance id for one semester */
+/** Retrieves all the instance session for a given course instance id across all semesters */
 export const getInstancesSessions = (() => {
 	const stmt = coursesDB.prepare<number, Session>('SELECT * from sessions where instance_id = ?');
 	return (id: number | string) => stmt.all(id as number);
