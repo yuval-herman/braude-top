@@ -34,14 +34,14 @@ test.describe('main page', () => {
 	});
 
 	test('show instance preview on hover', async ({ page }) => {
-		await page.goto('/?query=%D7%97%D7%93%D7%95');
+		await page.goto('/?name-query=%D7%97%D7%93%D7%95');
 		await page.getByText("הרצאה של פרופ' ילין מרק בעברית יום ג חדר 303 EM 08:30-10:30").hover();
 		await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 303 EM')).toBeVisible();
 		await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 202 EM')).toBeVisible();
 	});
 
 	test('switch between "my" and "all" lists', async ({ page }) => {
-		await page.goto('/?query=%D7%97%D7%93%D7%95');
+		await page.goto('/?name-query=%D7%97%D7%93%D7%95');
 
 		await test.step('check "my" list is empty', async () => {
 			await page.getByRole('button', { name: 'הקורסים שלי' }).click();
@@ -129,7 +129,7 @@ test.describe('main page', () => {
 	});
 
 	test('selecting instances directly from "all" list', async ({ page }) => {
-		await page.goto('/?query=%D7%97%D7%93%D7%95');
+		await page.goto('/?name-query=%D7%97%D7%93%D7%95');
 		await expect(page.getByRole('heading', { name: 'חדו"א 1', exact: true })).toBeVisible();
 
 		await test.step('ascertain no course was selected', async () => {
@@ -161,7 +161,7 @@ test.describe('main page', () => {
 	});
 	test('removing instances', async ({ page }) => {
 		await page.goto(
-			'/?query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
+			'/?name-query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
 		);
 
 		await test.step('add instances', async () => {
@@ -214,7 +214,7 @@ test.describe('main page', () => {
 
 	test('removing all instances', async ({ page }) => {
 		await page.goto(
-			'/?query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
+			'/?name-query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
 		);
 
 		await test.step('add instances', async () => {
@@ -270,7 +270,7 @@ test.describe('main page', () => {
 
 	test('ctrl-z ctrl-y', async ({ page }) => {
 		await page.goto(
-			'/?query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
+			'/?name-query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
 		);
 
 		await page.getByText("מעבדה של מר כהן גדעון בעברית יום ב חדר 306 M מע' 15:50-17:").click();
@@ -333,7 +333,7 @@ test.describe('main page', () => {
 
 	test('data survives refresh (in localstorage)', async ({ page }) => {
 		await page.goto(
-			'/?query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
+			'/?name-query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
 		);
 
 		await test.step('add instances', async () => {
