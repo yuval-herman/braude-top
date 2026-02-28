@@ -1,0 +1,39 @@
+import {
+	getFullCourseSemester,
+	getInstancesExams,
+	getInstancesSemesterSessions,
+	getNonEmptyCourseInstances,
+	queryNonEmptyCourses,
+} from '$lib/server/coursesDB';
+
+export const load = async ({ url, parent }) => {
+	const nameQuery = url.searchParams.get('name-query');
+	const idQuery = parseInt(url.searchParams.get('id-query') || '');
+	const { year, semester } = await parent();
+
+	const full_courses: SemesterCourse[] = nameQuery
+		? queryNonEmptyCourses('braude', { year, semester, query: nameQuery })
+				.map((course) => ({
+					...course,
+					instances: getNonEmptyCourseInstances('braude', {
+						course_id: course.course_id,
+						year,
+						semester,
+					}).map((instance) => ({
+						...instance,
+						sessions: getInstancesSemesterSessions('braude', instance.instance_id, semester),
+						exams: getInstancesExams('braude', instance.instance_id),
+					})),
+				}))
+				// The filter here is to ensure a course does not appear twice if it matches both the id and the name query.
+				// The reason I use a filter is so I can also keep the ordering so that the course found by id always appears first.
+				.filter((c) => c.course_id !== idQuery)
+		: [];
+
+	if (!isNaN(idQuery)) {
+		const queriedCourse = getFullCourseSemester('braude', idQuery, year, semester);
+		if (queriedCourse) full_courses.unshift(queriedCourse);
+	}
+
+	return { full_courses };
+};

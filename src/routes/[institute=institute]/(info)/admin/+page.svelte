@@ -1,0 +1,123 @@
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	import { slide } from 'svelte/transition';
+
+	const { data, form } = $props();
+</script>
+
+{#snippet messageBlock(message: SpamMessage | ContactMessage)}
+	{@const isSpam = 'additional' in message}
+	<div class="message">
+		<div class="message-header">
+			<span>{message.date}</span> | <span>{message.type}</span> |
+			<span>{message.email || 'ללא מייל'}</span> | <span>{message.name || 'שם לא צויין'}</span>
+		</div>
+		<div class="message-body">
+			<p>{message.message}</p>
+			{#if isSpam}
+				<p><strong>Additional info:</strong> {message.additional}</p>
+			{/if}
+		</div>
+		<form method="POST" action={isSpam ? '?/delete-spam' : '?/delete-message'} use:enhance>
+			<input type="hidden" name="id" value={message.id} />
+			<button type="submit">מחק</button>
+		</form>
+	</div>
+{/snippet}
+
+<header>
+	<h1>שלום, {data.user.name}!</h1>
+</header>
+<main>
+	{#if form}
+		{#if form?.success}
+			<span transition:slide class="success">הודעה נמחקה!</span>
+		{:else if !form?.success}
+			<span transition:slide class="failure">ההודעה לא נמחקה...</span>
+		{/if}
+	{/if}
+	{#if data.messages.length > 0}
+		<h2>הודעות:</h2>
+		{#each data.messages as message}
+			{@render messageBlock(message)}
+		{/each}
+	{:else}
+		<p>אין הודעות להצגה.</p>
+	{/if}
+
+	{#if data.spam?.length > 0}
+		<h2>הודעות ספאם:</h2>
+		{#each data.spam as message}
+			{@render messageBlock(message)}
+		{/each}
+	{:else}
+		<p>אין הודעות ספאם.</p>
+	{/if}
+</main>
+
+<style>
+	header {
+		width: 100%;
+		display: inline-block;
+		background: var(--primary);
+		border-radius: 12px;
+		padding: 0 16px;
+	}
+	main {
+		padding: 1.5rem;
+	}
+	.success,
+	.failure {
+		padding: 8px;
+		border-radius: 8px;
+	}
+	.failure {
+		background: var(--warn);
+	}
+	.success {
+		background: var(--success);
+	}
+
+	.message {
+		border: 1px solid var(--border);
+		padding: 0.5rem;
+		margin-bottom: 0.5rem;
+		border-radius: 4px;
+		background: var(--neutral);
+		color: var(--text);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+	}
+
+	.message-header {
+		flex: 1 1 auto;
+		margin-bottom: 0.5rem;
+		font-weight: bold;
+		color: var(--text-secondary);
+	}
+
+	.message-body {
+		flex: 1 1 100%;
+		margin-bottom: 0.5rem;
+	}
+
+	form {
+		display: inline;
+	}
+
+	button {
+		background: var(--warn);
+		color: var(--text-light);
+		border: none;
+		padding: 0.5rem 1rem;
+		border-radius: 4px;
+		cursor: pointer;
+		transition: background 0.3s;
+	}
+
+	button:hover {
+		background: darken(var(--warn), 10%);
+	}
+</style>

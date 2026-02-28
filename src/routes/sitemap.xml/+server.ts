@@ -6,7 +6,10 @@ import { resolve } from 'url';
 const urls = ['', 'contact', 'rooms']
 	.concat(
 		Array.from(
-			getCourses().map((c) => resolve('course/', c.course_id.toString() + `?year=${c.year}`))
+			// TODO make sitemap per institute
+			getCourses('braude').map((c) =>
+				resolve('course/', c.course_id.toString() + `?year=${c.year}`)
+			)
 		)
 	)
 	.map((u) => resolve(ORIGIN, u));

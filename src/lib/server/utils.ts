@@ -1,4 +1,4 @@
-import { getYearSemesterMap } from '$lib/server/coursesDB';
+import { getYearSemesterMap, type Institute } from '$lib/server/coursesDB';
 import { error } from '@sveltejs/kit';
 
 /**
@@ -6,13 +6,14 @@ import { error } from '@sveltejs/kit';
  * Url search params has precedence over cookies.
  */
 export function resolveYearSemester(
+	institute: Institute,
 	url: URL,
 	currentCookies: { year?: string; semester?: string }
 ) {
 	let year: number = Number(url.searchParams.get('year') ?? currentCookies.year);
 	let semester: string | undefined = url.searchParams.get('semester') ?? currentCookies.semester;
 
-	const available = Object.entries(getYearSemesterMap())
+	const available = Object.entries(getYearSemesterMap(institute))
 		.map(([year, semesters]) => ({ year: +year, semesters }))
 		.sort((a, b) => a.year - b.year);
 	if (!year || !semester) {

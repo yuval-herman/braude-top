@@ -111,3 +111,6 @@ export const instanceColors = new Map(
 		default: 'var(--primary)',
 	})
 );
+
+export const INSTITUTES = ['braude', 'ono'] as const;
+export type Institute = (typeof INSTITUTES)[number];
