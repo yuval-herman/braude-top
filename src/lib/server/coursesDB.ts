@@ -15,10 +15,10 @@ function makeStmts<BindParameters extends unknown[] | {} = unknown[], Result = u
 	stmtMod?: (stmt: Statement) => Statement
 ) {
 	return Object.fromEntries(
-		Object.entries(courseDBS).map(([institue, db]) => {
+		Object.entries(courseDBS).map(([institute, db]) => {
 			const stmt = db.prepare<BindParameters, Result>(query);
 			if (stmtMod) stmtMod(stmt);
-			return [institue, stmt];
+			return [institute, stmt];
 		})
 	) as Record<Institute, Statement<BindParameters, Result>>;
 }

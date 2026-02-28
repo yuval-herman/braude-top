@@ -1,6 +1,7 @@
 import { browser } from '$app/environment';
 import { page } from '$app/state';
 import { setCurrentEmptyRooms } from './storage';
+import type { Institute } from './utils/constants.utils';
 
 export const hoveredItems = $state<{
 	items: Item[] | undefined;
@@ -11,7 +12,7 @@ export const hoveredInstanceId = $state<{
 export const theme = $state<{ theme: 'auto' | 'light' | 'dark' }>({ theme: 'auto' });
 export const selectedEmptyRooms = $state<EmptyRoom[]>([]);
 
-export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
+export function toggleRoom(institute: Institute, room: EmptyRoom, year: number, semester: string) {
 	const roomIndex = selectedEmptyRooms.findIndex(
 		(r) =>
 			r.week_day === room.week_day &&
@@ -35,6 +36,6 @@ export function toggleRoom(room: EmptyRoom, year: number, semester: string) {
 					data: $state.snapshot(selectedEmptyRooms),
 				})
 			);
-		setCurrentEmptyRooms(selectedEmptyRooms, year, semester);
+		setCurrentEmptyRooms(institute, selectedEmptyRooms, year, semester);
 	}
 }

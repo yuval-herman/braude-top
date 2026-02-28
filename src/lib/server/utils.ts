@@ -1,4 +1,5 @@
-import { getYearSemesterMap, type Institute } from '$lib/server/coursesDB';
+import { getYearSemesterMap } from '$lib/server/coursesDB';
+import type { Institute } from '$lib/utils/constants.utils';
 import { error } from '@sveltejs/kit';
 
 /**

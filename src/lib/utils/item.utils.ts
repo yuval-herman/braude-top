@@ -1,6 +1,6 @@
 import { toggleInstance } from '$lib/courseManager.svelte';
 import { hoveredInstanceId, toggleRoom } from '$lib/state.svelte';
-import { hoursList, instanceColors } from './constants.utils';
+import { hoursList, instanceColors, type Institute } from './constants.utils';
 import { num2color } from './css.utils';
 
 export function time2Index(timestring: string): number | undefined {
@@ -30,7 +30,7 @@ export function day2Index(day: string) {
 	return index;
 }
 
-export function itemizeEmptyRoom(room: EmptyRoom): Item<EmptyRoomItemValue> {
+export function itemizeEmptyRoom(institute: Institute, room: EmptyRoom): Item<EmptyRoomItemValue> {
 	const day = day2Index(room.week_day);
 	const start = time2Index(room.start_time);
 	const end = time2Index(room.end_time);
@@ -45,12 +45,16 @@ export function itemizeEmptyRoom(room: EmptyRoom): Item<EmptyRoomItemValue> {
 		end,
 		bgColor: 'white',
 		indicatorColor: 'white',
-		onclick: () => toggleRoom(room, room.year, room.semester),
+		onclick: () => toggleRoom(institute, room, room.year, room.semester),
 		value: { type: 'empty-room', name: 'חדר ריק', room: room.room },
 	};
 }
 
-export function itemizeCourse({ name, instances, course_id }: Course, is_preview = false): Item[] {
+export function itemizeCourse(
+	institute: Institute,
+	{ name, instances, course_id }: Course,
+	is_preview = false
+): Item[] {
 	return instances.flatMap(({ sessions, instructor, type, instance_id }) =>
 		sessions.map(({ week_day, start_time, end_time, room }): Item => {
 			const day = day2Index(week_day);
@@ -65,7 +69,7 @@ export function itemizeCourse({ name, instances, course_id }: Course, is_preview
 			return {
 				onhover: () => (hoveredInstanceId.id = instance_id),
 				onstopHover: () => (hoveredInstanceId.id = undefined),
-				onclick: () => ((hoveredInstanceId.id = undefined), toggleInstance(instance_id)),
+				onclick: () => ((hoveredInstanceId.id = undefined), toggleInstance(institute, instance_id)),
 				day,
 				end,
 				start,
@@ -78,8 +82,8 @@ export function itemizeCourse({ name, instances, course_id }: Course, is_preview
 	);
 }
 
-export function itemizeCourseList(courses: Course[]): Item[] {
-	const items = courses.flatMap((c) => itemizeCourse(c));
+export function itemizeCourseList(institute: Institute, courses: Course[]): Item[] {
+	const items = courses.flatMap((c) => itemizeCourse(institute, c));
 	items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
 	for (let i = 0; i < items.length - 1; i++) {
 		const curr = items[i];

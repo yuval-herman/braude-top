@@ -27,10 +27,10 @@
 	});
 
 	afterNavigate(() => {
-		loadCourses();
+		loadCourses(data.institute);
 
 		selectedEmptyRooms.length = 0;
-		selectedEmptyRooms.push(...getCurrentEmptyRooms(data.year, data.semester));
+		selectedEmptyRooms.push(...getCurrentEmptyRooms(data.institute, data.year, data.semester));
 	});
 
 	onNavigate(({ to, type }) => {

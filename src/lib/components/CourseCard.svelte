@@ -10,7 +10,7 @@
 		toggleInstance,
 	} from '$lib/courseManager.svelte';
 	import { hoveredInstanceId, hoveredItems } from '$lib/state.svelte';
-	import { instanceColors } from '$lib/utils/constants.utils';
+	import { instanceColors, type Institute } from '$lib/utils/constants.utils';
 	import { getContrast, num2color } from '$lib/utils/css.utils';
 	import { itemizeCourse } from '$lib/utils/item.utils';
 	import parseColor from 'color-parse';
@@ -22,9 +22,10 @@
 	interface Props {
 		course: SemesterCourse;
 		mode?: 'all' | 'my';
+		institute: Institute;
 	}
 
-	const { course, mode = 'all' }: Props = $props();
+	const { course, mode = 'all', institute }: Props = $props();
 
 	// warn when the course registration is incomplete
 	const warn = $derived(registrationIncomplete(mode, course));
@@ -72,9 +73,11 @@
 		<a aria-label="מידע נוסף" class="icon-info-circled" href="course/{course.course_id}"></a>
 	</header>
 	{#if hasCourse(course)}
-		<button class="remove-button" onclick={() => removeCourse(course)}>מחק קורס מהרשימה</button>
+		<button class="remove-button" onclick={() => removeCourse(institute, course)}
+			>מחק קורס מהרשימה</button
+		>
 	{:else}
-		<button class="add-button" onclick={() => addCourse(course, course.instances)}
+		<button class="add-button" onclick={() => addCourse(institute, course, course.instances)}
 			>הוסף קורס לרשימה</button
 		>
 	{/if}
@@ -97,11 +100,11 @@
 				})}
 				onclick={() => {
 					hasCourse(course)
-						? toggleInstance(instance.instance_id)
-						: addCourseActivateInstance(course, course.instances, instance.instance_id);
+						? toggleInstance(institute, instance.instance_id)
+						: addCourseActivateInstance(institute, course, course.instances, instance.instance_id);
 				}}
 				onmouseenter={() => {
-					hoveredItems.items = itemizeCourse({ ...course, instances: [instance] }, true);
+					hoveredItems.items = itemizeCourse(institute, { ...course, instances: [instance] }, true);
 				}}
 				onmouseleave={() => (hoveredItems.items = undefined)}
 			>

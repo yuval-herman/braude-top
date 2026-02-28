@@ -1,12 +1,15 @@
 import { browser, version } from '$app/environment';
 import semverMinor from 'semver/functions/minor';
+import type { Institute } from './utils/constants.utils';
 
 interface StorageItems {
-	[key: `selected-${SemesterCourse['year']}-${SemesterSession['semester']}`]: SemesterCourse[];
 	[
-		key: `active-${SemesterCourse['year']}-${SemesterSession['semester']}`
+		key: `${Institute}-selected-${SemesterCourse['year']}-${SemesterSession['semester']}`
+	]: SemesterCourse[];
+	[
+		key: `${Institute}-active-${SemesterCourse['year']}-${SemesterSession['semester']}`
 	]: StrippedCourseInstance['instance_id'][];
-	[key: `rooms-${SemesterCourse['year']}-${SemesterSession['semester']}`]: EmptyRoom[];
+	[key: `${Institute}-rooms-${SemesterCourse['year']}-${SemesterSession['semester']}`]: EmptyRoom[];
 	version: string; // semver, can be compared with normal comparison operators
 	onboarded: boolean; // whether the user has been onboraded
 	settings: Settings;
@@ -37,41 +40,54 @@ export class TypedLocalStorage {
 }
 
 export function getCurrentCourses(
+	institute: Institute,
 	year: SemesterCourse['year'],
 	semester: SemesterSession['semester']
 ): SemesterCourse[] {
 	if (!browser) return [];
-	return TypedLocalStorage.getItem(`selected-${year}-${semester}`) ?? [];
+	return TypedLocalStorage.getItem(`${institute}-selected-${year}-${semester}`) ?? [];
 }
 export function setCurrentCourses(
+	institute: Institute,
 	courses: SemesterCourse[],
 	year: SemesterCourse['year'],
 	semester: SemesterSession['semester']
 ) {
 	if (!browser) return;
-	return TypedLocalStorage.setItem(`selected-${year}-${semester}`, courses);
+	return TypedLocalStorage.setItem(`${institute}-selected-${year}-${semester}`, courses);
 }
 export function getCurrentActiveInstances(
+	institute: Institute,
 	year: SemesterCourse['year'],
 	semester: SemesterSession['semester']
 ) {
-	return TypedLocalStorage.getItem(`active-${year}-${semester}`);
+	return TypedLocalStorage.getItem(`${institute}-active-${year}-${semester}`);
 }
 export function setCurrentActiveInstances(
+	institute: Institute,
 	instance_ids: StrippedCourseInstance['instance_id'][],
 	year: SemesterCourse['year'],
 	semester: SemesterSession['semester']
 ) {
-	return TypedLocalStorage.setItem(`active-${year}-${semester}`, instance_ids);
+	return TypedLocalStorage.setItem(`${institute}-active-${year}-${semester}`, instance_ids);
 }
 
-export function getCurrentEmptyRooms(year: number, semester: string): EmptyRoom[] {
+export function getCurrentEmptyRooms(
+	institute: Institute,
+	year: number,
+	semester: string
+): EmptyRoom[] {
 	if (!browser) return [];
-	return TypedLocalStorage.getItem(`rooms-${year}-${semester}`) ?? [];
+	return TypedLocalStorage.getItem(`${institute}-rooms-${year}-${semester}`) ?? [];
 }
-export function setCurrentEmptyRooms(rooms: EmptyRoom[], year: number, semester: string) {
+export function setCurrentEmptyRooms(
+	institute: Institute,
+	rooms: EmptyRoom[],
+	year: number,
+	semester: string
+) {
 	if (!browser) return;
-	return TypedLocalStorage.setItem(`rooms-${year}-${semester}`, rooms);
+	return TypedLocalStorage.setItem(`${institute}-rooms-${year}-${semester}`, rooms);
 }
 
 if (browser) {

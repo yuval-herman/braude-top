@@ -97,7 +97,7 @@
 					<td
 						class="add-button icon-{roomIndex === -1 ? 'plus' : 'minus'}-circled"
 						onclick={() => {
-							toggleRoom(room, data.year, data.semester);
+							toggleRoom(data.institute, room, data.year, data.semester);
 						}}
 					></td>
 					<td>{room.start_time}</td>

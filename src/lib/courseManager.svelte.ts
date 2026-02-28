@@ -9,6 +9,7 @@ import {
 	setCurrentCourses,
 } from './storage';
 import { stripExcessProperties } from './utils/utils';
+import type { Institute } from './utils/constants.utils';
 
 type CourseIdString = `${SemesterCourse['course_id']}-${number}`; // `${course_id}-${year}`
 
@@ -39,21 +40,21 @@ function loadStackItem(item: UndoStackItem): void {
 	item.active_instances_ids.forEach((i) => active_instances_ids.add(i));
 }
 
-export function undo() {
+export function undo(institute: Institute) {
 	const item = undoStack.pop();
 	if (!item) return;
 	redoStack.push(constructUndoStackItem());
 	clearState();
 	loadStackItem(item);
-	saveAllData();
+	saveAllData(institute);
 }
-export function redo() {
+export function redo(institute: Institute) {
 	const item = redoStack.pop();
 	if (!item) return;
 	undoStack.push(constructUndoStackItem());
 	clearState();
 	loadStackItem(item);
-	saveAllData();
+	saveAllData(institute);
 }
 export function saveSnapshotToUndo() {
 	undoStack.push(constructUndoStackItem());
@@ -142,21 +143,22 @@ function saveServerActiveInstances() {
 		sendDataToServer(active_instances_ids.values().toArray(), 'active_instance_ids');
 }
 
-function saveLocalData() {
+function saveLocalData(institute: Institute) {
 	if (!browser) return;
-	setCurrentCourses(getFullCourses(), page.data.year, page.data.semester);
+	setCurrentCourses(institute, getFullCourses(), page.data.year, page.data.semester);
 	setCurrentActiveInstances(
+		institute,
 		active_instances_ids.values().toArray(),
 		page.data.year,
 		page.data.semester
 	);
 }
 
-function saveAllData() {
+function saveAllData(institute: Institute) {
 	saveServerCourses();
 	saveServerInstances();
 	saveServerActiveInstances();
-	saveLocalData();
+	saveLocalData(institute);
 }
 
 ////////////// LOAD DATA FUNCTIONS
@@ -171,7 +173,7 @@ async function loadServerData(): Promise<
 	return (await fetch(fetchDataTypesUrl)).json();
 }
 
-export async function loadCourses() {
+export async function loadCourses(institute: Institute) {
 	if (!browser) return;
 	clearState();
 	undoStack.length = 0;
@@ -200,7 +202,7 @@ export async function loadCourses() {
 			'Could not fetch data from server, data is loaded from localstorage instead.'
 		);
 	}
-	const full_courses = getCurrentCourses(page.data.year, page.data.semester);
+	const full_courses = getCurrentCourses(institute, page.data.year, page.data.semester);
 	for (const full_course of full_courses) {
 		full_course.instances.forEach((instance) => instances.set(instance.instance_id, instance));
 		// @ts-ignore;
@@ -209,22 +211,26 @@ export async function loadCourses() {
 		delete full_course.instances;
 		courses.set(GCID(full_course), full_course);
 	}
-	getCurrentActiveInstances(page.data.year, page.data.semester)?.forEach((id) =>
+	getCurrentActiveInstances(institute, page.data.year, page.data.semester)?.forEach((id) =>
 		active_instances_ids.add(id)
 	);
 }
 
 ////////////// SET STATE FUNCTIONS
 
-export function toggleInstance(instance_id: CourseInstance['instance_id']) {
+export function toggleInstance(institute: Institute, instance_id: CourseInstance['instance_id']) {
 	saveSnapshotToUndo();
 	// Tries to deactivate instance. If instance is already deactivated, activates it.
 	if (!active_instances_ids.delete(instance_id)) active_instances_ids.add(instance_id);
 	saveServerActiveInstances();
-	saveLocalData();
+	saveLocalData(institute);
 }
 
-function addCourseNoUndo(course: SemesterCourse, course_instances: SemesterCourseInstance[]) {
+function addCourseNoUndo(
+	institute: Institute,
+	course: SemesterCourse,
+	course_instances: SemesterCourseInstance[]
+) {
 	const courseKeys: (keyof SemesterCourse)[] = ['course_id', 'name', 'year', 'description'];
 	const stripped_course = stripExcessProperties(course, courseKeys);
 	courses.set(GCID(stripped_course), stripped_course);
@@ -233,26 +239,32 @@ function addCourseNoUndo(course: SemesterCourse, course_instances: SemesterCours
 
 	saveServerInstances();
 	saveServerCourses();
-	saveLocalData();
+	saveLocalData(institute);
 }
 
-export function addCourse(course: SemesterCourse, course_instances: SemesterCourseInstance[]) {
+export function addCourse(
+	institute: Institute,
+	course: SemesterCourse,
+	course_instances: SemesterCourseInstance[]
+) {
 	saveSnapshotToUndo();
-	addCourseNoUndo(course, course_instances);
+	addCourseNoUndo(institute, course, course_instances);
 }
 
 export function addCourseActivateInstance(
+	institute: Institute,
 	course: SemesterCourse,
 	course_instances: SemesterCourseInstance[],
 	instance_id: SemesterCourseInstance['instance_id']
 ) {
-	addCourseNoUndo(course, course_instances);
-	toggleInstance(instance_id);
+	addCourseNoUndo(institute, course, course_instances);
+	toggleInstance(institute, instance_id);
 }
 
-export function removeInstance(id: CourseInstance['instance_id']): void;
-export function removeInstance(instance: StrippedCourseInstance): void;
+export function removeInstance(institute: Institute, id: CourseInstance['instance_id']): void;
+export function removeInstance(institute: Institute, instance: StrippedCourseInstance): void;
 export function removeInstance(
+	institute: Institute,
 	InstanceOrId: StrippedCourseInstance | CourseInstance['instance_id']
 ): void {
 	saveSnapshotToUndo();
@@ -261,12 +273,15 @@ export function removeInstance(
 	active_instances_ids.delete(id);
 	saveServerInstances();
 	saveServerCourses();
-	saveLocalData();
+	saveLocalData(institute);
 }
 
-export function removeCourse(CID: CourseIdString): void;
-export function removeCourse(course: SemesterCourse): void;
-export function removeCourse(CourseOrCID: CourseIdString | SemesterCourse): void {
+export function removeCourse(institute: Institute, CID: CourseIdString): void;
+export function removeCourse(institute: Institute, course: SemesterCourse): void;
+export function removeCourse(
+	institute: Institute,
+	CourseOrCID: CourseIdString | SemesterCourse
+): void {
 	saveSnapshotToUndo();
 	let CID: CourseIdString, course: SemesterCourse | undefined;
 	if (typeof CourseOrCID === 'string') {
@@ -280,20 +295,20 @@ export function removeCourse(CourseOrCID: CourseIdString | SemesterCourse): void
 
 	for (const instance of instances.values()) {
 		if (instance.course_id === course.course_id && instance.year === course.year)
-			removeInstance(instance);
+			removeInstance(institute, instance);
 	}
 	courses.delete(CID);
 
 	saveServerInstances();
 	saveServerCourses();
-	saveLocalData();
+	saveLocalData(institute);
 }
 
 /** Removes all courses instances and all other related data from state, localstorage, and server */
-export function removeAllCoursesData() {
+export function removeAllCoursesData(institute: Institute) {
 	saveSnapshotToUndo();
 	clearState();
-	saveAllData();
+	saveAllData(institute);
 }
 
 ////////////// GET STATE FUNCTIONS

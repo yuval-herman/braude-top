@@ -37,9 +37,9 @@
 	const onkeydown: KeyboardEventHandler<Window> = (e) => {
 		if (e.metaKey || e.ctrlKey) {
 			if (e.code === 'KeyZ') {
-				if (e.shiftKey) redo();
-				else undo();
-			} else if (e.code === 'KeyY') redo();
+				if (e.shiftKey) redo(data.institute);
+				else undo(data.institute);
+			} else if (e.code === 'KeyY') redo(data.institute);
 		}
 	};
 
@@ -105,7 +105,7 @@
 					/>
 				</div>
 				{#if data.full_courses.length}
-					<PaginatedList items={data.full_courses} />
+					<PaginatedList institute={data.institute} items={data.full_courses} />
 				{:else}
 					<i class="info" transition:slide>חפש קורסים בתיבת החיפוש!</i>
 				{/if}
@@ -122,7 +122,7 @@
 						onclick={() => {
 							if (confirm('מערכת השעות הולכת להמחק, להמשיך?')) {
 								saveSnapshotToUndo();
-								removeAllCoursesData();
+								removeAllCoursesData(data.institute);
 							}
 						}}>מחק הכל</button
 					>
@@ -136,14 +136,14 @@
 						>
 					</div>
 				{/if}
-				<PaginatedList items={getFullCourses()} mode="my" />
+				<PaginatedList institute={data.institute} items={getFullCourses()} mode="my" />
 			</div>
 		{/if}
 	</div>
 	<div class="table-container" class:hidden={page.state.sidebarOpen}>
 		<TimeTable
-			items={itemizeCourseList(getActiveFullCourses()).concat(
-				selectedEmptyRooms.map(itemizeEmptyRoom)
+			items={itemizeCourseList(data.institute, getActiveFullCourses()).concat(
+				selectedEmptyRooms.map((r) => itemizeEmptyRoom(data.institute, r))
 			)}
 			preview={hoveredItems.items}
 		/>

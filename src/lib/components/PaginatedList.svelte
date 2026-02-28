@@ -1,19 +1,21 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition';
 	import CourseCard from './CourseCard.svelte';
+	import type { Institute } from '$lib/utils/constants.utils';
 
 	interface Props {
 		mode?: 'all' | 'my';
 		items: SemesterCourse[];
+		institute: Institute;
 	}
-	const { items, mode = 'all' }: Props = $props();
+	const { items, mode = 'all', institute }: Props = $props();
 </script>
 
 <div class="container">
 	<ul>
 		{#each items as course (course.course_id + course.year)}
 			<li transition:slide>
-				<CourseCard {course} {mode} />
+				<CourseCard {institute} {course} {mode} />
 			</li>
 		{/each}
 	</ul>
