@@ -70,7 +70,8 @@
 			<h3>{course.name}</h3>
 			<span class="info">{course.course_id}</span>
 		</div>
-		<a aria-label="מידע נוסף" class="icon-info-circled" href="course/{course.course_id}"></a>
+		<a aria-label="מידע נוסף" class="icon-info-circled" href="{institute}/course/{course.course_id}"
+		></a>
 	</header>
 	{#if hasCourse(course)}
 		<button class="remove-button" onclick={() => removeCourse(institute, course)}

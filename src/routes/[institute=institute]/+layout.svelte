@@ -59,9 +59,9 @@
 <div class="container">
 	<nav>
 		<ul id="page-links">
-			<li><a href="/">ראשי</a></li>
-			<li><a href="/rooms">חדרים ריקים</a></li>
-			<li><a href="/contact">יצירת קשר</a></li>
+			<li><a href="/{data.institute}/">ראשי</a></li>
+			<li><a href="/{data.institute}/rooms">חדרים ריקים</a></li>
+			<li><a href="/{data.institute}/contact">יצירת קשר</a></li>
 			{#if data.user}
 				<li>
 					<form method="post" action="/login?/log-out" use:enhance>
@@ -69,7 +69,7 @@
 					</form>
 				</li>
 				{#if data.user.role === 'admin'}
-					<li><a href="/admin">ניהול אתר</a></li>
+					<li><a href="/{data.institute}/admin">ניהול אתר</a></li>
 				{/if}
 			{:else}
 				<li><a href="/login/google">התחברות</a></li>
@@ -108,7 +108,7 @@
 		<ul>
 			{#if data.user}<li>{data.user?.name}</li>{/if}
 			<li>
-				<a href="/settings" aria-label="הגדרות" id="settings" class="icon-cog"></a>
+				<a href="/{data.institute}/settings" aria-label="הגדרות" id="settings" class="icon-cog"></a>
 			</li>
 			<li>
 				<button aria-label="עזרה" class="help" id="help-button" onclick={() => showHelp(page)}

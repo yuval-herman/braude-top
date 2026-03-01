@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	// TODO need to figure out how to allow going back to your institute page
 </script>
 
 <main>
