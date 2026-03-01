@@ -3,11 +3,11 @@ import { resolveYearSemester } from '$lib/server/utils.js';
 import { json } from '@sveltejs/kit';
 
 export const GET = async ({ url, params, cookies, setHeaders }) => {
-	const { year, semester } = resolveYearSemester('braude', url, {
+	const { year, semester } = resolveYearSemester(params.institute, url, {
 		year: cookies.get('year'),
 		semester: cookies.get('semester'),
 	});
-	const rooms = getEmptyRoomsByStart('braude', {
+	const rooms = getEmptyRoomsByStart(params.institute, {
 		year,
 		semester,
 		week_day: params.day,

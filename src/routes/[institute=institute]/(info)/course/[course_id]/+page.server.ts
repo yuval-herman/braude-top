@@ -11,7 +11,7 @@ import { error } from '@sveltejs/kit';
 
 export const load = async ({ params, setHeaders, parent, locals }) => {
 	const { year } = await parent();
-	const course = getFullCourse('braude', params.course_id, year);
+	const course = getFullCourse(params.institute, params.course_id, year);
 
 	if (course === undefined) {
 		error(404, 'הקורס לא נמצא');
@@ -38,11 +38,11 @@ export const load = async ({ params, setHeaders, parent, locals }) => {
 
 export const actions = {
 	'add-comment': async ({ request, locals, params, url, cookies }) => {
-		const { year } = resolveYearSemester('braude', url, {
+		const { year } = resolveYearSemester(params.institute, url, {
 			year: cookies.get('year'),
 			semester: cookies.get('semester'),
 		});
-		if (!checkCourse('braude', params.course_id, year))
+		if (!checkCourse(params.institute, params.course_id, year))
 			error(400, 'לא ניתן להגיב על קורס שאינו קיים');
 		const { user } = locals;
 		if (!user) error(401, 'כדי להגיב חובה להתחבר');

@@ -2,7 +2,7 @@ import { getUserSavedTimetableData } from '$lib/server/usersDB';
 import { resolveYearSemester } from '$lib/server/utils';
 import { error, json } from '@sveltejs/kit';
 
-export const GET = async ({ locals, cookies, url }) => {
+export const GET = async ({ locals, cookies, url, params }) => {
 	if (!locals.user) error(401, 'משתמש לא מחובר');
 	const url_data_types = url.searchParams.get('data_types') ?? undefined;
 	let data_types: SavedDataTypes[] | undefined;
@@ -16,7 +16,7 @@ export const GET = async ({ locals, cookies, url }) => {
 	}
 
 	// Getting this from cookies here is insane design. Shame on you :( @fix!
-	const { year, semester } = resolveYearSemester('braude', url, {
+	const { year, semester } = resolveYearSemester(params.institute, url, {
 		year: cookies.get('year'),
 		semester: cookies.get('semester'),
 	});

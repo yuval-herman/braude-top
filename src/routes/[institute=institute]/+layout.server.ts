@@ -4,7 +4,7 @@ import { resolveYearSemester } from '$lib/server/utils.js';
 
 export const load = async ({ cookies, locals, url, params }) => {
 	let settings, savedTimetableData;
-	const availableTimeSpans = Object.entries(getYearSemesterMap('braude'));
+	const availableTimeSpans = Object.entries(getYearSemesterMap(params.institute));
 	const { year, semester } = resolveYearSemester(params.institute, url, {
 		year: cookies.get('year'),
 		semester: cookies.get('semester'),

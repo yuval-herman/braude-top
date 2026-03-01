@@ -6,23 +6,27 @@ import {
 	queryNonEmptyCourses,
 } from '$lib/server/coursesDB';
 
-export const load = async ({ url, parent }) => {
+export const load = async ({ url, parent, params }) => {
 	const nameQuery = url.searchParams.get('name-query');
 	const idQuery = parseInt(url.searchParams.get('id-query') || '');
 	const { year, semester } = await parent();
 
 	const full_courses: SemesterCourse[] = nameQuery
-		? queryNonEmptyCourses('braude', { year, semester, query: nameQuery })
+		? queryNonEmptyCourses(params.institute, { year, semester, query: nameQuery })
 				.map((course) => ({
 					...course,
-					instances: getNonEmptyCourseInstances('braude', {
+					instances: getNonEmptyCourseInstances(params.institute, {
 						course_id: course.course_id,
 						year,
 						semester,
 					}).map((instance) => ({
 						...instance,
-						sessions: getInstancesSemesterSessions('braude', instance.instance_id, semester),
-						exams: getInstancesExams('braude', instance.instance_id),
+						sessions: getInstancesSemesterSessions(
+							params.institute,
+							instance.instance_id,
+							semester
+						),
+						exams: getInstancesExams(params.institute, instance.instance_id),
 					})),
 				}))
 				// The filter here is to ensure a course does not appear twice if it matches both the id and the name query.
@@ -31,7 +35,7 @@ export const load = async ({ url, parent }) => {
 		: [];
 
 	if (!isNaN(idQuery)) {
-		const queriedCourse = getFullCourseSemester('braude', idQuery, year, semester);
+		const queriedCourse = getFullCourseSemester(params.institute, idQuery, year, semester);
 		if (queriedCourse) full_courses.unshift(queriedCourse);
 	}
 

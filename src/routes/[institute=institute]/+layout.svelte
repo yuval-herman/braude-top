@@ -48,6 +48,7 @@
 
 <svelte:head>
 	<script
+		// TODO use one source of truth for ORIGIN
 		data-goatcounter={`https://stats${isBetaSite ? '.beta' : ''}.braude.top/count`}
 		async
 		src={`https://stats${isBetaSite ? '.beta' : ''}.braude.top/count.js`}
@@ -59,6 +60,7 @@
 <div class="container">
 	<nav>
 		<ul id="page-links">
+			<li><a href="/">בחירת מוסד</a></li>
 			<li><a href="/{data.institute}/">ראשי</a></li>
 			<li><a href="/{data.institute}/rooms">חדרים ריקים</a></li>
 			<li><a href="/{data.institute}/contact">יצירת קשר</a></li>
