@@ -119,8 +119,9 @@ function constructFullCourses(instances_iter: Iterable<SemesterCourseInstance>) 
 ////////////// SAVE DATA FUNCTIONS
 
 function sendDataToServer(data: unknown, data_type: SavedDataTypes) {
+	if (!page.params.institute) return;
 	navigator.sendBeacon(
-		'/api/user/update/data',
+		page.params.institute + '/api/user/update/data',
 		JSON.stringify({
 			year: page.data.year,
 			semester: page.data.semester,
@@ -169,8 +170,8 @@ const fetchDataTypesUrl = `/api/user/get/data?data_types=${JSON.stringify(dataTy
 async function loadServerData(): Promise<
 	{ data: unknown; data_type: SavedDataTypes }[] | undefined
 > {
-	if (!page.data.user) return;
-	return (await fetch(fetchDataTypesUrl)).json();
+	if (!page.data.user || !page.params.institute) return;
+	return (await fetch(page.params.institute + fetchDataTypesUrl)).json();
 }
 
 export async function loadCourses(institute: Institute) {
