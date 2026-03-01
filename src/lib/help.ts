@@ -299,10 +299,10 @@ function roomsPage() {
 }
 
 const pageFunctions = new Map<string, (page: Page) => void>([
-	['/', mainPage],
-	['/(info)/contact', contactPage],
-	['/(info)/course/[course_id]', coursePage],
-	['/(info)/rooms', roomsPage],
+	['/[institute=institute]', mainPage],
+	['/[institute=institute]/(info)/contact', contactPage],
+	['/[institute=institute]/(info)/course/[course_id]', coursePage],
+	['/[institute=institute]/(info)/rooms', roomsPage],
 ]);
 
 export function showHelp(page: Page) {
