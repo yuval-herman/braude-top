@@ -3,7 +3,7 @@ import { test } from '@playwright/test';
 export const gotoMainExitHelp: Parameters<typeof test.beforeEach>[1] = async ({ page }) => {
 	// Don't fetch the analytics script
 	await page.route('https://stats.braude.top/count.js', (route) => route.abort());
-	await page.goto('/');
+	await page.goto('/braude');
 	// Escape the help popup
 	await page.locator('#driver-popover-content').waitFor({ state: 'visible' });
 	await page.locator('#driver-popover-content').press('Escape');

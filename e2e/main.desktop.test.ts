@@ -1,5 +1,9 @@
-import { expect, test } from '@playwright/test';
+import { expect, Page, test } from '@playwright/test';
 import { gotoMainExitHelp } from './test.utils';
+
+async function searchCourse(page: Page, name: string) {
+	await page.getByPlaceholder('חפש כאן').fill(name);
+}
 
 test.describe('main page', () => {
 	test.beforeEach(gotoMainExitHelp);
@@ -23,25 +27,25 @@ test.describe('main page', () => {
 	});
 
 	test('searching courses', async ({ page }) => {
-		await page.getByPlaceholder('חפש כאן').fill('חדו');
+		await searchCourse(page, 'חדו');
 		await expect(page.getByRole('heading', { name: 'חדו"א 1', exact: true })).toBeVisible();
-		await page.getByPlaceholder('חפש כאן').fill('אלגברה');
+		await searchCourse(page, 'אלגברה');
 		await expect(page.getByRole('heading', { name: 'אלגברה', exact: true })).toBeVisible();
-		await page.getByPlaceholder('חפש כאן').fill('מבוא למדעי המח');
+		await searchCourse(page, 'מבוא למדעי המח');
 		await expect(page.getByRole('heading', { name: 'מבוא למדעי המחשב (מל"מ)' })).toBeVisible();
-		await page.getByPlaceholder('חפש כאן').fill('חדו"א');
+		await searchCourse(page, 'חדו"א');
 		await expect(page.getByRole('heading', { name: 'חדו"א 1', exact: true })).toBeVisible();
 	});
 
 	test('show instance preview on hover', async ({ page }) => {
-		await page.goto('/?name-query=%D7%97%D7%93%D7%95');
+		await searchCourse(page, 'חדו');
 		await page.getByText("הרצאה של פרופ' ילין מרק בעברית יום ג חדר 303 EM 08:30-10:30").hover();
 		await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 303 EM')).toBeVisible();
 		await expect(page.getByText('הרצאה חדו"א 1 פרופ\' ילין מרק 202 EM')).toBeVisible();
 	});
 
 	test('switch between "my" and "all" lists', async ({ page }) => {
-		await page.goto('/?name-query=%D7%97%D7%93%D7%95');
+		await searchCourse(page, 'חדו');
 
 		await test.step('check "my" list is empty', async () => {
 			await page.getByRole('button', { name: 'הקורסים שלי' }).click();
@@ -129,7 +133,7 @@ test.describe('main page', () => {
 	});
 
 	test('selecting instances directly from "all" list', async ({ page }) => {
-		await page.goto('/?name-query=%D7%97%D7%93%D7%95');
+		await searchCourse(page, 'חדו');
 		await expect(page.getByRole('heading', { name: 'חדו"א 1', exact: true })).toBeVisible();
 
 		await test.step('ascertain no course was selected', async () => {
@@ -160,9 +164,7 @@ test.describe('main page', () => {
 		});
 	});
 	test('removing instances', async ({ page }) => {
-		await page.goto(
-			'/?name-query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
-		);
+		await searchCourse(page, 'מבוא למדעי המחשב');
 
 		await test.step('add instances', async () => {
 			await page.getByText('הרצאה של ד"ר מילר אורנה בעברית יום ג חדר 709 L 08:30-10:').click();
@@ -213,9 +215,7 @@ test.describe('main page', () => {
 	});
 
 	test('removing all instances', async ({ page }) => {
-		await page.goto(
-			'/?name-query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
-		);
+		await searchCourse(page, 'מבוא למדעי המחשב');
 
 		await test.step('add instances', async () => {
 			await page.getByText('הרצאה של ד"ר מילר אורנה בעברית יום ג חדר 709 L 08:30-10:').click();
@@ -269,9 +269,7 @@ test.describe('main page', () => {
 	});
 
 	test('ctrl-z ctrl-y', async ({ page }) => {
-		await page.goto(
-			'/?name-query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
-		);
+		await searchCourse(page, 'מבוא למדעי המחשב');
 
 		await page.getByText("מעבדה של מר כהן גדעון בעברית יום ב חדר 306 M מע' 15:50-17:").click();
 		await page.getByText("הרצאה של גב' ארז יעל יום ה חדר 103 EM 12:50-14:").click();
@@ -332,9 +330,7 @@ test.describe('main page', () => {
 	});
 
 	test('data survives refresh (in localstorage)', async ({ page }) => {
-		await page.goto(
-			'/?name-query=%D7%9E%D7%91%D7%95%D7%90+%D7%9C%D7%9E%D7%93%D7%A2%D7%99+%D7%94%D7%9E%D7%97%D7%A9%D7%91'
-		);
+		await searchCourse(page, 'מבוא למדעי המחשב');
 
 		await test.step('add instances', async () => {
 			await page.getByText("מעבדה של מר כהן גדעון בעברית יום ב חדר 306 M מע' 15:50-17:").click();

@@ -1,11 +1,11 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-	use: { trace: 'on' },
+	use: { trace: 'on', baseURL: 'http://localhost:4173' },
 	webServer: {
 		command: 'npm run build &&  npm run preview',
 		reuseExistingServer: true,
-		port: 4173,
+		url: 'http://localhost:4173',
 	},
 	timeout: 10_000, // 10 seconds timeout for each test
 	expect: {
