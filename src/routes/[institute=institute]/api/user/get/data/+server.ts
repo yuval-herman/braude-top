@@ -15,7 +15,6 @@ export const GET = async ({ locals, cookies, url, params }) => {
 		throw err;
 	}
 
-	// Getting this from cookies here is insane design. Shame on you :( @fix!
 	const { year, semester } = resolveYearSemester(params.institute, url, {
 		year: cookies.get('year'),
 		semester: cookies.get('semester'),
