@@ -3,6 +3,7 @@ type StrippedCourse = {
 	name: string;
 	year: number;
 	description?: string;
+	origin_url: string;
 };
 
 type StrippedCourseInstance = {

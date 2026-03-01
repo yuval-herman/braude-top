@@ -43,21 +43,6 @@
 	/>
 </svelte:head>
 
-{#snippet YedionButton(course_id: number)}
-	<form
-		style="display: inline;"
-		id="yedion"
-		// TODO add urls for each institute
-		action="https://info.braude.ac.il/yedion/fireflyweb.aspx"
-		method="POST"
-		target="_blank"
-	>
-		<input type="hidden" name="PRGNAME" value="S_LOOK_FOR_NOSE" />
-		<input type="hidden" name="ARGUMENTS" value="-N{course_id}" />
-		<button type="submit">פתח את דף הקורס בתחנת המידע</button>
-	</form>
-{/snippet}
-
 <header class="course-header">
 	<h1>
 		{course.name}
@@ -81,7 +66,7 @@
 		{#if properties.languages.size > 0}
 			<span id="languages">הקורס זמין ב{joinSet(properties.languages)} </span>
 		{/if}
-		{@render YedionButton(course.course_id)}
+		<a href={course.origin_url} target="_blank">פתח את דף הקורס באתר המוסד</a>
 	</div>
 	<div class="list-info">
 		<ul>
@@ -171,7 +156,8 @@
 	.icon-star-half-alt::before {
 		scale: -1 1;
 	}
-	button {
+	a {
+		text-decoration: none;
 		border: none;
 		background: var(--light);
 		color: var(--dark);
