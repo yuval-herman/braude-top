@@ -7,15 +7,16 @@
 		mode?: 'all' | 'my';
 		items: SemesterCourse[];
 		institute: Institute;
+		hoursList: Time[];
 	}
-	const { items, mode = 'all', institute }: Props = $props();
+	const { items, mode = 'all', institute, hoursList }: Props = $props();
 </script>
 
 <div class="container">
 	<ul>
 		{#each items as course (course.course_id + course.year)}
 			<li transition:slide>
-				<CourseCard {institute} {course} {mode} />
+				<CourseCard {hoursList} {institute} {course} {mode} />
 			</li>
 		{/each}
 	</ul>

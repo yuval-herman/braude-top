@@ -3,6 +3,7 @@ import {
 	getInstancesExams,
 	getInstancesSemesterSessions,
 	getNonEmptyCourseInstances,
+	getTimeSpans,
 	queryNonEmptyCourses,
 } from '$lib/server/coursesDB';
 
@@ -39,5 +40,7 @@ export const load = async ({ url, parent, params }) => {
 		if (queriedCourse) full_courses.unshift(queriedCourse);
 	}
 
-	return { full_courses };
+	const time_spans = getTimeSpans(params.institute).map((span) => span[0]);
+
+	return { full_courses, time_spans };
 };

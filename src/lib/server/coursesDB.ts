@@ -138,6 +138,15 @@ export const getYearsAvailable = (() => {
 	return (institute: Institute) => JSON.parse(stmts[institute].get()!) as number[];
 })();
 
+/** Retrieves the time span list from the db metadata section */
+export const getTimeSpans = (() => {
+	const stmts = makeStmts<[], string>("SELECT value from metadata where key = 'time_spans'", (s) =>
+		s.pluck()
+	);
+
+	return (institute: Institute) => JSON.parse(stmts[institute].get()!) as Span[];
+})();
+
 /** Retrieves the semesters that exists for a given year in the db */
 export const getSemestersAvailable = (() => {
 	const stmts = makeStmts<number, string>(

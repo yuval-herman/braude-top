@@ -24,6 +24,12 @@
 	import { slide } from 'svelte/transition';
 
 	const { data } = $props();
+	const hoursList = $derived(
+		data.time_spans.map((time) => {
+			const [hour, min] = time.split(':');
+			return { hour: +hour, min: +min };
+		})
+	);
 
 	let tab = $state<'all' | 'my'>('all');
 
@@ -105,7 +111,7 @@
 					/>
 				</div>
 				{#if data.full_courses.length}
-					<PaginatedList institute={data.institute} items={data.full_courses} />
+					<PaginatedList {hoursList} institute={data.institute} items={data.full_courses} />
 				{:else}
 					<i class="info" transition:slide>חפש קורסים בתיבת החיפוש!</i>
 				{/if}
@@ -136,14 +142,15 @@
 						>
 					</div>
 				{/if}
-				<PaginatedList institute={data.institute} items={getFullCourses()} mode="my" />
+				<PaginatedList {hoursList} institute={data.institute} items={getFullCourses()} mode="my" />
 			</div>
 		{/if}
 	</div>
 	<div class="table-container" class:hidden={page.state.sidebarOpen}>
 		<TimeTable
-			items={itemizeCourseList(data.institute, getActiveFullCourses()).concat(
-				selectedEmptyRooms.map((r) => itemizeEmptyRoom(data.institute, r))
+			{hoursList}
+			items={itemizeCourseList(data.institute, hoursList, getActiveFullCourses()).concat(
+				selectedEmptyRooms.map((r) => itemizeEmptyRoom(data.institute, hoursList, r))
 			)}
 			preview={hoveredItems.items}
 		/>

@@ -1,13 +1,17 @@
 <script lang="ts">
 	import { settings } from '$lib/settings.svelte';
-	import { buildings, hoursList, walkTimes } from '$lib/utils/constants.utils';
 	import { getContrast } from '$lib/utils/css.utils';
 	import { getDay, getHour } from '$lib/utils/formatter.utils';
 	import { sameObject } from '$lib/utils/utils';
 	import Indicator from './Indicator.svelte';
 	import MenuButton from './MenuButton.svelte';
 
-	const { items = [], preview: previewItems = [] }: { items?: Item[]; preview?: Item[] } = $props();
+	interface Props {
+		items?: Item[];
+		preview?: Item[];
+		hoursList: { hour: number; min: number }[];
+	}
+	const { items = [], preview: previewItems = [], hoursList }: Props = $props();
 
 	const processed = $derived.by(() => {
 		const processed: Item[] = [];
@@ -40,34 +44,19 @@
 			else if ($settings.show_walk_times) {
 				const prevItem = items[i - 1];
 				prevItem.freeTime = items[i].start - prevItem.end;
-
-				const prevBuilding = getBuilding(prevItem);
-				const building = getBuilding(items[i]);
-				if (prevBuilding && building && prevBuilding !== building) {
-					// @ts-expect-error
-					const walk: { dist: number; time: number } = walkTimes[prevBuilding][building];
-					prevItem.walk = walk;
-				}
 			}
-			// set this to undefined on current item since if they were set previously and
-			// the next item then got removed this will stay incorrectly
-			items[i].walk = undefined;
 			items[i].freeTime = undefined;
 			daysArr[items[i].day].push(items[i]);
 		}
 		return daysArr;
-
-		function getBuilding(prevItem: Item) {
-			return buildings.find((b) => 'room' in prevItem.value && prevItem.value.room.includes(b));
-		}
 	}
 </script>
 
 {#snippet Item(item: Item, index: number)}
 	{@const background = (item.overlapping?.overlapIndex ?? 0) < 2 ? item.bgColor : 'red'}
 	{@const offset = item.walk && item.freeTime === 0 ? '- 2em' : ''}
-	{@const start = item.start + Number($settings.show_lunch && item.start > 4)}
-	{@const end = item.end + Number($settings.show_lunch && item.end > 4)}
+	{@const start = item.start}
+	{@const end = item.end}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_interactive_supports_focus -->
 	<div
@@ -149,15 +138,6 @@
 					{/each}
 				{/if}
 			</tr>
-			{#if row === 4 && $settings.show_lunch}
-				<tr>
-					<th class="hour lunch">הפסקת צהריים</th>
-
-					{#each { length: itemsByDay.length } as _}
-						<td></td>
-					{/each}
-				</tr>
-			{/if}
 		{/each}
 	</tbody>
 </table>

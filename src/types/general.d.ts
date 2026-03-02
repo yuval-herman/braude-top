@@ -41,4 +41,6 @@ interface Settings {
 	anonymous_comment?: boolean;
 }
 
+type Time = { hour: number; min: number };
+
 type Branded<T, Name extends string> = T & { __brand: Name };

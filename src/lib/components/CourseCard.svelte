@@ -23,9 +23,10 @@
 		course: SemesterCourse;
 		mode?: 'all' | 'my';
 		institute: Institute;
+		hoursList: Time[];
 	}
 
-	const { course, mode = 'all', institute }: Props = $props();
+	const { course, mode = 'all', institute, hoursList }: Props = $props();
 
 	// warn when the course registration is incomplete
 	const warn = $derived(registrationIncomplete(mode, course));
@@ -105,7 +106,12 @@
 						: addCourseActivateInstance(institute, course, course.instances, instance.instance_id);
 				}}
 				onmouseenter={() => {
-					hoveredItems.items = itemizeCourse(institute, { ...course, instances: [instance] }, true);
+					hoveredItems.items = itemizeCourse(
+						institute,
+						hoursList,
+						{ ...course, instances: [instance] },
+						true
+					);
 				}}
 				onmouseleave={() => (hoveredItems.items = undefined)}
 			>

@@ -1,9 +1,9 @@
 import { toggleInstance } from '$lib/courseManager.svelte';
 import { hoveredInstanceId, toggleRoom } from '$lib/state.svelte';
-import { hoursList, instanceColors, type Institute } from './constants.utils';
+import { instanceColors, type Institute } from './constants.utils';
 import { num2color } from './css.utils';
 
-export function time2Index(timestring: string): number | undefined {
+export function time2Index(hoursList: Time[], timestring: string): number | undefined {
 	const [chour, cmin] = timestring.split(':').map(Number);
 	let index = hoursList.findIndex(({ hour, min }) => hour === chour && min === cmin);
 	return index === -1 ? undefined : index;
@@ -30,10 +30,14 @@ export function day2Index(day: string) {
 	return index;
 }
 
-export function itemizeEmptyRoom(institute: Institute, room: EmptyRoom): Item<EmptyRoomItemValue> {
+export function itemizeEmptyRoom(
+	institute: Institute,
+	hoursList: Time[],
+	room: EmptyRoom
+): Item<EmptyRoomItemValue> {
 	const day = day2Index(room.week_day);
-	const start = time2Index(room.start_time);
-	const end = time2Index(room.end_time);
+	const start = time2Index(hoursList, room.start_time);
+	const end = time2Index(hoursList, room.end_time);
 
 	if (start === undefined || end === undefined) {
 		throw new Error('start or end time were not found in hourList');
@@ -52,6 +56,7 @@ export function itemizeEmptyRoom(institute: Institute, room: EmptyRoom): Item<Em
 
 export function itemizeCourse(
 	institute: Institute,
+	hoursList: Time[],
 	{ name, instances, course_id }: Course,
 	is_preview = false
 ): Item[] {
@@ -59,11 +64,13 @@ export function itemizeCourse(
 		sessions.map(({ week_day, start_time, end_time, room }): Item => {
 			const day = day2Index(week_day);
 
-			const start = time2Index(start_time);
-			const end = time2Index(end_time);
+			const start = time2Index(hoursList, start_time);
+			const end = time2Index(hoursList, end_time);
 
 			if (start === undefined || end === undefined) {
-				throw new Error('start or end time were not found in hourList');
+				throw new Error(
+					`start (${start_time}) or end (${end_time}) time were not found in hourList`
+				);
 			}
 
 			return {
@@ -82,8 +89,12 @@ export function itemizeCourse(
 	);
 }
 
-export function itemizeCourseList(institute: Institute, courses: Course[]): Item[] {
-	const items = courses.flatMap((c) => itemizeCourse(institute, c));
+export function itemizeCourseList(
+	institute: Institute,
+	hoursList: Time[],
+	courses: Course[]
+): Item[] {
+	const items = courses.flatMap((c) => itemizeCourse(institute, hoursList, c));
 	items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
 	for (let i = 0; i < items.length - 1; i++) {
 		const curr = items[i];
