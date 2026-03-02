@@ -1,9 +1,9 @@
 import {
 	getFullCourseSemester,
+	getHoursList,
 	getInstancesExams,
 	getInstancesSemesterSessions,
 	getNonEmptyCourseInstances,
-	getTimeSpans,
 	queryNonEmptyCourses,
 } from '$lib/server/coursesDB';
 
@@ -40,7 +40,7 @@ export const load = async ({ url, parent, params }) => {
 		if (queriedCourse) full_courses.unshift(queriedCourse);
 	}
 
-	const time_spans = getTimeSpans(params.institute).map((span) => span[0]);
+	const time_spans = getHoursList(params.institute);
 
 	return { full_courses, time_spans };
 };

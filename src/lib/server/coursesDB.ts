@@ -147,6 +147,26 @@ export const getTimeSpans = (() => {
 	return (institute: Institute) => JSON.parse(stmts[institute].get()!) as Span[];
 })();
 
+/** Retrieves the hours list from the db metadata section */
+export const getHoursList = (() => {
+	const stmts = makeStmts<[], string>(
+		"WITH spans AS (\
+			  SELECT json_each.value AS span\
+			  FROM metadata m, json_each(m.value, '$') \
+			  WHERE m.key = 'time_spans'\
+			)\
+			SELECT json_extract(span, '$[0]') AS time\
+			FROM spans\
+			UNION\
+			SELECT json_extract(span, '$[1]') AS time\
+			FROM spans\
+			ORDER BY time;",
+		(s) => s.pluck()
+	);
+
+	return (institute: Institute) => stmts[institute].all();
+})();
+
 /** Retrieves the semesters that exists for a given year in the db */
 export const getSemestersAvailable = (() => {
 	const stmts = makeStmts<number, string>(
