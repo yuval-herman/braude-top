@@ -2,9 +2,21 @@ import type { Institute } from '$lib/utils/constants.utils';
 import Database from 'better-sqlite3';
 import type { Statement, Database as SQLiteDatabase } from 'better-sqlite3';
 
+function makeDB(dbName: string) {
+	// Since we only ever read AND are the only reader from db,
+	// this are some optimizations to increase read speed
+	const db = new Database(`data/${dbName}.sqlite`, {
+		readonly: true,
+		fileMustExist: true,
+	});
+	db.pragma('journal_mode = OFF');
+	db.pragma('synchronous = OFF');
+	return db;
+}
+
 const courseDBS = {
-	braude: new Database('data/braude.sqlite'),
-	ono: new Database('data/ono.sqlite'),
+	braude: makeDB('braude'),
+	ono: makeDB('ono'),
 } as const satisfies Record<Institute, SQLiteDatabase>;
 
 // Theses should not be changed or messed with
