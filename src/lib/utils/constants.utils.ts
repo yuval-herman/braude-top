@@ -93,5 +93,10 @@ export const instanceColors = new Map(
 	})
 );
 
-export const INSTITUTES = ['braude', 'ono'] as const;
+export const INSTITUTES = [
+	'AzrieliCollegeOfEngineeringJerusalem',
+	'braude',
+	'ono',
+	'yezreelValley',
+] as const;
 export type Institute = (typeof INSTITUTES)[number];

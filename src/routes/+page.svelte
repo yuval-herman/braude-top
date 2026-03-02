@@ -40,8 +40,9 @@
 		ul {
 			list-style: none;
 			padding: 0;
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
 			gap: 1rem;
 			width: 100%;
 			max-width: 600px;

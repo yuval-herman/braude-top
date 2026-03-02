@@ -1,4 +1,4 @@
-import type { Institute } from '$lib/utils/constants.utils';
+import { INSTITUTES, type Institute } from '$lib/utils/constants.utils';
 import Database from 'better-sqlite3';
 import type { Statement, Database as SQLiteDatabase } from 'better-sqlite3';
 
@@ -14,10 +14,10 @@ function makeDB(dbName: string) {
 	return db;
 }
 
-const courseDBS = {
-	braude: makeDB('braude'),
-	ono: makeDB('ono'),
-} as const satisfies Record<Institute, SQLiteDatabase>;
+const courseDBS = Object.fromEntries(INSTITUTES.map((i) => [i, makeDB(i)])) as Record<
+	Institute,
+	SQLiteDatabase
+>;
 
 // Theses should not be changed or messed with
 Object.freeze(courseDBS);
