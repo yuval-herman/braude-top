@@ -3,10 +3,11 @@ import { hoveredInstanceId, toggleRoom } from '$lib/state.svelte';
 import { instanceColors, type Institute } from './constants.utils';
 import { num2color } from './css.utils';
 
-export function time2Index(hoursList: Time[], timestring: string): number | undefined {
+export function time2Index(hoursList: Time[], timestring: string) {
 	const [chour, cmin] = timestring.split(':').map(Number);
 	let index = hoursList.findIndex(({ hour, min }) => hour === chour && min === cmin);
-	return index === -1 ? undefined : index;
+	if (index === -1) throw new Error(`time (${timestring}) was not found in hourList`);
+	else return index;
 }
 
 const week_days: string[] = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי'] as const;
@@ -39,10 +40,6 @@ export function itemizeEmptyRoom(
 	const start = time2Index(hoursList, room.start_time);
 	const end = time2Index(hoursList, room.end_time);
 
-	if (start === undefined || end === undefined) {
-		throw new Error('start or end time were not found in hourList');
-	}
-
 	return {
 		day,
 		start,
@@ -66,12 +63,6 @@ export function itemizeCourse(
 
 			const start = time2Index(hoursList, start_time);
 			const end = time2Index(hoursList, end_time);
-
-			if (start === undefined || end === undefined) {
-				throw new Error(
-					`start (${start_time}) or end (${end_time}) time were not found in hourList`
-				);
-			}
 
 			return {
 				onhover: () => (hoveredInstanceId.id = instance_id),
