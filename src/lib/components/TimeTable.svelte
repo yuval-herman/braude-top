@@ -12,6 +12,9 @@
 		hoursList: { hour: number; min: number }[];
 	}
 	const { items = [], preview: previewItems = [], hoursList }: Props = $props();
+	const quantizedHoursList = $derived(
+		new Set(hoursList.map(({ hour }) => hour)).values().toArray()
+	);
 
 	const processed = $derived.by(() => {
 		const processed: Item[] = [];
@@ -22,19 +25,28 @@
 					p &&
 					sameObject(p, i, ['day', 'start', 'end', 'type', 'value', 'bgColor', 'indicatorColor'])
 			);
+			let item: Item;
 			if (index !== -1) {
 				ignore.push(index);
-				processed.push({ ...i, highlight: true });
+				item = { ...adjustTimes(i), highlight: true };
 			} else {
-				processed.push({ ...i });
+				item = { ...adjustTimes(i) };
 			}
+			processed.push(item);
 		}
 
-		return processed.concat(
-			previewItems.filter((_, i) => !ignore.includes(i)).map((item) => ({ ...item }))
-		);
+		return processed.concat(previewItems.filter((_, i) => !ignore.includes(i)).map(adjustTimes));
 	});
 	const itemsByDay = $derived(splitToDays(processed));
+
+	function adjustTimes(i: Item<any>) {
+		const item = { ...i };
+		const start = hoursList[i.start];
+		const end = hoursList[i.end];
+		item.start = quantizedHoursList.findIndex((h) => h === start.hour) + start.min / 60;
+		item.end = quantizedHoursList.findIndex((h) => h === end.hour) + end.min / 60;
+		return item;
+	}
 
 	function splitToDays(items: Item[]) {
 		items.sort((a, b) => a.day - b.day || a.start - b.start || a.end - b.end);
@@ -83,38 +95,18 @@
 		onclick={item.onclick}
 	>
 		{#if item.indicatorColor}<Indicator color={item.indicatorColor} />{/if}
+		<span>{item.time_string}</span>
 		{#if 'session_type' in item.value}<span>{item.value.session_type}</span>{/if}
 		<span>{item.value.name}</span>
 		{#if 'instructor' in item.value}<span>{item.value.instructor}</span>{/if}
 		{#if 'room' in item.value}<span>{item.value.room}</span>{/if}
 	</div>
-	{#if (item.walk || item.freeTime) && !item.overlapping}
-		<div
-			class="walk-free"
-			class:preview={item.is_preview}
-			style:top="calc({start} * (100% + 1px) + {end - start} * (100% + 1px) {offset})"
-		>
-			{#if item.walk}
-				<div class="data">
-					<span class="icon-{item.freeTime === 0 && item.walk.time > 7 ? 'run' : 'walk'}"
-						>{item.walk.time}</span
-					>
-				</div>
-			{/if}
-
-			{#if item.freeTime}
-				<div class="data">
-					<span class="icon-clock">{item.freeTime} ש'</span>
-				</div>
-			{/if}
-		</div>
-	{/if}
 {/snippet}
 
 <div class="container">
 	<table
 		style:--item-margin={$settings.columns_margins ? '5%' : '0'}
-		style:--row-amount={hoursList.length + 1}
+		style:--row-amount={quantizedHoursList.length + 1}
 	>
 		<thead>
 			<tr>
@@ -125,9 +117,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each hoursList as hour, row}
+			{#each quantizedHoursList as hour, row}
 				<tr>
-					<th class="hour">{getHour(hour.hour, hour.min)}</th>
+					<th class="hour">{hour}:00</th>
 					{#if row === 0}
 						{#each itemsByDay as dayItems, i}
 							<td>

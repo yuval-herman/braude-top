@@ -41,6 +41,7 @@ export function itemizeEmptyRoom(
 	const end = time2Index(hoursList, room.end_time);
 
 	return {
+		time_string: `${room.start_time} - ${room.end_time}`,
 		day,
 		start,
 		end,
@@ -68,6 +69,7 @@ export function itemizeCourse(
 				onhover: () => (hoveredInstanceId.id = instance_id),
 				onstopHover: () => (hoveredInstanceId.id = undefined),
 				onclick: () => ((hoveredInstanceId.id = undefined), toggleInstance(institute, instance_id)),
+				time_string: `${start_time} - ${end_time}`,
 				day,
 				end,
 				start,

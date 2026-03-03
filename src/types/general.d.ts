@@ -18,6 +18,7 @@ interface Item<TValue extends ItemValueTypes = BaseItemValue> {
 	day: number; // Day of the week 1-6
 	start: number; // Start hour as an integer (1=8:30, 2=9:30, etc...)
 	end: number; // End hour as an integer
+	time_string: string;
 	value: TValue; // Value to show in cell
 	bgColor: string;
 	indicatorColor?: string;
