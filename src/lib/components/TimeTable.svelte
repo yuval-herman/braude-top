@@ -111,38 +111,48 @@
 	{/if}
 {/snippet}
 
-<table style:--item-margin={$settings.columns_margins ? '5%' : '0'}>
-	<thead>
-		<tr>
-			<th><MenuButton /></th>
-			{#each { length: 6 } as _, day}
-				<th>{getDay(day)} </th>
-			{/each}
-		</tr>
-	</thead>
-	<tbody>
-		{#each hoursList as hour, row}
+<div class="container">
+	<table
+		style:--item-margin={$settings.columns_margins ? '5%' : '0'}
+		style:--row-amount={hoursList.length + 1}
+	>
+		<thead>
 			<tr>
-				<th class="hour">{getHour(hour.hour, hour.min)}</th>
-				{#if row === 0}
-					{#each itemsByDay as dayItems, i}
-						<td>
-							{#each dayItems as item}
-								{@render Item(item, 10 * (6 - i) + item.start)}
-							{/each}
-						</td>
-					{/each}
-				{:else}
-					{#each { length: itemsByDay.length } as _}
-						<td></td>
-					{/each}
-				{/if}
+				<th><MenuButton /></th>
+				{#each { length: 6 } as _, day}
+					<th>{getDay(day)} </th>
+				{/each}
 			</tr>
-		{/each}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
+			{#each hoursList as hour, row}
+				<tr>
+					<th class="hour">{getHour(hour.hour, hour.min)}</th>
+					{#if row === 0}
+						{#each itemsByDay as dayItems, i}
+							<td>
+								{#each dayItems as item}
+									{@render Item(item, 10 * (6 - i) + item.start)}
+								{/each}
+							</td>
+						{/each}
+					{:else}
+						{#each { length: itemsByDay.length } as _}
+							<td></td>
+						{/each}
+					{/if}
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>
 
 <style>
+	.container {
+		display: block;
+		overflow-y: scroll;
+	}
+
 	table {
 		background: var(--bg);
 		box-shadow: 5px 5px 5px 5px var(--shadow);
@@ -151,9 +161,7 @@
 		height: 100%;
 		width: 100%;
 		border-radius: 12px;
-
 		--item-margin: 3%;
-
 		z-index: 0;
 	}
 
@@ -163,7 +171,6 @@
 	}
 
 	thead {
-		height: calc(100% / 19);
 		th {
 			border-top: none;
 		}
@@ -182,7 +189,11 @@
 	th,
 	td {
 		position: relative;
-		height: calc(100% / 19);
+	}
+	th,
+	td,
+	thead {
+		height: calc(100% / var(--row-amount));
 	}
 
 	.lunch,
