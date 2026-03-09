@@ -51,6 +51,7 @@
 		"@oslojs/encoding": "^1.1.0",
 		"arctic": "^3.7.0",
 		"better-sqlite3": "^12.6.2",
+		"cheerio": "^1.2.0",
 		"color-parse": "^2.0.2",
 		"color-space": "^2.1.0",
 		"core-js": "^3.41.0",
