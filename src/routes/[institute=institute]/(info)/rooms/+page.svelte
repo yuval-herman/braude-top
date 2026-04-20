@@ -154,7 +154,7 @@
 		}
 
 		tr {
-			background: var(bg);
+			background: var(--bg);
 			&:nth-child(odd) {
 				background: hsl(from var(--bg) h calc(s + 10) calc(l + 5));
 			}
