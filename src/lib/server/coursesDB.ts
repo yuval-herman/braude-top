@@ -2,10 +2,14 @@ import { INSTITUTES, type Institute } from '$lib/utils/constants.utils';
 import Database from 'better-sqlite3';
 import type { Statement, Database as SQLiteDatabase } from 'better-sqlite3';
 
-function makeDB(dbName: string) {
+export function getDBName(institue: string) {
+	return `${institue}.sqlite`;
+}
+
+function makeDB(institue: string) {
 	// Since we only ever read AND are the only reader from db,
 	// this are some optimizations to increase read speed
-	const db = new Database(`data/${dbName}.sqlite`, {
+	const db = new Database('data/' + getDBName(institue), {
 		readonly: true,
 		fileMustExist: true,
 	});
