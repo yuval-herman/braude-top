@@ -27,6 +27,8 @@
 		"@types/semver": "^7.5.8",
 		"@vitest/browser-playwright": "^4.0.18",
 		"@vitest/coverage-v8": "^4.0.18",
+		"browserslist": "^4.28.5",
+		"lightningcss": "^1.32.0",
 		"playwright": "^1.58.1",
 		"prettier": "^3.8.1",
 		"prettier-plugin-svelte": "^4.1.1",
