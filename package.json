@@ -14,18 +14,10 @@
 		"lint": "prettier --check .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
-		"test:e2e": "playwright test",
-		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"test:e2e": "playwright test"
 	},
 	"devDependencies": {
-		"@chromatic-com/storybook": "^5.0.1",
 		"@playwright/test": "^1.45.3",
-		"@storybook/addon-a11y": "^10.2.10",
-		"@storybook/addon-docs": "^10.2.10",
-		"@storybook/addon-svelte-csf": "^5.0.11",
-		"@storybook/addon-vitest": "^10.2.10",
-		"@storybook/sveltekit": "^10.2.10",
 		"@sveltejs/adapter-node": "^5.3.3",
 		"@sveltejs/kit": "^2.43.8",
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
@@ -38,7 +30,6 @@
 		"playwright": "^1.58.1",
 		"prettier": "^3.8.1",
 		"prettier-plugin-svelte": "^4.1.1",
-		"storybook": "^10.2.10",
 		"svelte": "^5.39.8",
 		"svelte-check": "^4.3.2",
 		"typescript": "^6.0.3",

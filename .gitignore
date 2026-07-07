@@ -31,6 +31,3 @@ vite.config.ts.timestamp-*
 
 fullcourses.json
 secrets.json
-
-*storybook.log
-storybook-static
