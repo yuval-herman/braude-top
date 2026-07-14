@@ -148,7 +148,25 @@
 		</ul>
 	</nav>
 
-	{@render children()}
+	<svelte:boundary
+		onerror={(error) => {
+			let val;
+			if (error instanceof Error)
+				val = {
+					name: error.name,
+					message: error.message,
+					stack: error.stack,
+					cause: error.cause,
+				};
+			else val = error;
+			fetch(page.params.institute + '/api/error', {
+				method: 'post',
+				body: JSON.stringify(val),
+			});
+		}}
+	>
+		{@render children()}
+	</svelte:boundary>
 </div>
 
 <style>
