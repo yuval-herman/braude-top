@@ -1,15 +1,11 @@
 import { page } from '$app/state';
 
 export const handleError = async (error) => {
-	fetch(page.params.institute + '/api/error', {
-		method: 'post',
-		body: JSON.stringify(error),
-	});
-
-	fetch('/api/error', {
-		method: 'post',
-		body: JSON.stringify(error),
-	});
+	if (error.status !== 404)
+		fetch(page.params.institute + '/api/error', {
+			method: 'post',
+			body: JSON.stringify({ error: error.error, status: error.status, message: error.message }),
+		});
 
 	return {
 		message: error.message,

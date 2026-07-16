@@ -25,7 +25,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 };
 
 export const handleError = async (error) => {
-	sendTelegramMessage(JSON.stringify(error));
+	console.log(error);
+	if (error.status !== 404)
+		sendTelegramMessage(
+			JSON.stringify({ error: error.error, status: error.status, message: error.message })
+		);
 
 	return {
 		message: error.message,
