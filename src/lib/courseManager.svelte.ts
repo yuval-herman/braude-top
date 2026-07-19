@@ -121,7 +121,7 @@ function constructFullCourses(instances_iter: Iterable<SemesterCourseInstance>) 
 function sendDataToServer(data: unknown, data_type: SavedDataTypes) {
 	if (!page.params.institute) return;
 	navigator.sendBeacon(
-		page.params.institute + '/api/user/update/data',
+		page.url.origin + '/' + page.params.institute + '/api/user/update/data',
 		JSON.stringify({
 			year: page.data.year,
 			semester: page.data.semester,
@@ -171,7 +171,7 @@ async function loadServerData(): Promise<
 	{ data: unknown; data_type: SavedDataTypes }[] | undefined
 > {
 	if (!page.data.user || !page.params.institute) return;
-	return (await fetch(page.params.institute + fetchDataTypesUrl)).json();
+	return (await fetch(page.url.origin + '/' + page.params.institute + fetchDataTypesUrl)).json();
 }
 
 export async function loadCourses(institute: Institute) {
@@ -183,11 +183,9 @@ export async function loadCourses(institute: Institute) {
 		const serverData = await loadServerData();
 		if (serverData?.length) {
 			const server_courses = serverData.find((d) => d.data_type === 'courses')?.data as
-				| undefined
-				| SemesterCourse[];
+				undefined | SemesterCourse[];
 			const server_instances = serverData.find((d) => d.data_type === 'instances')?.data as
-				| undefined
-				| SemesterCourseInstance[];
+				undefined | SemesterCourseInstance[];
 			const server_active_instance_ids = serverData.find(
 				(d) => d.data_type === 'active_instance_ids'
 			)?.data as undefined | SemesterCourseInstance['instance_id'][];

@@ -16,5 +16,8 @@ settings.subscribe((v) => {
 	if (!browser) return;
 	TypedLocalStorage.setItem('settings', v);
 	if (page.data.user && page.params.institute)
-		navigator.sendBeacon(page.params.institute + '/api/user/update/settings', JSON.stringify(v));
+		navigator.sendBeacon(
+			page.url.origin + '/' + page.params.institute + '/api/user/update/settings',
+			JSON.stringify(v)
+		);
 });

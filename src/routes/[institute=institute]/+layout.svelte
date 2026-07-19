@@ -159,7 +159,7 @@
 					cause: error.cause,
 				};
 			else val = error;
-			fetch(page.params.institute + '/api/error', {
+			fetch(page.url.origin + '/' + page.params.institute + '/api/error', {
 				method: 'post',
 				body: JSON.stringify(val),
 			});
