@@ -154,33 +154,13 @@ export const getYearsAvailable = (() => {
 	return (institute: Institute) => JSON.parse(stmts[institute].get()!) as number[];
 })();
 
-/** Retrieves the time span list from the db metadata section */
-export const getTimeSpans = (() => {
-	const stmts = makeStmts<[], string>("SELECT value from metadata where key = 'time_spans'", (s) =>
+/** Retrieves the hours list from the db metadata section */
+export const getHoursList = (() => {
+	const stmts = makeStmts<[], string>("SELECT value from metadata where key = 'hour_list'", (s) =>
 		s.pluck()
 	);
 
-	return (institute: Institute) => JSON.parse(stmts[institute].get()!) as Span[];
-})();
-
-/** Retrieves the hours list from the db metadata section */
-export const getHoursList = (() => {
-	const stmts = makeStmts<[], string>(
-		"WITH spans AS (\
-			  SELECT json_each.value AS span\
-			  FROM metadata m, json_each(m.value, '$') \
-			  WHERE m.key = 'time_spans'\
-			)\
-			SELECT json_extract(span, '$[0]') AS time\
-			FROM spans\
-			UNION\
-			SELECT json_extract(span, '$[1]') AS time\
-			FROM spans\
-			ORDER BY time;",
-		(s) => s.pluck()
-	);
-
-	return (institute: Institute) => stmts[institute].all();
+	return (institute: Institute) => JSON.parse(stmts[institute].get()!) as string[];
 })();
 
 /** Retrieves the semesters that exists for a given year in the db */
